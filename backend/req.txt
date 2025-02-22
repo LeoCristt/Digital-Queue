@@ -1,0 +1,7 @@
+sqlalchemy
+fastapi
+alembic
+passlib
+uvicorn
+pydantic[email]
+python-jose
