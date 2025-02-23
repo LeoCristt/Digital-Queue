@@ -5,3 +5,4 @@ passlib
 uvicorn
 pydantic[email]
 python-jose
+argon2_cffi
