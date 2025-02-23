@@ -1,5 +1,5 @@
-from core.database import engine, Base
-from models.user import User  # Импортируйте все модели
+from app.core.database import engine, Base
+from app.models.user import User  # Импортируйте все модели
 
 # Создайте все таблицы
 Base.metadata.create_all(bind=engine)
