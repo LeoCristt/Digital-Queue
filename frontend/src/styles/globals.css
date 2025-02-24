@@ -4,10 +4,12 @@
 
 :root {
   --background: #0A1B30;
+  --secondbackground:#16253B;
   --backgroundHeader: rgba(10, 27, 48, 0.75);
   --foreground: #00FF88;
+  --colorbutton:#00BE65;
   --textColor: #ffffff;
-;
+  --foreground-hover: #33FFAA;
 }
 
 
@@ -15,9 +17,12 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0A1B30;
+    --secondbackground:#16253B;
     --backgroundHeader: rgba(10, 27, 48, 0.75);
     --foreground: #00FF88;
+    --colorbutton:#00BE65;
     --textColor: #ffffff;
+    --foregroundhover: #0bc578;
   }
 }
 
@@ -46,4 +51,22 @@ body {
   src: url('../assets/fonts/futura-book/FuturaPTDemi.otf') format('opentype');
   font-weight: normal;
   font-style: italic;
+}
+
+.container{
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+.auth-container{
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
 }

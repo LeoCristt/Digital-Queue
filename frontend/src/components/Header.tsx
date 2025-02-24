@@ -17,7 +17,7 @@ const Header = () => {
         <header className="backdrop-blur-xl bg-backgroundHeader width-full flex justify-between sticky top-0 z-50">
             <nav className="container mx-auto px-4 py-4 flex items-center justify-between" >
                 <Link
-                    href=""
+                    href="/"
                     className="align-center text-[20px]"
                 >
                     DQ
@@ -39,7 +39,12 @@ const Header = () => {
                     ))}
                 </div>
                 <div className="flex space-x-6 bg-foreground text-black p-2 rounded-2xl shadow-4xl">
+                <Link
+                    href="/login"
+                    className=""
+                >
                     <button>Login</button>
+                </Link>
                 </div>
             </nav>
         </header>
