@@ -14,11 +14,11 @@ const Header = () => {
     ];
 
     return (
-        <header className="bg-background width-full flex justify-between sticky top-0 z-50">
+        <header className="backdrop-blur-xl bg-backgroundHeader width-full flex justify-between sticky top-0 z-50">
             <nav className="container mx-auto px-4 py-4 flex items-center justify-between" >
                 <Link
                     href=""
-                    className="text-white align-center text-[20px]"
+                    className="align-center text-[20px]"
                 >
                     DQ
                 </Link>
@@ -30,7 +30,7 @@ const Header = () => {
                             href={link.href}
                             className={`${
                                 pathname === link.href
-                                    ? 'text-white border-b-2 border-foreground'
+                                    ? 'border-b-2 border-foreground'
                                     : 'text-gray-600 hover:text-white'
                             } transition-colors`}
                         >
