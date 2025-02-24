@@ -21,9 +21,29 @@
   }
 }
 
+*, *:before, *:after{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html{
+  width: 100vw;
+  overflow-x: hidden;
+  display: block;
+}
+
 
 body {
   color: var(--textColor);
   background: var(--background);
-  font-family:FuturaPT,sans-serif;
+  font-family: Futura PT Demi Italic;
+  color: #fff;
+}
+
+@font-face{
+  font-family: 'Futura PT Demi Italic';
+  src: url('../assets/fonts/futura-book/FuturaPTDemi.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
 }
