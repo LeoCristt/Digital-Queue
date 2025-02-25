@@ -43,7 +43,10 @@ async def auto_refresh_token_middleware(request: Request, call_next):
         )
         exp = payload.get("exp")
         if not exp:
-            raise JWTError("Токен не содержит времени истечения")
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Токен не содержит времени истечения"},
+            )
 
         current_time = datetime.utcnow().timestamp()
         time_diff = current_time - exp
@@ -77,10 +80,10 @@ async def refresh_access_token(refresh_token: str, db: Session):
     if not payload:
         raise HTTPException(status_code=401, detail="Недействительный refresh token")
     
-    username = payload.get("sub")
-    user = db.query(User).filter(User.username == username).first()
+    id = payload.get("sub")
+    user = db.query(User).filter(User.id == id).first()
     if not user:
         raise HTTPException(status_code=401, detail="Пользователь не найден")
     
-    new_access_token = create_access_token(data={"sub": user.username})
+    new_access_token = create_access_token(data={"sub": user.id})
     return new_access_token
