@@ -41,7 +41,7 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
 
         # Проверка, что queue_id совпадает с user_id при создании новой очереди
     if queue_id not in queues:
-        if queue_id != id:
+        if queue_id != client_id:
             await websocket.send_text("error: You can only create a queue with your own user ID")
             await websocket.close()
             return
@@ -72,12 +72,33 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
                     current_queue.remove(client_id)
                     await broadcast_queue(active_connections, current_queue)
 
+            elif data == "delete":
+                if client_id == queue_id:
+                    # Сохраняем копию подключений перед удалением
+                    connections_to_close = active_connections.copy()
+                    
+                    # Удаляем очередь из глобального словаря
+                    del queues[queue_id]
+                    
+                    # Рассылаем уведомление и закрываем соединения
+                    for connection, _ in connections_to_close:
+                        try:
+                            await connection.send_text("info: Очередь была удалена создателем")
+                            await connection.close()
+                        except Exception:
+                            pass
+                    
+                    # Очищаем локальный список подключений
+                    active_connections.clear()
+                else:
+                    await websocket.send_text("error: Только создатель очереди может её удалить")
+
+
+
     except WebSocketDisconnect:
         # Удаляем подключение при разрыве
         active_connections.remove((websocket, client_id))
-        if client_id in current_queue:
-            current_queue.remove(client_id)
-            await broadcast_queue(active_connections, current_queue)
+        await broadcast_queue(active_connections, current_queue)
 
 async def broadcast_queue(active_connections, current_queue):
     for connection, _ in list(active_connections):
