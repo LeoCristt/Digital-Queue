@@ -10,6 +10,8 @@ router = APIRouter()
 
 @router.post("/register")
 async def register(response: Response, user: UserCreate, db: Session = Depends(get_db)):
+    if user.password != user.re_password:
+        raise HTTPException(status_code=400, detail="Пароли не совпадают!")
     db_user_email = db.query(User).filter(User.email == user.email).first()
     db_user_username = db.query(User).filter(User.username == user.username).first()
     if db_user_email or db_user_username:
