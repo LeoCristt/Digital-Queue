@@ -1,0 +1,23 @@
+from pydantic import BaseModel, EmailStr
+
+# Базовая схема для пользователя
+class UserBase(BaseModel):
+    email: EmailStr
+    username: str
+
+# Схема для создания пользователя (регистрация)
+class UserCreate(UserBase):
+    password: str
+
+# Схема для аутентификации
+class UserLogin(BaseModel):
+    username: str  # Может быть email или username
+    password: str
+
+# Схема для возврата информации о пользователе
+class User(UserBase):
+    id: int
+    is_active: bool
+
+    class Config:
+        from_attributes = True  # Ранее orm_mode = True

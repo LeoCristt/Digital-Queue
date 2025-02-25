@@ -44,6 +44,8 @@ body {
   background: var(--background);
   font-family: Futura PT Demi Italic;
   color: #fff;
+  min-height: 100vh;
+  display: flex;
 }
 
 @font-face{
