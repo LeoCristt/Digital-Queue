@@ -36,7 +36,7 @@ export default function Queue() {
                 </div>
             </div>
             <div className="queue-rightside sidebar">
-                
+                <p>dadd</p>
             </div>
         </div>
     );
