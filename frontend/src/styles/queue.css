@@ -130,3 +130,43 @@
     width: 240px;
     height: 48px;
 }
+
+/* МЕДИАХУНЯ 9MICE KOSTILI NASHE VSE :/ */
+
+@media(max-width: 768px){
+    .queue-main {
+        flex-direction: column;
+        gap: 30px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar {
+        width: auto;
+        margin: 0px 22px;
+    }
+
+    .queue-leftside-position p {
+        font-size: 35px;
+    }
+
+    .queue-leftside-ticket {
+        height: 190px;
+    }
+
+    .queue-leftside-ticket-img {
+        height: 100%;
+        margin: 0px 150px;
+    }
+
+    .leftcolumn {
+        justify-content: center;
+    }
+
+    .rightcolumn-remaining {
+        font-size: 20px;
+    }
+
+    .queue-leftside-time {
+        bottom: 60px;
+    }
+}
