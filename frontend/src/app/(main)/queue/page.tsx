@@ -27,11 +27,12 @@ export default function Queue() {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div className="queue-leftside-time">
+                <div className="queue-leftside-time">
                         <img src={ClockSvg.src}></img>
                         <p>~10 минут</p>
-                    </div>
+                </div>
+                <div className="queue-button">
+                    <button>Выйти из очереди</button>
                 </div>
             </div>
             <div className="queue-rightside sidebar">

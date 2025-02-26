@@ -53,6 +53,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    bottom: 40px;
 }
 
 .queue-leftside-time p{
@@ -78,6 +80,7 @@
 .leftcolumn {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
     gap: 15px;
     min-width: 52px;
 }
@@ -113,3 +116,17 @@
     font-size: 24px;
 }
 
+.queue-button {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    bottom: 60px;
+}
+
+.queue-button button {
+    font-size: 22px;
+    background-color: #932B2B;
+    border-radius: 10px;
+    width: 240px;
+    height: 48px;
+}
