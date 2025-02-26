@@ -45,6 +45,23 @@ export default function Home() {
                 </div>
             </section>
 
+            <section className="flex flex-row gap-[20px] mb-[40px]">
+                <div className="flex flex-col gap-[20px] w-full text-4xl">
+                    <div className="flex flex-row gap-[10px] h-full justify-center bg-secondbackground p-[10px] rounded-2xl">
+                        <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>
+                    </div>
+                    <div className="h-full text-center content-center text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
+                </div>
+                <div className="bg-secondbackground rounded-2xl p-[10px]">
+                    <div className="bg-background p-[40px] rounded-full">
+                        <svg className="w-full max-w-[200px]" viewBox="0 0 90 89">
+                            <path d="M45.1165 6.03955L45.1165 82.2957" stroke="#00FF88" strokeWidth="12" strokeLinecap="round"/>
+                            <path d="M6.98828 44.1678L83.2444 44.1678" stroke="#00FF88" strokeWidth="12" strokeLinecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
         </main>
 );
 }
