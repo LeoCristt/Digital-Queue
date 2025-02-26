@@ -62,6 +62,40 @@ export default function Home() {
                 </div>
             </section>
 
+            <section className="flex flex-row gap-[20px] text-4xl">
+                <div className="flex flex-col gap-[20px] w-full">
+                    <div className="flex flex-row gap-[10px] h-full justify-center bg-secondbackground p-[10px] rounded-2xl">
+                        <div>Что мы</div><div className="text-foreground">умеем?</div>
+                    </div>
+                    <div className="text-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
+                        Пример текста пример текста
+                        Пример текста пример текста
+                        Пример текста пример текста
+                        Пример текста пример текста
+                        Пример текста пример текста
+                        Пример текста пример текста
+                    </div>
+                </div>
+                <div className="flex flex-col gap-[20px] w-full">
+                    <div className="flex flex-row gap-[10px] justify-center bg-secondbackground rounded-2xl p-[10px]">
+                        <div>Используйте наш</div><div className="text-foreground">API</div>
+                    </div>
+                    <div className="flex flex-row gap-[20px] w-full h-full">
+                        <div className="flex flex-col justify-center bg-secondbackground rounded-2xl p-[10px]">
+                            <div className="flex flex-row gap-[10px] justify-center">
+                                <div className="text-foreground">Swagger</div>
+                            </div>
+                            <div className="text-center text-textInput">For better models and testing & mocking.</div>
+                        </div>
+                        <div className="flex flex-col justify-center bg-secondbackground rounded-2xl p-[10px]">
+                            <div className="flex flex-row gap-[10px] justify-center">
+                               <div className="text-foreground">Redoc</div>
+                            </div>
+                            <div className="text-center text-textInput">For better response viewing.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 );
 }
