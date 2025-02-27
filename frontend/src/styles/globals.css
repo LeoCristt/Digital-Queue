@@ -77,3 +77,35 @@ body {
             -2px  2px 0 var(--background),
             2px  2px 0 var(--background);
 }
+
+.animateOpenModal {
+  animation: openModal 1s;
+}
+
+.animateCloseModal {
+  animation: closeModal 1s;
+}
+
+@keyframes openModal {
+  0% {
+    filter: blur(64px);
+    transform: scale(100%) translateY(125vh);
+    box-shadow: 0 0 100px var(--foreground);
+  }
+  100% {
+    filter: blur(0);
+    transform: scale(100%) translateY(0);
+  }
+}
+
+@keyframes closeModal {
+  0% {
+    filter: blur(0);
+    transform: scale(100%) translateY(0);
+  }
+  100% {
+    filter: blur(64px);
+    transform: scale(100%) translateY(125vh);
+    box-shadow: 0 0 100px var(--foreground);
+  }
+}

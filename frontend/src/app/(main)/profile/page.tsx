@@ -1,4 +1,43 @@
+"use client";
+import {useEffect} from "react";
+
 export default function Home() {
+    useEffect(() => {
+        const modalContainer = document.getElementById('settingsModalContainer');
+        const modal = document.getElementById('settingsModal');
+        const settingsButton = document.getElementById('openSettings');
+        const closeSettingsButton = document.getElementById('closeSettings');
+
+        if (!settingsButton || !modal || !modalContainer || !closeSettingsButton) return;
+
+        const openModal = () => {
+            modalContainer.classList.remove('hidden');
+            modalContainer.classList.add('flex');
+            modal.classList.remove('animateCloseModal');
+            modal.classList.add('animateOpenModal');
+        };
+
+        const closeModalAnimationProcess = () => {
+            modal.classList.remove('animateOpenModal');
+            modal.classList.add('animateCloseModal');
+            modal.addEventListener('animationend', closeModal);
+        }
+
+        const closeModal = () => {
+            modalContainer.classList.remove('flex');
+            modalContainer.classList.add('hidden');
+            modal.removeEventListener('animationend', closeModal);
+        }
+
+        settingsButton.addEventListener('click', openModal);
+        closeSettingsButton.addEventListener('click', closeModalAnimationProcess);
+
+        return () => {
+            settingsButton.removeEventListener('click', openModal);
+            closeSettingsButton.removeEventListener('click', closeModalAnimationProcess);
+            modal.removeEventListener('animationend', closeModal);
+        };
+    }, []);
     return (
         <div className="bg-background items-center justify-items-center my-6">
             <main className="flex items-center justify-center flex-col">
@@ -82,15 +121,28 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="flex justify-center m-1.5">
-                    <svg width="50px" viewBox="0 0 24 24" version="1.1">
-                        <path
-                            d="M10.75,2.56687 C11.5235,2.12029 12.4765,2.12029 13.25,2.56687 L13.25,2.56687 L19.5443,6.20084 C20.3178,6.64743 20.7943,7.47274 20.7943,8.36591 L20.7943,8.36591 L20.7943,15.6339 C20.7943,16.527 20.3178,17.3523 19.5443,17.7989 L19.5443,17.7989 L13.25,21.4329 C12.4765,21.8795 11.5235,21.8795 10.75,21.4329 L10.75,21.4329 L4.45581,17.7989 C3.68231,17.3523 3.20581,16.527 3.20581,15.6339 L3.20581,15.6339 L3.20581,8.36591 C3.20581,7.47274 3.68231,6.64743 4.45581,6.20084 L4.45581,6.20084 L10.75,2.56687 Z M12.0000075,8.99989 C10.3431491,8.99989 9.0000075,10.3430316 9.0000075,11.99989 C9.0000075,13.6567184 10.3431491,14.99989 12.0000075,14.99989 C13.6568209,14.99989 14.9999925,13.6567184 14.9999925,11.99989 C14.9999925,10.3430316 13.6568209,8.99989 12.0000075,8.99989 Z"
-                            fill="#16253B">
-                        </path>
-                    </svg>
+                    <button id="openSettings" type="button">
+                        <svg className="fill-secondbackground hover:fill-foreground transition-all"
+                             width="50px"
+                             viewBox="0 0 24 24" version="1.1">
+                            <path
+                                d="M10.75,2.56687 C11.5235,2.12029 12.4765,2.12029 13.25,2.56687 L13.25,2.56687 L19.5443,6.20084 C20.3178,6.64743 20.7943,7.47274 20.7943,8.36591 L20.7943,8.36591 L20.7943,15.6339 C20.7943,16.527 20.3178,17.3523 19.5443,17.7989 L19.5443,17.7989 L13.25,21.4329 C12.4765,21.8795 11.5235,21.8795 10.75,21.4329 L10.75,21.4329 L4.45581,17.7989 C3.68231,17.3523 3.20581,16.527 3.20581,15.6339 L3.20581,15.6339 L3.20581,8.36591 C3.20581,7.47274 3.68231,6.64743 4.45581,6.20084 L4.45581,6.20084 L10.75,2.56687 Z M12.0000075,8.99989 C10.3431491,8.99989 9.0000075,10.3430316 9.0000075,11.99989 C9.0000075,13.6567184 10.3431491,14.99989 12.0000075,14.99989 C13.6568209,14.99989 14.9999925,13.6567184 14.9999925,11.99989 C14.9999925,10.3430316 13.6568209,8.99989 12.0000075,8.99989 Z">
+                            </path>
+                        </svg>
+                    </button>
                 </div>
             </main>
+            <div id="settingsModalContainer"
+                 className="w-full h-full fixed z-[51] justify-center top-0 end max-w-[1150px] hidden">
+                <div className="flex flex-col justify-center">
+                    <form id="settingsModal"
+                          className="backdrop-blur-xl w-[500px] h-[700px] rounded-3xl border-2 border-secondbackground bg-background shadow-2xl">
+                        <label className="text-2xl text-foreground">
+                            <button type="button" id="closeSettings" className="absolute right-5 top-3">X</button>
+                        </label>
+                    </form>
+                </div>
+            </div>
         </div>
-    )
-        ;
+    );
 }
