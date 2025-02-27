@@ -36,6 +36,12 @@
     width: 300px;
 }
 
+.queue-leftside-conteiner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .queue-leftside-ticket {
     position: relative;
     display: flex;
@@ -53,8 +59,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    bottom: 40px;
 }
 
 .queue-leftside-time p{
@@ -120,7 +124,7 @@
     display: flex;
     justify-content: center;
     position: relative;
-    bottom: 60px;
+    bottom: 50px;
 }
 
 .queue-button button {
@@ -129,6 +133,57 @@
     border-radius: 10px;
     width: 240px;
     height: 48px;
+}
+
+.queue-rightside {
+    display: flex;
+    flex-direction: column;
+}
+
+.queue-rightside-header {
+    display: flex;
+    justify-content: space-around;
+    font-size: 42px !important;
+    margin-top: 35px;
+}
+
+.queue-rightside-body {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.queue-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 28px;
+}
+
+.queue-rightside-body p {
+    font-size: 28px;
+}
+
+.left {
+    align-items: flex-end;
+}
+
+.right {
+    align-items: center;
+}
+
+.queue-rightside-vert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.queue-rightside-vert img {
+    max-height: 95%;
+    width: auto;
 }
 
 /* МЕДИАХУНЯ 9MICE KOSTILI NASHE VSE :/ */
@@ -160,13 +215,30 @@
 
     .leftcolumn {
         justify-content: center;
+        gap: 7px;
     }
 
     .rightcolumn-remaining {
         font-size: 20px;
     }
 
-    .queue-leftside-time {
-        bottom: 60px;
+    .queue-leftside-ticket-in {
+        left: 57%;
+    }
+
+    .leftcolumn-downarrow-image, .leftcolumn-toparrow-image {
+        height: 29px;
+    }
+
+    .leftcolumn-hashtag-image {
+        height: 46px;
+    }
+
+    .queue-rightside-header p {
+        font-size: 35px;
+    }
+
+    .queue-rightside-body p {
+        font-size: 24px;
     }
 }
