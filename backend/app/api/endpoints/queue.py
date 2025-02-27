@@ -4,14 +4,15 @@ from app.core.security import verify_refresh_token
 from app.core.database import get_db
 from app.models.user import User
 from sqlalchemy.orm import Session
+import time
 
 router = APIRouter()
 
 # Глобальные переменные для хранения очереди и подключений
 queues = {}
 
-@router.websocket("/queue/{queue_id}")
-async def websocket_endpoint(websocket: WebSocket, queue_id: str):
+@router.websocket("/queue/{queue_id}/{password}")
+async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str = None):
     await websocket.accept()
 
     db: Session = next(get_db())
@@ -26,7 +27,7 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
         raise HTTPException(status_code=401, detail="Недействительный refresh token")
     id = payload.get("sub")
 
-    user = db.query(User).filter(User.id == id).first()
+    user = db.query(User).filter(User.id == int(id)).first()
     if not user:
         raise HTTPException(status_code=401, detail="Пользователь не найден")
     
@@ -46,9 +47,18 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
             await websocket.close()
             return
         queues[queue_id] = {
-            "queue": set(),
-            "connections": []
+            "queue": [],
+            "connections": [],
+            "password": password,
+            "removed_user": None  # Поле для хранения временно удаленного пользователя
         }
+    else:
+        # Если очередь уже существует
+        if queues[queue_id]["password"] is not None:  # Если очередь защищена паролем
+            if password != queues[queue_id]["password"]:  # Проверяем пароль
+                await websocket.send_text("error: Неверный пароль!")
+                await websocket.close()
+                return
 
     current_queue = queues[queue_id]["queue"]
     active_connections = queues[queue_id]["connections"]
@@ -62,7 +72,7 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
             
             if data == "join":
                 if client_id not in current_queue:
-                    current_queue.add(client_id)
+                    current_queue.append(client_id)
                     await broadcast_queue(active_connections, current_queue)
                 else:
                     await websocket.send_text("error: Вы уже в очереди!")
@@ -83,7 +93,7 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
                     # Рассылаем уведомление и закрываем соединения
                     for connection, _ in connections_to_close:
                         try:
-                            await connection.send_text("info: Очередь была удалена создателем")
+                            await connection.send_text("info: Очередь была удалена создателем.")
                             await connection.close()
                         except Exception:
                             pass
@@ -91,9 +101,45 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str):
                     # Очищаем локальный список подключений
                     active_connections.clear()
                 else:
-                    await websocket.send_text("error: Только создатель очереди может её удалить")
+                    await websocket.send_text("error: Только создатель очереди может её удалить!")
+            
+            elif data == "next":
+                if client_id == queue_id:  # Только создатель очереди может использовать команду
+                    queue_data = queues[queue_id]
+                    
+                    # Фиксируем время обработки предыдущего пользователя (если было начато)
+                    if queue_data.get("last_processing_start"):
+                        processing_time = time.time() - queue_data["last_processing_start"]
+                        queue_data["processing_times"].append(processing_time)
+                        queue_data["avg_time"] = sum(queue_data["processing_times"]) / len(queue_data["processing_times"])
+                        await websocket.send_text(f"info: Предыдущий пользователь обработан за {processing_time:.1f} сек. Среднее время: {queue_data['avg_time']:.1f} сек")
 
+                    if current_queue:
+                        # Начинаем обработку нового пользователя
+                        removed_user = current_queue.pop(0)
+                        queue_data["removed_user"] = removed_user
+                        queue_data["last_processing_start"] = time.time()  # Запускаем новый таймер
+                        await broadcast_queue(active_connections, current_queue, queue_data.get("avg_time"))
+                        await websocket.send_text(f"info: Начата обработка пользователя {removed_user['client_id']}")
+                    else:
+                        queue_data["last_processing_start"] = None  # Сбрасываем таймер
+                        await websocket.send_text("error: Очередь пуста!")
+                else:
+                    await websocket.send_text("error: Только создатель очереди может использовать команду 'next'!")
 
+            elif data == "undo":
+                if client_id == queue_id:  # Только создатель очереди может использовать команду
+                    removed_user = queues[queue_id]["removed_user"]
+                    if removed_user:
+                        # Возвращаем пользователя обратно в начало очереди
+                        current_queue.insert(0, removed_user)  # Вставляем в начало
+                        queues[queue_id]["removed_user"] = None
+                        await broadcast_queue(active_connections, current_queue)
+                        await websocket.send_text(f"info: Пользователь {removed_user} возвращен в очередь.")
+                    else:
+                        await websocket.send_text("error: Нет пользователя для возврата!")
+                else:
+                    await websocket.send_text("error: Только создатель очереди может использовать команду 'undo'!")
 
     except WebSocketDisconnect:
         # Удаляем подключение при разрыве
