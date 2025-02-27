@@ -16,7 +16,8 @@ export default {
         foregroundhover: 'var(--foregroundhover)',
         textColor: 'var(--textColor)',
         colorbutton: 'var(--colorbutton)',
-        
+        trhirdbackground: 'var(--trhirdbackground)',
+        textInput: 'var(--textInput)',
       },
     },
   },
