@@ -47,9 +47,9 @@ export default function Home() {
                 <div className="flex flex-row"><div>Q</div><div className="text-foreground">ueue</div></div>
             </section>
 
-            <section className="flex flex-row gap-[20px] w-full mb-[40px]">
+            <section className="flex flex-row sm:flex-nowrap flex-wrap-reverse gap-[20px] w-full mb-[40px]">
                 {/*Сканирование QR*/}
-                <button id="openScanQR">
+                <button className="mx-auto" id="openScanQR">
                     <div className="bg-secondbackground rounded-2xl p-[10px]">
                         <div className="bg-background p-[40px] rounded-full">
                             <svg className="w-[120px]" viewBox="0 0 123 123">
@@ -85,7 +85,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="flex flex-row gap-[20px] w-full mb-[40px]">
+            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
                 <div className="flex flex-col gap-[20px] w-full">
                     <div className="flex flex-row gap-[10px] h-full justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
                         <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>
@@ -93,7 +93,7 @@ export default function Home() {
                     <div className="h-full text-center content-center lg:text-3xl text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
                 </div>
                 {/*Создение очереди*/}
-                <button id="openCreateQueue">
+                <button className="mx-auto" id="openCreateQueue">
                     <div className="bg-secondbackground rounded-2xl p-[10px]">
                         <div className="bg-background p-[40px] rounded-full">
                             <svg className="w-[120px]" viewBox="0 0 90 89">
@@ -105,7 +105,7 @@ export default function Home() {
                 </button>
             </section>
 
-            <section className="flex flex-row gap-[20px] mb-[40px]">
+            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] mb-[40px]">
                 <div className="flex flex-col gap-[20px] w-full">
                     <div className="flex flex-row gap-[10px] justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Что мы</div><div className="text-foreground">умеем?</div>
