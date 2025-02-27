@@ -2,16 +2,16 @@ import "../../styles/home.css"
 
 export default function Home() {
     return (
-        <main className="container">
-            <section className="flex flex-row justify-center gap-[20px] my-[120px] text-8xl">
+        <div className="p-[20px]">
+            <section className="flex flex-row justify-center gap-[20px] my-[120px] lg:text-8xl text-6xl text-nowrap">
                 <div className="flex flex-row"><div>D</div><div className="text-foreground">igital</div></div>
                 <div className="flex flex-row"><div>Q</div><div className="text-foreground">ueue</div></div>
             </section>
 
-            <section className="flex flex-row gap-[20px] text-3xl mb-[40px]">
+            <section className="flex flex-row gap-[20px] w-full mb-[40px]">
                 <div className="bg-secondbackground rounded-2xl p-[10px]">
                     <div className="bg-background p-[40px] rounded-full">
-                        <svg className="w-full max-w-[200px]" viewBox="0 0 123 123">
+                        <svg className="w-[120px]" viewBox="0 0 123 123">
                             <path d="M117.264 20.7591C117.264 12.2902 110.419 5.42468 101.975 5.42468H81.5892C78.7745 5.42468 76.4928 7.71319 76.4928 10.5362C76.4928 13.3591 78.7745 15.6476 81.5892 15.6476H101.975C104.79 15.6476 107.071 17.9362 107.071 20.7591V41.205C107.071 44.028 109.353 46.3165 112.168 46.3165C114.982 46.3165 117.264 44.028 117.264 41.205V20.7591Z" fill="#00FF88"/>
                             <path d="M117.264 82.0968C117.264 79.2738 114.982 76.9854 112.168 76.9854C109.353 76.9854 107.071 79.2738 107.071 82.0968V102.543C107.071 105.366 104.79 107.654 101.975 107.654H81.5892C78.7745 107.654 76.4928 109.943 76.4928 112.766C76.4928 115.589 78.7745 117.877 81.5892 117.877H101.975C110.419 117.877 117.264 111.012 117.264 102.543V82.0968Z" fill="#00FF88"/>
                             <path d="M20.4324 107.654C17.6178 107.654 15.336 105.366 15.336 102.543V82.0968C15.336 79.2738 13.0543 76.9854 10.2396 76.9854C7.42498 76.9854 5.14322 79.2738 5.14322 82.0968V102.543C5.14322 111.012 11.9884 117.877 20.4324 117.877H40.818C43.6327 117.877 45.9144 115.589 45.9144 112.766C45.9144 109.943 43.6327 107.654 40.818 107.654H20.4324Z" fill="#00FF88"/>
@@ -26,35 +26,30 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="flex flex-col w-full gap-[20px]">
-                    <div className="flex flex-row justify-center gap-[10px] h-full text-4xl bg-secondbackground p-[10px] rounded-2xl">
+                    <div className="flex flex-row justify-center gap-[10px] h-full lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
                         <div className="text-foreground content-center">Подключение</div><div className="content-center">к очереди</div>
                     </div>
                     <div className="flex flex-row h-full gap-[20px] bg-secondbackground p-[20px] rounded-2xl">
-                        <input type="text" className="w-full rounded-2xl p-[20px] bg-trhirdbackground text-textInputt" placeholder="Введите код для подключения"/>
-
-                        <svg width="100" viewBox="0 0 144 96">
-                            <g>
-                                <path d="M41.1392 15.412V43.291H89.944L73.1803 29.1665C72.2658 28.3556 71.7635 27.2759 71.7805 26.1574C71.7975 25.039 72.3325 23.9704 73.2713 23.1795C74.2102 22.3886 75.4787 21.938 76.8063 21.9236C78.134 21.9093 79.4158 22.3325 80.3784 23.1029L105.836 44.5482C106.79 45.3525 107.326 46.443 107.326 47.5801C107.326 48.7171 106.79 49.8076 105.836 50.6119L80.3784 72.0572C79.4158 72.8276 78.134 73.2508 76.8063 73.2365C75.4787 73.2222 74.2102 72.7715 73.2713 71.9806C72.3325 71.1897 71.7975 70.1211 71.7805 69.0027C71.7635 67.8842 72.2658 66.8045 73.1803 65.9936L89.944 51.8691H41.1392V79.7481C41.1442 83.7281 43.0233 87.5439 46.3641 90.3583C49.7049 93.1726 54.2346 94.7556 58.9593 94.7598H125.148C129.873 94.7556 134.403 93.1726 137.743 90.3583C141.084 87.5439 142.963 83.7281 142.968 79.7481V15.412C142.963 11.432 141.084 7.61616 137.743 4.80184C134.403 1.98751 129.873 0.404557 125.148 0.400299H58.9593C54.2346 0.404557 49.7049 1.98751 46.3641 4.80184C43.0233 7.61616 41.1442 11.432 41.1392 15.412Z" fill="#00FF88"/>
-                                <path d="M5.49905 43.291C4.14871 43.291 2.85368 43.7429 1.89885 44.5473C0.944012 45.3516 0.407593 46.4426 0.407593 47.5801C0.407593 48.7176 0.944012 49.8086 1.89885 50.6129C2.85368 51.4173 4.14871 51.8692 5.49905 51.8692H41.1392V43.291H5.49905Z" fill="#00FF88"/>
-                            </g>
-                            <defs>
-                                <rect width="143.375" height="95.1601" fill="white" transform="translate(0.000244141)"/>
-                            </defs>
-                        </svg>
+                        <input type="text" className="w-full rounded-2xl p-[20px] bg-trhirdbackground lg:text-3xl text-2xl text-textInputt" placeholder="Введите код для подключения"/>
+                        <div className="flex justify-center bg-background rounded-2xl p-[10px]">
+                            <svg className="w-[70px]" viewBox="0 0 102 95">
+                                 <path d="M0.13916 15.412V43.291H48.944L32.1803 29.1665C31.2658 28.3556 30.7635 27.2759 30.7805 26.1574C30.7975 25.039 31.3325 23.9704 32.2713 23.1795C33.2102 22.3886 34.4787 21.938 35.8063 21.9236C37.134 21.9093 38.4158 22.3325 39.3784 23.1029L64.8357 44.5482C65.7898 45.3525 66.3257 46.443 66.3257 47.5801C66.3257 48.7171 65.7898 49.8076 64.8357 50.6119L39.3784 72.0572C38.4158 72.8276 37.134 73.2508 35.8063 73.2365C34.4787 73.2222 33.2102 72.7715 32.2713 71.9806C31.3325 71.1897 30.7975 70.1211 30.7805 69.0027C30.7635 67.8842 31.2658 66.8045 32.1803 65.9936L48.944 51.8691H0.13916V79.7481C0.144214 83.7281 2.0233 87.5439 5.36413 90.3583C8.70495 93.1726 13.2346 94.7556 17.9593 94.7598H84.1482C88.8728 94.7556 93.4025 93.1726 96.7433 90.3583C100.084 87.5439 101.963 83.7281 101.968 79.7481V15.412C101.963 11.432 100.084 7.61616 96.7433 4.80184C93.4025 1.98751 88.8728 0.404557 84.1482 0.400299H17.9593C13.2346 0.404557 8.70495 1.98751 5.36413 4.80184C2.0233 7.61616 0.144214 11.432 0.13916 15.412Z" fill="#00FF88"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section className="flex flex-row gap-[20px] mb-[40px]">
-                <div className="flex flex-col gap-[20px] w-full text-4xl">
-                    <div className="flex flex-row gap-[10px] h-full justify-center bg-secondbackground p-[10px] rounded-2xl">
+            <section className="flex flex-row gap-[20px] w-full mb-[40px]">
+                <div className="flex flex-col gap-[20px] w-full">
+                    <div className="flex flex-row gap-[10px] h-full justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
                         <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>
                     </div>
-                    <div className="h-full text-center content-center text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
+                    <div className="h-full text-center content-center lg:text-3xl text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
                 </div>
                 <div className="bg-secondbackground rounded-2xl p-[10px]">
                     <div className="bg-background p-[40px] rounded-full">
-                        <svg className="w-full max-w-[200px]" viewBox="0 0 90 89">
+                        <svg className="w-[120px]" viewBox="0 0 90 89">
                             <path d="M45.1165 6.03955L45.1165 82.2957" stroke="#00FF88" strokeWidth="12" strokeLinecap="round"/>
                             <path d="M6.98828 44.1678L83.2444 44.1678" stroke="#00FF88" strokeWidth="12" strokeLinecap="round"/>
                         </svg>
@@ -62,12 +57,12 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="flex flex-row gap-[20px] text-4xl">
+            <section className="flex flex-row gap-[20px] mb-[40px]">
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-[10px] h-full justify-center bg-secondbackground p-[10px] rounded-2xl">
+                    <div className="flex flex-row gap-[10px] h-full justify-center text-4xl lg:text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Что мы</div><div className="text-foreground">умеем?</div>
                     </div>
-                    <div className="text-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
+                    <div className="lg:text-3xl text-2xl text-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
                         Пример текста пример текста
                         Пример текста пример текста
                         Пример текста пример текста
@@ -77,18 +72,18 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-[10px] justify-center bg-secondbackground rounded-2xl p-[10px]">
+                    <div className="flex flex-row gap-[10px] justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Используйте наш</div><div className="text-foreground">API</div>
                     </div>
-                    <div className="flex flex-row gap-[20px] w-full h-full">
+                    <div className="flex flex-row gap-[20px] w-full h-full lg:text-3xl text-2xl">
                         <div className="flex flex-col justify-center bg-secondbackground rounded-2xl p-[10px]">
-                            <div className="flex flex-row gap-[10px] justify-center">
+                            <div className="flex flex-row gap-[10px] justify-center text-nowrap">
                                 <div className="text-foreground">Swagger</div>
                             </div>
                             <div className="text-center text-textInput">For better models and testing & mocking.</div>
                         </div>
                         <div className="flex flex-col justify-center bg-secondbackground rounded-2xl p-[10px]">
-                            <div className="flex flex-row gap-[10px] justify-center">
+                            <div className="flex flex-row gap-[10px] justify-center text-nowrap">
                                <div className="text-foreground">Redoc</div>
                             </div>
                             <div className="text-center text-textInput">For better response viewing.</div>
@@ -96,6 +91,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
 );
 }
