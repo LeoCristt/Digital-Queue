@@ -13,15 +13,16 @@ from app.core.security import (
 )
 
 EXCLUDED_PATHS = [
-    "/api/auth/login", 
-    "/api/auth/register", 
+    "/api/auth/", 
+    "/api/profiles/",  # Исключает все пути, начинающиеся с /api/profiles/
+    "/static/",
     "/docs", 
     "/openapi.json", 
     "/redoc"
 ]
 
 async def auto_refresh_token_middleware(request: Request, call_next):
-    if request.url.path in EXCLUDED_PATHS:
+    if any(request.url.path.startswith(path) for path in EXCLUDED_PATHS):
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")

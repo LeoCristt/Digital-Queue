@@ -17,8 +17,8 @@ async def login(response: Response, user: UserLogin, db: Session = Depends(get_d
     if not verify_password(user.password, user_bd.hashed_password):
         raise HTTPException(status_code=400, detail="Пароль введен неверно!")
     
-    access_token = create_access_token(data={"sub": user_bd.id})
-    refresh_token = create_refresh_token(data={"sub": user_bd.id})
+    access_token = create_access_token(data={"sub": str(user_bd.id)})
+    refresh_token = create_refresh_token(data={"sub": str(user_bd.id)})
 
     response.set_cookie(
         key="refresh_token",

@@ -27,8 +27,8 @@ async def register(response: Response, user: UserCreate, db: Session = Depends(g
     db.refresh(db_user)
 
         # Генерируем токены для нового пользователя
-    access_token = create_access_token(data={"sub": db_user.id})
-    refresh_token = create_refresh_token(data={"sub": db_user.id})
+    access_token = create_access_token(data={"sub": str(db_user.id)})
+    refresh_token = create_refresh_token(data={"sub": str(db_user.id)})
     
     # Устанавливаем refresh token в куки
     response.set_cookie(
