@@ -1,48 +1,11 @@
 "use client";
-import "../../styles/home.css"
-import {useEffect} from "react";
+import ModalCreateQueue from '@/components/ModalCreateQueue';
+
 
 export default function Home() {
-    useEffect(() => {
-        const modalContainer = document.getElementById('settingsModalContainer');
-        const modal = document.getElementById('settingsModal');
-        const createQueueButton = document.getElementById('openCreateQueue');
-        const createQueueCloseButton = document.getElementById('closeCreateQueue');
-
-        if (!createQueueButton || !modal || !modalContainer || !createQueueCloseButton) return;
-
-        const openModal = () => {
-            modalContainer.classList.remove('hidden');
-            modalContainer.classList.add('flex');
-            modal.classList.remove('animateCloseModal');
-            modal.classList.add('animateOpenModal');
-        };
-
-        const closeModalAnimationProcess = () => {
-            modal.classList.remove('animateOpenModal');
-            modal.classList.add('animateCloseModal');
-            modal.addEventListener('animationend', closeModal);
-        }
-
-        const closeModal = () => {
-            modalContainer.classList.remove('flex');
-            modalContainer.classList.add('hidden');
-            modal.removeEventListener('animationend', closeModal);
-        }
-
-        createQueueButton.addEventListener('click', openModal);
-        createQueueCloseButton.addEventListener('click', closeModalAnimationProcess);
-
-        return () => {
-            createQueueButton.removeEventListener('click', openModal);
-            createQueueCloseButton.removeEventListener('click', closeModalAnimationProcess);
-            modal.removeEventListener('animationend', closeModal);
-        };
-    }, []);
-
     return (
         <div className="p-[20px]">
-            <section className="flex flex-row justify-center gap-[20px] my-[120px] lg:text-8xl text-6xl text-nowrap">
+            <section className="flex flex-row justify-center gap-2 my-[120px] lg:text-8xl text-6xl text-nowrap">
                 <div className="flex flex-row"><div>D</div><div className="text-foreground">igital</div></div>
                 <div className="flex flex-row"><div>Q</div><div className="text-foreground">ueue</div></div>
             </section>
@@ -68,7 +31,7 @@ export default function Home() {
                     </div>
                 </button>
                 <div className="flex flex-col w-full gap-[20px]">
-                    <div className="flex flex-row justify-center gap-[10px] h-full lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                    <div className="flex flex-row justify-center gap-2 h-full lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
                         <div className="text-foreground content-center">Подключение</div><div className="content-center">к очереди</div>
                     </div>
                     <div className="flex flex-row h-full gap-[20px] bg-secondbackground p-[20px] rounded-2xl">
@@ -87,7 +50,7 @@ export default function Home() {
 
             <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-[10px] h-full justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                    <div className="flex flex-row gap-2 h-full justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
                         <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>
                     </div>
                     <div className="h-full text-center content-center lg:text-3xl text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
@@ -107,7 +70,7 @@ export default function Home() {
 
             <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] mb-[40px]">
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-[10px] justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
+                    <div className="flex flex-row gap-2 justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Что мы</div><div className="text-foreground">умеем?</div>
                     </div>
                     <div className="lg:text-3xl text-2xl text-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
@@ -120,18 +83,18 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-[10px] justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
+                    <div className="flex flex-row gap-2 justify-center lg:text-4xl text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Используйте наш</div><div className="text-foreground">API</div>
                     </div>
                     <div className="flex flex-row gap-[20px] w-full h-full lg:text-3xl text-2xl">
                         <div className="flex flex-col justify-center w-full bg-secondbackground rounded-2xl p-[10px]">
-                            <div className="flex flex-row gap-[10px] justify-center text-nowrap">
+                            <div className="flex flex-row gap-2 justify-center text-nowrap">
                                 <div className="text-foreground">Swagger</div>
                             </div>
                             <div className="text-center text-textInput">For better models and testing & mocking.</div>
                         </div>
                         <div className="flex flex-col justify-center w-full bg-secondbackground rounded-2xl p-[10px]">
-                            <div className="flex flex-row gap-[10px] justify-center text-nowrap">
+                            <div className="flex flex-row gap-2 justify-center text-nowrap">
                                <div className="text-foreground">Redoc</div>
                             </div>
                             <div className="text-center text-textInput">For better response viewing.</div>
@@ -139,24 +102,7 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            <div id="settingsModalContainer"
-                 className="w-full h-full fixed z-[51] justify-center top-0 end max-w-[1150px] hidden">
-                <div className="flex flex-col justify-center">
-                    <form id="settingsModal"
-                          className="backdrop-blur-xl w-[500px] h-[700px] rounded-3xl border-2 border-secondbackground bg-background shadow-2xl px-[10px] py-[25px]">
-
-                        <label className="text-2xl text-foreground">
-                            <button type="button" id="closeCreateQueue" className="absolute right-5 top-3">X</button>
-                        </label>
-
-                        <label>
-                            123
-                        </label>
-                    </form>
-                </div>
-            </div>
-
+            <ModalCreateQueue />
         </div>
 );
 }
