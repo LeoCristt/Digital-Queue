@@ -6,6 +6,7 @@ import ToparrowSvg from '../../../assets/images/Toparrow.svg';
 import DownarrowSvg from '../../../assets/images/Downarrow.svg';
 import LineVertSvg from '../../../assets/images/LineVert.svg';
 import LineGorSvg from '../../../assets/images/LineGor.svg';
+import QueueTable from "../../../components/queue-table";
 
 export default function Queue() {
     return (
@@ -40,25 +41,7 @@ export default function Queue() {
                 </div>
             </div>
             <div className="queue-rightside sidebar">
-                <div className="queue-rightside-body">
-                    <div className="queue-column left">
-                        <p className="queue-rightside-header">№</p>
-                        <p>1</p>
-                        <p>2</p>
-                        <p>3</p>
-                        <p>4</p>
-                    </div>
-                    <div className="queue-rightside-vert">
-                        <img src={LineVertSvg.src}></img>
-                    </div>
-                    <div className="queue-column right">
-                        <p className="queue-rightside-header">Пользователь</p>
-                        <p>Пользователь 1</p>
-                        <p>Пользователь 2</p>
-                        <p>Пользователь 3</p>
-                        <p>Вы</p>
-                    </div>
-                </div>
+                <QueueTable/>
             </div>
         </div>
     );

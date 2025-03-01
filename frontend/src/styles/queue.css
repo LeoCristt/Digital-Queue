@@ -1,3 +1,9 @@
+:root {
+    --secondbackground:#16253B;
+    --buttoncolor: #932B2B;
+    --linecolor: #00FF88;
+}
+
 .queue-main {
     display: flex;
     justify-content: space-around;
@@ -21,7 +27,7 @@
     border-radius: 10px;
     width: 700px;
     height: 90vh;
-    background-color: #16253b;
+    background-color: var(--secondbackground);
 }
 
 .queue-leftside-position {
@@ -63,7 +69,7 @@
 
 .queue-leftside-time p{
     text-align: center;
-    font-size: 22px;
+    font-size: 24px;
     margin-left: 20px;
 }
 
@@ -129,61 +135,73 @@
 
 .queue-button button {
     font-size: 22px;
-    background-color: #932B2B;
+    background-color: var(--buttoncolor);
     border-radius: 10px;
     width: 240px;
     height: 48px;
 }
 
 .queue-rightside {
-    display: flex;
-    flex-direction: column;
-}
-
-.queue-rightside-header {
-    display: flex;
-    justify-content: space-around;
-    font-size: 42px !important;
-    margin-top: 35px;
-}
-
-.queue-rightside-body {
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    gap: 20px;
+    position: relative;
     overflow: hidden;
 }
 
-.queue-column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 28px;
-}
-
-.queue-rightside-body p {
-    font-size: 28px;
-}
-
-.left {
-    align-items: flex-end;
-}
-
-.right {
-    align-items: center;
-}
-
-.queue-rightside-vert {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.queue-rightside::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 25%;
+    width: 4px;
+    background-color: var(--linecolor);
     height: 100%;
 }
 
-.queue-rightside-vert img {
-    max-height: 95%;
-    width: auto;
+.queue-rightside-horiz {
+    margin: 0px 15px;
+}
+
+.queue-table {
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--secondbackground);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    height: 85vh;
+    min-height: 500px;
+}
+
+.queue-table-header {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    font-size: 42px;
+    text-align: center;
+    border-bottom: 4px solid var(--linecolor);
+    position: relative;
+}
+
+.queue-table-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.queue-table-row {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    text-align: center;
+    font-size: 24px;
+    padding: 15px;
+    position: relative;
+}
+
+.queue-table-number {
+    position: relative;
 }
 
 /* МЕДИАХУНЯ 9MICE KOSTILI NASHE VSE :/ */
@@ -234,11 +252,7 @@
         height: 46px;
     }
 
-    .queue-rightside-header p {
+    .queue-table-header {
         font-size: 35px;
-    }
-
-    .queue-rightside-body p {
-        font-size: 24px;
     }
 }
