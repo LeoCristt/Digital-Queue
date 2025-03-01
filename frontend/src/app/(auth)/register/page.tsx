@@ -8,7 +8,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [re_password, setRe_Password] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -17,7 +17,7 @@ export default function Register() {
     setError('');
     setSuccess('');
 
-    if (password !== confirmPassword) {
+    if (password !== re_password) {
       setError('Пароли не совпадают!');
       return;
     }
@@ -33,6 +33,7 @@ export default function Register() {
           email,
           username,
           password,
+          re_password
         }),
       });
 
@@ -110,7 +111,7 @@ export default function Register() {
             name="password-again"
             required
             type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => setRe_Password(e.target.value)}
           />
         </div>
         <div id="code_container" className="hidden">
@@ -144,7 +145,7 @@ export default function Register() {
             Зарегистрироваться
           </button>
         </div>
-        <div id="message" className="hidden flex items-center justify-center flex-col">
+        <div id="message" className="hidden items-center justify-center flex-col">
           <label className="ml-2 block text-sm text-red-500" id="response-message"></label>
         </div>
       </form>
