@@ -40,17 +40,20 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str 
     elif not client_id and id:
         client_id = id
 
-        # Проверка, что queue_id совпадает с user_id при создании новой очереди
+    # Проверка, что queue_id совпадает с user_id при создании новой очереди
     if queue_id not in queues:
         if queue_id != client_id:
             await websocket.send_text("error: You can only create a queue with your own user ID")
             await websocket.close()
             return
         queues[queue_id] = {
-            "queue": [],
+            "queue": [],  # Очередь с информацией о пользователях
             "connections": [],
             "password": password,
-            "removed_user": None  # Поле для хранения временно удаленного пользователя
+            "removed_user": None,  # Поле для хранения временно удаленного пользователя
+            "processing_times": [],  # История времени обработки
+            "last_processing_start": None,  # Время начала обработки текущего пользователя
+            "avg_time": None  # Среднее время обработки
         }
     else:
         # Если очередь уже существует
@@ -71,16 +74,19 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str 
             data = await websocket.receive_text()
             
             if data == "join":
-                if client_id not in current_queue:
-                    current_queue.append(client_id)
-                    await broadcast_queue(active_connections, current_queue)
+                if client_id not in [user["client_id"] for user in current_queue]:
+                    current_queue.append({
+                        "client_id": client_id,
+                        "join_time": time.time()  # Сохраняем время добавления
+                    })
+                    await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
                 else:
                     await websocket.send_text("error: Вы уже в очереди!")
             
             elif data == "leave":
-                if client_id in current_queue:
-                    current_queue.remove(client_id)
-                    await broadcast_queue(active_connections, current_queue)
+                if client_id in [user["client_id"] for user in current_queue]:
+                    current_queue = [user for user in current_queue if user["client_id"] != client_id]
+                    await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
 
             elif data == "delete":
                 if client_id == queue_id:
@@ -134,8 +140,8 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str 
                         # Возвращаем пользователя обратно в начало очереди
                         current_queue.insert(0, removed_user)  # Вставляем в начало
                         queues[queue_id]["removed_user"] = None
-                        await broadcast_queue(active_connections, current_queue)
-                        await websocket.send_text(f"info: Пользователь {removed_user} возвращен в очередь.")
+                        await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                        await websocket.send_text(f"info: Пользователь {removed_user['client_id']} возвращен в очередь.")
                     else:
                         await websocket.send_text("error: Нет пользователя для возврата!")
                 else:
@@ -144,12 +150,19 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str 
     except WebSocketDisconnect:
         # Удаляем подключение при разрыве
         active_connections.remove((websocket, client_id))
-        await broadcast_queue(active_connections, current_queue)
+        await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
 
-async def broadcast_queue(active_connections, current_queue):
+async def broadcast_queue(active_connections, current_queue, avg_time):
+    if avg_time is None:
+        avg_time = 0  # Если среднее время не установлено, считаем его нулевым
+
     for connection, _ in list(active_connections):
         try:
-            await connection.send_text(f"queue:{','.join(current_queue)}")
+            queue_info = []
+            for idx, user in enumerate(current_queue):
+                expected_time = idx * avg_time  # Ожидаемое время для текущего пользователя
+                queue_info.append(f"{user['client_id']}:{expected_time:.1f} сек")
+            await connection.send_text(f"queue:{','.join(queue_info)}")
         except WebSocketDisconnect:
             try:
                 active_connections.remove((connection, _))

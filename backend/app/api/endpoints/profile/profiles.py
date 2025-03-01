@@ -5,7 +5,7 @@ from app.models.user import User
 
 router = APIRouter()
 
-@router.get("/profiles/{user_id}")
+@router.get("/{user_id}")
 async def profiles(user_id: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == int(user_id)).first()
     if not user:
