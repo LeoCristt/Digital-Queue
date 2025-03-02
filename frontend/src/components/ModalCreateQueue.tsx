@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState} from "react";
 
-export default function Home() {
+export default function CreateQueue() {
     const [isPrivate, setIsPrivate] = useState(false); // Состояние для переключателя
 
     useEffect(() => {
-        const modalContainer = document.getElementById('ModalContainer');
-        const modal = document.getElementById('Modal');
+        const modalContainer = document.getElementById('ModalContainerCreateQueue');
+        const modal = document.getElementById('ModalCreateQueue');
         const createQueueButton = document.getElementById('openCreateQueue');
         const createQueueCloseButton = document.getElementById('closeCreateQueue');
 
@@ -41,10 +41,10 @@ export default function Home() {
         };
     }, []);
     return (
-        <div id="ModalContainer"
+        <div id="ModalContainerCreateQueue"
              className="w-full h-full fixed z-[51] justify-center items-center top-0 max-w-[1150px] hidden">
             <div className="flex flex-col justify-center">
-                <form id="Modal"
+                <form id="ModalCreateQueue"
                       className="box-border backdrop-blur-xl w-[500px] h-[700px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
                     {/* Заголовок */}
                     <div className="text-3xl">
