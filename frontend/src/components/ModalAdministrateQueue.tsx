@@ -59,7 +59,18 @@ export default function AdministrateQueue() {
                     </div>
                     {/* Основное содержимое */}
                     <div className="flex-1 flex flex-col justify-between text-2xl p-[20px]">
-                        123
+                        <div className="flex flex-col gap-[10px]">
+                            <div className="flex flex-row gap-[10px]">
+                                {/*Вызвать следующего*/}
+                                <button id="" className="flex justify-center w-full bg-colorbutton rounded-2xl p-[10px]">Вызвать следующего</button>
+                                {/*Вернуть предыдущего*/}
+                                <button  id="" className="flex justify-center w-full bg-colorbutton rounded-2xl p-[10px]">Вернуть пердыдущего</button>
+                            </div>
+                        </div>
+                        {/*Завершить очередь - удалить*/}
+                        <button id="" className="flex justify-center bg-importantcolorbutton rounded-2xl p-[10px]">
+                            Завершить очередь
+                        </button>
                     </div>
                 </form>
             </div>
