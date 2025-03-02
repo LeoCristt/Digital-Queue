@@ -100,7 +100,7 @@ export default function CreateQueue() {
 
                         {/* Кнопка создания */}
                         <button id=""
-                                className="flex justify-center bg-colorbutton hover:bg-background-oregroundhover transition-all rounded-2xl p-[10px]">
+                                className="flex justify-center bg-colorbutton rounded-2xl p-[10px]">
                             Создать очередь
                         </button>
                     </div>
