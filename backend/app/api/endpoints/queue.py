@@ -1,10 +1,15 @@
-from fastapi import WebSocket, WebSocketDisconnect, APIRouter, HTTPException
+from fastapi import WebSocket, WebSocketDisconnect, APIRouter, HTTPException, Depends, Request
 import uuid
 from app.core.security import verify_refresh_token
 from app.core.database import get_db
 from app.models.user import User
 from sqlalchemy.orm import Session
 import time
+from app.core.security import (
+    SECRET_KEY,
+    ALGORITHM
+)
+from jose import jwt
 
 router = APIRouter()
 
@@ -12,11 +17,9 @@ router = APIRouter()
 queues = {}
 
 @router.websocket("/queue/{queue_id}/{password}")
-async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str = None):
+async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str = None, db: Session = Depends(get_db)):
     await websocket.accept()
 
-    db: Session = next(get_db())
-    
     # Генерация client_id
     client_id = websocket.cookies.get("client_id")
 
@@ -168,3 +171,37 @@ async def broadcast_queue(active_connections, current_queue, avg_time):
                 active_connections.remove((connection, _))
             except ValueError:
                 pass
+
+@router.get("/queue")
+async def check_queue_existence(request: Request, db: Session = Depends(get_db)):
+
+    auth_header = request.headers.get("New-Access-Token")
+    if not auth_header:
+        auth_header = request.headers.get("Authorization")
+    
+    access_token = auth_header.split(" ")[1]
+
+    payload = jwt.decode(
+        access_token,
+        SECRET_KEY,
+        algorithms=[ALGORITHM]
+    )
+
+    access_user_id = payload.get("sub")
+    
+    user = db.query(User).filter(User.id == int(access_user_id)).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Некорректный access token!")
+    
+    # Проверка существования очереди
+    if access_user_id not in queues:
+        raise HTTPException(status_code=404, detail="Очередь не найдена!")
+    
+    # Дополнительная проверка прав доступа (если очередь приватная)
+    queue_info = queues[access_user_id]
+    
+    return {
+        "message": "Очередь существует.",
+        "queue_id": access_user_id,
+        "password": queue_info["password"]
+    }
