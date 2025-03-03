@@ -166,7 +166,6 @@
     flex-direction: column;
     margin-top: 35px;
     width: 100%;
-    max-width: 500px;
     background-color: var(--secondbackground);
     border-radius: 10px;
     overflow: hidden;
