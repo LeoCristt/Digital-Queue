@@ -30,6 +30,7 @@ export default function Login() {
           username,
           password
         }),
+        credentials: 'include' 
       });
 
       const data = await response.json();
