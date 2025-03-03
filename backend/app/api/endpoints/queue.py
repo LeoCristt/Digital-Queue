@@ -56,7 +56,8 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str 
             "removed_user": None,  # Поле для хранения временно удаленного пользователя
             "processing_times": [],  # История времени обработки
             "last_processing_start": None,  # Время начала обработки текущего пользователя
-            "avg_time": None  # Среднее время обработки
+            "avg_time": None,  # Среднее время обработки
+            "messages": [],  # История сообщений чата
         }
     else:
         # Если очередь уже существует
@@ -72,9 +73,32 @@ async def websocket_endpoint(websocket: WebSocket, queue_id: str, password: str 
     try:
         # Добавляем подключение в список
         active_connections.append((websocket, client_id))
+
+        await websocket.send_json({
+            "type": "chat_history",
+            "data": queues[queue_id]["messages"][-50:]  # Последние 50 сообщений
+        })
         
         while True:
             data = await websocket.receive_text()
+
+            if data.startswith("message:"):
+                message_text = data[len("message:"):].strip()
+                if message_text:
+                    # Сохраняем сообщение с меткой времени
+                    new_message = {
+                        "user_id": client_id,
+                        "text": message_text,
+                        "timestamp": time.time(),
+                    }
+                    queues[queue_id]["messages"].append(new_message)
+                    
+                    # Рассылаем сообщение всем участникам
+                    await broadcast_message(
+                        active_connections,
+                        new_message
+                    )
+                continue
             
             if data == "join":
                 if client_id not in [user["client_id"] for user in current_queue]:
@@ -166,6 +190,23 @@ async def broadcast_queue(active_connections, current_queue, avg_time):
                 expected_time = idx * avg_time  # Ожидаемое время для текущего пользователя
                 queue_info.append(f"{user['client_id']}:{expected_time:.1f} сек")
             await connection.send_text(f"queue:{','.join(queue_info)}")
+        except WebSocketDisconnect:
+            try:
+                active_connections.remove((connection, _))
+            except ValueError:
+                pass
+
+async def broadcast_message(active_connections, message):
+    for connection, _ in list(active_connections):
+        try:
+            await connection.send_json({
+                "type": "new_message",
+                "data": {
+                    "user_id": message["user_id"],
+                    "text": message["text"],
+                    "timestamp": message["timestamp"],
+                }
+            })
         except WebSocketDisconnect:
             try:
                 active_connections.remove((connection, _))
