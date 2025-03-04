@@ -13,6 +13,8 @@ export default function Home() {
         const openModal = () => {
             modalContainer.classList.remove('hidden');
             modalContainer.classList.add('flex');
+            modalContainer.classList.remove('animateCloseModalBlur');
+            modalContainer.classList.add('animateOpenModalBlur');
             modal.classList.remove('animateCloseModal');
             modal.classList.add('animateOpenModal');
         };
@@ -20,6 +22,8 @@ export default function Home() {
         const closeModalAnimationProcess = () => {
             modal.classList.remove('animateOpenModal');
             modal.classList.add('animateCloseModal');
+            modalContainer.classList.remove('animateOpenModalBlur');
+            modalContainer.classList.add('animateCloseModalBlur');
             modal.addEventListener('animationend', closeModal);
         }
 
@@ -87,6 +91,8 @@ export default function Home() {
         const openModal = () => {
             modalContainer.classList.remove('hidden');
             modalContainer.classList.add('flex');
+            modalContainer.classList.remove('animateCloseModalBlur');
+            modalContainer.classList.add('animateOpenModalBlur');
             modal.classList.remove('animateCloseModal');
             modal.classList.add('animateOpenModal');
         };
@@ -94,6 +100,8 @@ export default function Home() {
         const closeModalAnimationProcess = () => {
             modal.classList.remove('animateOpenModal');
             modal.classList.add('animateCloseModal');
+            modalContainer.classList.remove('animateOpenModalBlur');
+            modalContainer.classList.add('animateCloseModalBlur');
             modal.addEventListener('animationend', closeModal);
         }
 
@@ -124,6 +132,8 @@ export default function Home() {
         const openModal = () => {
             modalContainer.classList.remove('hidden');
             modalContainer.classList.add('flex');
+            modalContainer.classList.remove('animateCloseModalBlur');
+            modalContainer.classList.add('animateOpenModalBlur');
             modal.classList.remove('animateCloseModal');
             modal.classList.add('animateOpenModal');
         };
@@ -131,6 +141,8 @@ export default function Home() {
         const closeModalAnimationProcess = () => {
             modal.classList.remove('animateOpenModal');
             modal.classList.add('animateCloseModal');
+            modalContainer.classList.remove('animateOpenModalBlur');
+            modalContainer.classList.add('animateCloseModalBlur');
             modal.addEventListener('animationend', closeModal);
         }
 
@@ -152,7 +164,7 @@ export default function Home() {
 
     return (
         <div id="settingsModalContainer"
-             className="w-full h-full fixed z-[51] justify-center items-center top-0 max-w-[1150px] hidden">
+             className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
             <div className="flex flex-col justify-center">
                 <form id="settingsModal"
                       className="box-border backdrop-blur-xl max-w-[500px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
@@ -207,7 +219,7 @@ export default function Home() {
             </div>
 
             <div id="imgModalContainer"
-                 className="w-full h-full fixed z-[51] justify-center items-center top-0 max-w-[1150px] hidden">
+                 className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
                 <div className="flex flex-col justify-center">
                     <form id="imgModal"
                           className="box-border backdrop-blur-xl max-w-[490px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
@@ -231,7 +243,7 @@ export default function Home() {
             </div>
 
             <div id="passwdModalContainer"
-                 className="w-full h-full fixed z-[51] justify-center items-center top-0 max-w-[1150px] hidden">
+                 className="w-full h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
                 <div className="flex flex-col justify-center">
                     <form id="passwdModal"
                           className="box-border backdrop-blur-xl max-w-[490px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
@@ -295,7 +307,7 @@ export default function Home() {
             </div>
 
             <div id="removeModalContainer"
-                 className="w-full h-full fixed z-[51] justify-center items-center top-0 max-w-[1150px] hidden">
+                 className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
                 <div className="flex flex-col justify-center">
                     <form id="removeModal"
                           className="box-border backdrop-blur-xl w-fit h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">

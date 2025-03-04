@@ -98,6 +98,14 @@ body {
   animation: closeModal 1s;
 }
 
+.animateOpenModalBlur {
+  animation: openModalBackdropBlur 1s;
+}
+
+.animateCloseModalBlur {
+  animation: closeModalBackdropBlur 1s;
+}
+
 @keyframes openModal {
   0% {
     filter: blur(64px);
@@ -119,5 +127,23 @@ body {
     filter: blur(64px);
     transform: scale(100%) translateY(125vh);
     box-shadow: 0 0 100px var(--foreground);
+  }
+}
+
+@keyframes openModalBackdropBlur {
+  0% {
+    backdrop-filter: blur(0);
+  }
+  100% {
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes closeModalBackdropBlur {
+  0% {
+    backdrop-filter: blur(12px);
+  }
+  100% {
+    backdrop-filter: blur(0);
   }
 }
