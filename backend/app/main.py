@@ -3,6 +3,7 @@ from app.api.routers import api_router
 from app.middleware.auto_refresh import auto_refresh_token_middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from app.api.endpoints.queue import register_websocket_handlers
 
 app = FastAPI(title="My Project")
 
@@ -19,3 +20,5 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(api_router, prefix="/api")
+
+register_websocket_handlers(app)
