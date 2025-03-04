@@ -54,6 +54,8 @@ export default function Home() {
         const openModal = () => {
             modalContainer.classList.remove('hidden');
             modalContainer.classList.add('flex');
+            modalContainer.classList.remove('animateCloseModalBlur');
+            modalContainer.classList.add('animateOpenModalBlur');
             modal.classList.remove('animateCloseModal');
             modal.classList.add('animateOpenModal');
         };
@@ -61,6 +63,8 @@ export default function Home() {
         const closeModalAnimationProcess = () => {
             modal.classList.remove('animateOpenModal');
             modal.classList.add('animateCloseModal');
+            modalContainer.classList.remove('animateOpenModalBlur');
+            modalContainer.classList.add('animateCloseModalBlur');
             modal.addEventListener('animationend', closeModal);
         }
 
