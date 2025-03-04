@@ -2,6 +2,9 @@
     --secondbackground:#16253B;
     --buttoncolor: #932B2B;
     --linecolor: #00FF88;
+    --scrollcolor: #888;
+    --scrollbackcolor: white;
+    --buttoncolordop: #C4A24A;  
 }
 
 .queue-main {
@@ -131,13 +134,14 @@
     justify-content: center;
     position: relative;
     bottom: 50px;
+    gap: 10px;
 }
 
 .queue-button button {
     font-size: 22px;
     background-color: var(--buttoncolor);
     border-radius: 10px;
-    width: 240px;
+    width: 200px;
     height: 48px;
 }
 
@@ -166,7 +170,6 @@
     flex-direction: column;
     margin-top: 35px;
     width: 100%;
-    max-width: 500px;
     background-color: var(--secondbackground);
     border-radius: 10px;
     overflow: hidden;
@@ -202,6 +205,24 @@
 
 .queue-table-number {
     position: relative;
+}
+
+.queue-table-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.queue-table-body::-webkit-scrollbar-track {
+    background: var(--scrollbackcolor);
+    border-radius: 4px;
+}
+
+.queue-table-body::-webkit-scrollbar-thumb {
+    background: var(--scrollcolor);
+    border-radius: 4px;
+}
+
+.queue-table-body::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollcolor);
 }
 
 /* МЕДИАХУНЯ 9MICE KOSTILI NASHE VSE :/ */
