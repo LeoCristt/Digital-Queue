@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0A1B30;
+  --secondbackground:#16253B;
+  --trhirdbackground: #384152;
+  --backgroundHeader: rgba(10, 27, 48, 0.75);
+  --foreground: #00FF88;
+  --colorbutton:#00BE65;
+  --importantcolorbutton: #932B2B;
+  --textColor: #ffffff;
+  --textInput: #939AA4;
+  --foregroundhover: #0bc578;
+  --skinsurvivor: #ef0606;
+  --skinlegend: #ffcd00;
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0A1B30;
+    --secondbackground:#16253B;
+    --trhirdbackground: #384152;
+    --backgroundHeader: rgba(10, 27, 48, 0.75);
+    --foreground: #00FF88;
+    --colorbutton:#00BE65;
+    --importantcolorbutton: #932B2B;
+    --textColor: #ffffff;
+    --textInput: #939AA4;
+    --foregroundhover: #0bc578;
+    --skinsurvivor: #ef0606;
+    --skinlegend: #ffcd00;
+  }
+}
+
+*, *:before, *:after{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html{
+  width: 100vw;
+  overflow-x: hidden;
+  display: block;
+}
+
+
+body {
+  color: var(--textColor);
+  background: var(--background);
+  font-family: Futura PT Demi Italic;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+}
+
+@font-face{
+  font-family: 'Futura PT Demi Italic';
+  src: url('../assets/fonts/futura-book/FuturaPTDemi.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+.container{
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+.auth-container{
+  max-width: 1150px;
+  margin: 1rem auto;
+  padding: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-stroke {
+    text-shadow:
+            -2px -2px 0 var(--background),
+            2px -2px 0 var(--background),
+            -2px  2px 0 var(--background),
+            2px  2px 0 var(--background);
+}
+
+.animateOpenModal {
+  animation: openModal 1s;
+}
+
+.animateCloseModal {
+  animation: closeModal 1s;
+}
+
+@keyframes openModal {
+  0% {
+    filter: blur(64px);
+    transform: scale(100%) translateY(125vh);
+    box-shadow: 0 0 100px var(--foreground);
+  }
+  100% {
+    filter: blur(0);
+    transform: scale(100%) translateY(0);
+  }
+}
+
+@keyframes closeModal {
+  0% {
+    filter: blur(0);
+    transform: scale(100%) translateY(0);
+  }
+  100% {
+    filter: blur(64px);
+    transform: scale(100%) translateY(125vh);
+    box-shadow: 0 0 100px var(--foreground);
+  }
+}

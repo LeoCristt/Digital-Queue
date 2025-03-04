@@ -11,7 +11,7 @@ app.middleware("http")(auto_refresh_token_middleware)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешить все домены (настройте правильно для продакшена!)
+    allow_origins=["http://localhost:3000"],  # Разрешить все домены (настройте правильно для продакшена!)
     allow_credentials=True,
     allow_methods=["*"],  # Разрешить все методы
     allow_headers=["*"],  # Разрешить все заголовки
