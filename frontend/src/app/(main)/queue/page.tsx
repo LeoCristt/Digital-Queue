@@ -38,7 +38,7 @@ export default function Queue() {
                     </div>
                 </div>
                 <div className="queue-button">
-                    <button>Выйти из очереди</button>
+                    <button id="openchat">Выйти из очереди</button>
                 </div>
             </div>
             <div className="queue-rightside sidebar">

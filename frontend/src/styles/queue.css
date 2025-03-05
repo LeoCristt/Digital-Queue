@@ -276,4 +276,10 @@
     .queue-table-header {
         font-size: 35px;
     }
+
+    .media-form {
+        width: 57vh;
+        height: 530px;
+        backdrop-filter: none;
+    }
 }
