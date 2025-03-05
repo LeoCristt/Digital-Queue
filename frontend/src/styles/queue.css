@@ -21,6 +21,13 @@
     justify-content: space-between;
 }
 
+.queue-table-empty {
+    text-align: center;
+    width: 100%;
+    color: #666;
+    padding: 1rem;
+  }
+
 .queue-rightside {
     margin-left: 30px;
     margin-right: 50px;
@@ -143,6 +150,11 @@
     border-radius: 10px;
     width: 200px;
     height: 48px;
+}
+
+.queue-button button:first-child{
+    background-color: var(--linecolor);
+    color:black
 }
 
 .queue-rightside {

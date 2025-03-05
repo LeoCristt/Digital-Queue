@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useWebSocket = (queueId: string = "2") => {
+export const useWebSocket = (queueId: string) => {
   const [messages, setMessages] = useState<{ user_id: string; text: string; timestamp: number }[]>([]);
   const [queue, setQueue] = useState<string[]>([]);
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    if (!queueId) return; 
+
     const ws = new WebSocket(`ws://localhost:8000/api/queue/${queueId}`);
 
     ws.onopen = () => {
@@ -55,6 +57,7 @@ export const useWebSocket = (queueId: string = "2") => {
 
   const leaveQueue = () => {
     socketRef.current?.send("leave");
+    window.location.reload();
   };
 
   return { messages, queue, sendMessage, joinQueue, leaveQueue };
