@@ -1,8 +1,34 @@
 "use client";
 import ModalCreateQueue from '@/components/ModalCreateQueue';
 import ModalAdministrateQueue from '@/components/ModalAdministrateQueue';
+import {jwtDecode} from "jwt-decode";
+import { useEffect, useState } from "react";
+
+
+interface TokenPayload {
+    sub: string;
+}
+
 
 export default function Home() {
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            try {
+                const token = localStorage.getItem("access_token");
+                if (!token) {
+                    console.error("Токен не найден в localStorage");
+                    return;
+                }
+
+                const decoded = jwtDecode<TokenPayload>(token);
+                setUserId(decoded.sub);
+            } catch (error) {
+                console.error("Ошибка при декодировании токена:", error);
+            }
+        }
+    }, []);
     return (
         <div className="p-[20px]">
             <section className="flex flex-row justify-center gap-2 my-[120px] lg:text-8xl text-6xl text-nowrap">
@@ -124,7 +150,7 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            <ModalCreateQueue/>
+            <ModalCreateQueue userId={userId || ''} />
             <ModalAdministrateQueue/>
         </div>
 );

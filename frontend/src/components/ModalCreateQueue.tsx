@@ -1,8 +1,19 @@
-"use client";
-import { useEffect, useState} from "react";
+import {useEffect, useState} from "react";
+import { useRouter } from "next/navigation";
 
-export default function CreateQueue() {
-    const [isPrivate, setIsPrivate] = useState(false); // Состояние для переключателя
+interface ModalCreateQueueProps {
+    userId: string;
+}
+
+export default function CreateQueue({ userId }: ModalCreateQueueProps) {
+    const [isPrivate, setIsPrivate] = useState(false);
+    const router = useRouter();
+
+    const handleRedirect = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault(); // Предотвращаем перезагрузку страницы
+        console.log("Redirecting to:", `/queue/${userId}`);
+        router.push(`/queue/${userId}`);
+    };
 
     useEffect(() => {
         const modalContainer = document.getElementById('ModalContainerCreateQueue');
@@ -100,7 +111,8 @@ export default function CreateQueue() {
 
                         {/* Кнопка создания */}
                         <button id=""
-                                className="flex justify-center bg-colorbutton rounded-2xl p-[10px]">
+                                className="flex justify-center bg-colorbutton rounded-2xl p-[10px]"
+                                onClick={handleRedirect}>
                             Создать очередь
                         </button>
                     </div>
