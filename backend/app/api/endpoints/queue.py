@@ -73,6 +73,8 @@ def register_websocket_handlers(app):
             # Добавляем подключение в список
             active_connections.append((websocket, client_id))
 
+            await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+
             await websocket.send_json({
                 "type": "chat_history",
                 "data": queues[queue_id]["messages"][-50:]  # Последние 50 сообщений
@@ -110,9 +112,12 @@ def register_websocket_handlers(app):
                         await websocket.send_text("error: Вы уже в очереди!")
                 
                 elif data == "leave":
-                    if client_id in [user["client_id"] for user in current_queue]:
-                        current_queue = [user for user in current_queue if user["client_id"] != client_id]
-                        await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                    # Удаляем пользователя из очереди в глобальном словаре
+                    queues[queue_id]["queue"] = [
+                        user for user in queues[queue_id]["queue"] 
+                        if user["client_id"] != client_id
+                    ]
+                    await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
 
                 elif data == "delete":
                     if client_id == queue_id:
