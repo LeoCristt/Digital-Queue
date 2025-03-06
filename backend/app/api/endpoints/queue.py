@@ -10,9 +10,40 @@ from app.core.security import (
     ALGORITHM
 )
 from jose import jwt
+import requests
 
 # Глобальные переменные для хранения очереди и подключений
 queues = {}
+
+async def send_message_to_gigachat(message: str):
+    """
+    Отправляет сообщение в Gigachat API и возвращает ответ.
+    """
+    url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
+
+    payload={
+    'scope': 'GIGACHAT_API_PERS'
+    }
+    headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Accept': 'application/json',
+    'RqUID': '2a6cf25a-1bdd-4e77-ad10-7a82781af8a1',
+    'Authorization': 'Basic MTVmZjQ5NTUtNTQ5OS00ODViLWE3NzItZTQzMjM1MDU4MTZjOjcxN2ZlM2ExLTdmYzYtNDBmYS1iMmFjLWQyOTc2YThjOGIwNA=='
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    url = "https://gigachat.devices.sberbank.ru/api/v1/models"
+
+    payload={}
+    headers = {
+    'Accept': 'application/json',
+    'Authorization': f'Bearer {response.text}'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response.text
 
 def register_websocket_handlers(app):
     @app.websocket("/api/queue/{queue_id}")
@@ -23,15 +54,17 @@ def register_websocket_handlers(app):
         client_id = websocket.cookies.get("client_id")
 
         refresh_token = websocket.cookies.get("refresh_token")
+        id = None
 
-        payload = verify_refresh_token(refresh_token)
-        if not payload:
-            raise HTTPException(status_code=401, detail="Недействительный refresh token")
-        id = payload.get("sub")
+        if refresh_token:
+            payload = verify_refresh_token(refresh_token)
+            if not payload:
+                raise HTTPException(status_code=401, detail="Недействительный refresh token")
+            id = payload.get("sub")
 
-        user = db.query(User).filter(User.id == int(id)).first()
-        if not user:
-            raise HTTPException(status_code=401, detail="Пользователь не найден")
+            user = db.query(User).filter(User.id == int(id)).first()
+            if not user:
+                raise HTTPException(status_code=401, detail="Пользователь не найден")
         
         if not client_id and not id:
             client_id = str(uuid.uuid4())
@@ -83,20 +116,44 @@ def register_websocket_handlers(app):
 
                 if data.startswith("message:"):
                     message_text = data[len("message:"):].strip()
-                    if message_text:
-                        # Сохраняем сообщение с меткой времени
-                        new_message = {
-                            "user_id": client_id,
-                            "text": message_text,
-                            "timestamp": time.time(),
-                        }
-                        queues[queue_id]["messages"].append(new_message)
-                        
-                        # Рассылаем сообщение всем участникам
-                        await broadcast_message(
-                            active_connections,
-                            new_message
-                        )
+                    if "/ai" in message_text:
+                        # Разделяем сообщение на части
+                        parts = message_text.split("/ai", 1)
+                        if len(parts) > 1:
+                            ai_message = parts[1].strip()  # Текст после /ai
+                            if ai_message:
+                                try:
+                                    # Отправляем сообщение в Gigachat
+                                    gigachat_response = await send_message_to_gigachat(ai_message)
+                                    
+                                    # Сохраняем ответ Gigachat в истории сообщений
+                                    new_message = {
+                                        "user_id": "Gigachat",  # Идентификатор Gigachat
+                                        "text": gigachat_response,  # Ответ от Gigachat
+                                        "timestamp": time.time(),
+                                    }
+                                    queues[queue_id]["messages"].append(new_message)
+                                    
+                                    # Рассылаем ответ Gigachat всем участникам
+                                    await broadcast_message(active_connections, new_message)
+                                except HTTPException as e:
+                                    await websocket.send_text(f"error: {e.detail}")
+                                except Exception as e:
+                                    await websocket.send_text(f"error: Ошибка при взаимодействии с Gigachat: {str(e)}")
+                        else:
+                            await websocket.send_text("error: Не указано сообщение для нейронки после /ai")
+                    else:
+                        # Обрабатываем как обычное сообщение
+                        if message_text:
+                            new_message = {
+                                "user_id": client_id,
+                                "text": message_text,
+                                "timestamp": time.time(),
+                            }
+                            queues[queue_id]["messages"].append(new_message)
+                            
+                            # Рассылаем сообщение всем участникам
+                            await broadcast_message(active_connections, new_message)
                     continue
                 
                 if data == "join":
