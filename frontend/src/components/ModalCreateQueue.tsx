@@ -62,7 +62,7 @@ export default function CreateQueue() {
                     {/* Основное содержимое */}
                     <div className="flex-1 flex flex-col justify-between text-2xl p-[20px]">
                         <div className="flex flex-col gap-[10px]">
-                            <input type="text" placeholder="Название" className="w-full rounded-2xl p-[15px] bg-trhirdbackground text-textInputt" />
+                            <input type="text" placeholder="Название" className="w-full rounded-2xl p-[15px] bg-thirdbackground text-textInputt" />
                             <div className="flex flex-row gap-3 text-textInput">
                                 Приватная очередь
                                 <label className="inline-flex items-center cursor-pointer">
@@ -93,7 +93,7 @@ export default function CreateQueue() {
                                 <input
                                     type="text"
                                     placeholder="Пароль"
-                                    className="w-full rounded-2xl p-[15px] bg-trhirdbackground text-textInputt"
+                                    className="w-full rounded-2xl p-[15px] bg-thirdbackground text-textInputt"
                                 />
                             )}
                         </div>

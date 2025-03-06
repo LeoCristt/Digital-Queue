@@ -67,7 +67,7 @@ const Header = () => {
 
     return (
         <header className="backdrop-blur-xl bg-backgroundHeader w-full flex justify-between sticky top-0 z-50 mt-2">
-            <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <nav className="hidden container mx-auto px-4 py-4 sm:flex items-center justify-between">
                 <Link href="/" className="align-center text-[20px]">
                     DQ
                 </Link>

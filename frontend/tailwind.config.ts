@@ -16,7 +16,11 @@ export default {
         foregroundhover: 'var(--foregroundhover)',
         textColor: 'var(--textColor)',
         colorbutton: 'var(--colorbutton)',
-        
+        thirdbackground: 'var(--thirdbackground)',
+        importantcolorbutton: 'var(--importantcolorbutton)',
+        textInput: 'var(--textInput)',
+        skinsurvivor: 'var(--skinsurvivor)',
+        skinlegend: 'var(--skinlegend)',
       },
     },
   },

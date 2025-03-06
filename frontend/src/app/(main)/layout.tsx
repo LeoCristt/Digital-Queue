@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import MobileNavbar from "@/components/MobileNavbar"
 
 export default function MainLayout({
                                        children,
@@ -11,6 +12,7 @@ export default function MainLayout({
             <main className="main-content">
                 {children}
             </main>
+            <MobileNavbar/>
         </div>
     )
 }
