@@ -6,7 +6,7 @@ export const useWebSocket = (queueId: string) => {
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    if (!queueId) return; 
+    if (!queueId) return;
 
     const ws = new WebSocket(`ws://localhost:8000/api/queue/${queueId}`);
 
@@ -16,6 +16,12 @@ export const useWebSocket = (queueId: string) => {
 
     ws.onmessage = (event) => {
       const data = event.data;
+
+      if (data.startsWith("set_cookie:")) {
+        const clientId = data.split("=")[1];
+        document.cookie = `client_id=${clientId}; path=/`;
+        return; 
+      }
 
       if (data.startsWith("queue:")) {
         const queueData = data.slice(6).split(",");

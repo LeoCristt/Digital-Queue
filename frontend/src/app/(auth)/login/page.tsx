@@ -70,7 +70,7 @@ export default function Login() {
       <form onSubmit={handleSubmit} id="login_form" className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300" htmlFor="email/login">
-            Адрес электронной почты
+            Адрес электронной почты или Логин
           </label>
           <input
             className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
@@ -105,11 +105,6 @@ export default function Login() {
               Запомнить меня
             </label>
           </div>
-          <div className="text-sm">
-            <Link href="/forgot-password" className="font-medium text-textColor hover:text-textColor">
-              Забыл пароль?
-            </Link>
-          </div>
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <div>
@@ -119,9 +114,6 @@ export default function Login() {
           >
             Войти
           </button>
-        </div>
-        <div id="message" style={{ display: 'none' }} className="flex items-center justify-center">
-          <label className="ml-2 block text-sm text-red-500" id="response-message"></label>
         </div>
         <div className="relative mt-6">
           <div className="absolute inset-0 flex items-center">
@@ -137,7 +129,6 @@ export default function Login() {
               href="/login/yandex"
               className="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
             >
-              <span className="sr-only">Войти через Яндекс</span>
               Яндекс
             </Link>
           </div>

@@ -60,11 +60,28 @@ const Header = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('access_token');
-        setIsAuthenticated(false);
-        setUserId(null);
-        router.push('/');
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error('Ошибка при выходе');
+            }
+    
+            localStorage.removeItem('access_token');
+            setIsAuthenticated(false);
+            setUserId(null);
+            router.push('/');
+        } catch (error) {
+            console.error('Ошибка при выходе:', error);
+        }
     };
 
     return (

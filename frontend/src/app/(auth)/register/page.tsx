@@ -114,15 +114,6 @@ export default function Register() {
             onChange={(e) => setRe_Password(e.target.value)}
           />
         </div>
-        <div id="code_container" className="hidden">
-          <label className="block text-sm font-medium text-gray-300">
-            Введите код, который пришел вам на почту
-          </label>
-          <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
-            id="code"
-          />
-        </div>
         <div className="flex items-center">
           <input
             className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-600 rounded bg-gray-700"
