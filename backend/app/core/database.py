@@ -12,9 +12,6 @@ engine = create_engine(
 # Создайте фабрику сессий
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Базовый класс для моделей
-Base = declarative_base()
-
 # Функция для получения сессии БД
 def get_db():
     db = SessionLocal()

@@ -5,7 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.models.user import Base  # Импортируйте Base из ваших моделей
+from app.models.base import Base  # Импортируйте Base из ваших моделей
+from app.models.user import User  # Импортируйте все модели
+from app.models.feedback import Feedback  # Импортируйте все модели
 target_metadata = Base.metadata
 
 # this is the Alembic Config object, which provides
