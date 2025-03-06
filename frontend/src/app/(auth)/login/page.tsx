@@ -4,6 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { jwtDecode } from "jwt-decode";
+
+interface TokenPayload {
+  sub: string;
+}
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -18,18 +23,27 @@ export default function Login() {
     try {
       const response = await fetch('http://localhost:8000/api/auth/login', {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password
+        }),
+        credentials: 'include' 
       });
-      
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.detail || 'Ошибка авторизации');
       }
       
-      localStorage.setItem('token', data.access_token);
+      const decoded = jwtDecode<TokenPayload>(data.access_token);
+      const userId = decoded.sub;
+
+      localStorage.setItem('access_token', data.access_token);
       setError(null); 
-      router.push('/profile');
+      router.push(`/profiles/${userId}`);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);

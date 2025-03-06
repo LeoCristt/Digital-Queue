@@ -5,11 +5,16 @@
 :root {
   --background: #0A1B30;
   --secondbackground:#16253B;
+  --trhirdbackground: #384152;
   --backgroundHeader: rgba(10, 27, 48, 0.75);
   --foreground: #00FF88;
   --colorbutton:#00BE65;
+  --importantcolorbutton: #932B2B;
   --textColor: #ffffff;
-  --foreground-hover: #33FFAA;
+  --textInput: #939AA4;
+  --foregroundhover: #0bc578;
+  --skinsurvivor: #ef0606;
+  --skinlegend: #ffcd00;
 }
 
 
@@ -26,6 +31,8 @@
     --textColor: #ffffff;
     --textInput: #939AA4;
     --foregroundhover: #0bc578;
+    --skinsurvivor: #ef0606;
+    --skinlegend: #ffcd00;
   }
 }
 
@@ -91,6 +98,14 @@ body {
   animation: closeModal 1s;
 }
 
+.animateOpenModalBlur {
+  animation: openModalBackdropBlur 1s;
+}
+
+.animateCloseModalBlur {
+  animation: closeModalBackdropBlur 1s;
+}
+
 @keyframes openModal {
   0% {
     filter: blur(64px);
@@ -112,5 +127,23 @@ body {
     filter: blur(64px);
     transform: scale(100%) translateY(125vh);
     box-shadow: 0 0 100px var(--foreground);
+  }
+}
+
+@keyframes openModalBackdropBlur {
+  0% {
+    backdrop-filter: blur(0);
+  }
+  100% {
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes closeModalBackdropBlur {
+  0% {
+    backdrop-filter: blur(12px);
+  }
+  100% {
+    backdrop-filter: blur(0);
   }
 }

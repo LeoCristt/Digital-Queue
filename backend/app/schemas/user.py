@@ -8,6 +8,7 @@ class UserBase(BaseModel):
 # Схема для создания пользователя (регистрация)
 class UserCreate(UserBase):
     password: str
+    re_password: str
 
 # Схема для аутентификации
 class UserLogin(BaseModel):
