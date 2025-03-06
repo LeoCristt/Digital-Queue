@@ -10,40 +10,16 @@ from app.core.security import (
     ALGORITHM
 )
 from jose import jwt
-import requests
+from gigachat import GigaChat
 
 # Глобальные переменные для хранения очереди и подключений
 queues = {}
 
 async def send_message_to_gigachat(message: str):
-    """
-    Отправляет сообщение в Gigachat API и возвращает ответ.
-    """
-    url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
-
-    payload={
-    'scope': 'GIGACHAT_API_PERS'
-    }
-    headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json',
-    'RqUID': '2a6cf25a-1bdd-4e77-ad10-7a82781af8a1',
-    'Authorization': 'Basic MTVmZjQ5NTUtNTQ5OS00ODViLWE3NzItZTQzMjM1MDU4MTZjOjcxN2ZlM2ExLTdmYzYtNDBmYS1iMmFjLWQyOTc2YThjOGIwNA=='
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    url = "https://gigachat.devices.sberbank.ru/api/v1/models"
-
-    payload={}
-    headers = {
-    'Accept': 'application/json',
-    'Authorization': f'Bearer {response.text}'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response.text
+    # Укажите ключ авторизации, полученный в личном кабинете, в интерфейсе проекта GigaChat API
+    with GigaChat(credentials="MTVmZjQ5NTUtNTQ5OS00ODViLWE3NzItZTQzMjM1MDU4MTZjOjcxN2ZlM2ExLTdmYzYtNDBmYS1iMmFjLWQyOTc2YThjOGIwNA==", verify_ssl_certs=False) as giga:
+        response = giga.chat(message)
+        return (response.choices[0].message.content)
 
 def register_websocket_handlers(app):
     @app.websocket("/api/queue/{queue_id}")
@@ -118,6 +94,16 @@ def register_websocket_handlers(app):
 
                 if data.startswith("message:"):
                     message_text = data[len("message:"):].strip()
+                    if message_text:
+                        new_message = {
+                            "user_id": client_id,
+                            "text": message_text,
+                            "timestamp": time.time(),
+                        }
+                        queues[queue_id]["messages"].append(new_message)
+                        
+                        # Рассылаем сообщение всем участникам
+                        await broadcast_message(active_connections, new_message)
                     if "/ai" in message_text:
                         # Разделяем сообщение на части
                         parts = message_text.split("/ai", 1)
@@ -144,18 +130,6 @@ def register_websocket_handlers(app):
                                     await websocket.send_text(f"error: Ошибка при взаимодействии с Gigachat: {str(e)}")
                         else:
                             await websocket.send_text("error: Не указано сообщение для нейронки после /ai")
-                    else:
-                        # Обрабатываем как обычное сообщение
-                        if message_text:
-                            new_message = {
-                                "user_id": client_id,
-                                "text": message_text,
-                                "timestamp": time.time(),
-                            }
-                            queues[queue_id]["messages"].append(new_message)
-                            
-                            # Рассылаем сообщение всем участникам
-                            await broadcast_message(active_connections, new_message)
                     continue
                 
                 if data == "join":
@@ -194,6 +168,7 @@ def register_websocket_handlers(app):
                         
                         # Очищаем локальный список подключений
                         active_connections.clear()
+                        break
                     else:
                         await websocket.send_text("error: Только создатель очереди может её удалить!")
                 
@@ -208,12 +183,12 @@ def register_websocket_handlers(app):
                             queue_data["avg_time"] = sum(queue_data["processing_times"]) / len(queue_data["processing_times"])
                             await websocket.send_text(f"info: Предыдущий пользователь обработан за {processing_time:.1f} сек. Среднее время: {queue_data['avg_time']:.1f} сек")
 
-                        if current_queue:
+                        if queues[queue_id]["queue"]:
                             # Начинаем обработку нового пользователя
-                            removed_user = current_queue.pop(0)
+                            removed_user = queues[queue_id]["queue"].pop(0)
                             queue_data["removed_user"] = removed_user
                             queue_data["last_processing_start"] = time.time()  # Запускаем новый таймер
-                            await broadcast_queue(active_connections, current_queue, queue_data.get("avg_time"))
+                            await broadcast_queue(active_connections, queues[queue_id]["queue"], queue_data.get("avg_time"))
                             await websocket.send_text(f"info: Начата обработка пользователя {removed_user['client_id']}")
                         else:
                             queue_data["last_processing_start"] = None  # Сбрасываем таймер
@@ -226,9 +201,9 @@ def register_websocket_handlers(app):
                         removed_user = queues[queue_id]["removed_user"]
                         if removed_user:
                             # Возвращаем пользователя обратно в начало очереди
-                            current_queue.insert(0, removed_user)  # Вставляем в начало
+                            queues[queue_id]["queue"].insert(0, removed_user)  # Вставляем в начало
                             queues[queue_id]["removed_user"] = None
-                            await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                            await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                             await websocket.send_text(f"info: Пользователь {removed_user['client_id']} возвращен в очередь.")
                         else:
                             await websocket.send_text("error: Нет пользователя для возврата!")
