@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
+import { authFetch } from '@/utils/auth';
 
 interface TokenPayload {
     sub: string;
@@ -41,10 +42,10 @@ const Header = () => {
             href: '/queue',
             label: 'Очередь',
         },
-        { 
-            href: `/profiles/${userId}`, 
-            label: 'Профиль', 
-            authRequired: true 
+        {
+            href: `/profiles/${userId}`,
+            label: 'Профиль',
+            authRequired: true
         },
         {
             href: '/contact',
@@ -62,19 +63,15 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/auth/logout', {
+            // Замените все вызовы fetch на authFetch
+            const response = await authFetch('http://localhost:8000/api/auth/logout', {
                 method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
             });
-    
+
             if (!response.ok) {
                 throw new Error('Ошибка при выходе');
             }
-    
+
             localStorage.removeItem('access_token');
             setIsAuthenticated(false);
             setUserId(null);
@@ -94,7 +91,7 @@ const Header = () => {
                 <div className="flex space-x-6">
                     {links.map((link) => {
                         if (link.authRequired && !isAuthenticated) return null;
-                        
+
                         return link.authRequired ? (
                             <button
                                 key={link.href}

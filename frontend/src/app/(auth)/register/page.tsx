@@ -3,6 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { authFetch } from '@/utils/auth';
+import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
+
+interface TokenPayload {
+  sub: string;
+}
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -10,12 +17,11 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [re_password, setRe_Password] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
 
     if (password !== re_password) {
       setError('Пароли не совпадают!');
@@ -23,27 +29,35 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          username,
-          password,
-          re_password
-        }),
-      });
+      const response = await authFetch(
+        'http://localhost:8000/api/auth/register',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, username, password, re_password }),
+        }
+      );
 
-      const data = await response.json();
+      // Клонируем ответ для чтения тела
+      const clonedResponse = response.clone();
+      const data = await clonedResponse.json();
+
       if (!response.ok) {
         throw new Error(data.detail || 'Ошибка регистрации');
       }
-      setSuccess('Регистрация успешна! Теперь вы можете войти.');
+
+      // Сохраняем токен из ответа
+      localStorage.setItem('access_token', data.access_token);
+
+      // Декодируем ID пользователя
+      const decoded = jwtDecode<TokenPayload>(data.access_token);
+
+      // Редирект на профиль
+      router.replace(`/profiles/${decoded.sub}`);
+
     } catch (err: any) {
       setError(err.message);
+      localStorage.removeItem('access_token');
     }
   };
 
@@ -127,7 +141,6 @@ export default function Register() {
           </label>
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
-        {success && <p className="text-green-500 text-sm">{success}</p>}
         <div>
           <button
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-colorbutton hover:bg-foregroundhover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

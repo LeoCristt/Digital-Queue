@@ -65,5 +65,17 @@ export const useWebSocket = (queueId: string) => {
     socketRef.current?.send("leave");
   };
 
-  return { messages, queue, sendMessage, joinQueue, leaveQueue };
+  const nextQueue = () => {
+    socketRef.current?.send("next");
+  };
+
+  const undoQueue = () => {
+    socketRef.current?.send("undo");
+  };
+
+  const deleteQueue = () => {
+    socketRef.current?.send("delete")
+  }
+
+  return { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue };
 };

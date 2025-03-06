@@ -22,7 +22,7 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
     const { id } = params;
-    const { messages, queue, sendMessage, joinQueue, leaveQueue } = useWebSocket(
+    const { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue  } = useWebSocket(
         typeof id === "string" ? id : ""
     );
 
@@ -37,6 +37,7 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
             }
         }
     }, []);
+    const isQueueOwner = userId === "1";
 
     return (
         <div>
@@ -70,6 +71,28 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                         <button onClick={joinQueue}>Присоединиться</button>
                         <button onClick={leaveQueue}>Выйти из очереди</button>
                     </div>
+                    {isQueueOwner && (
+                        <div className="queue-admin-controls mt-4">
+                            <button
+                                onClick={nextQueue}
+                                className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+                            >
+                                Следующий пользователь
+                            </button>
+                            <button
+                                onClick={undoQueue}
+                                className="px-4 py-2 bg-yellow-500 text-white rounded"
+                            >
+                                Вернуть предыдущего
+                            </button>
+                            <button
+                                onClick={deleteQueue}
+                                className="px-4 py-2 bg-red-500 text-white rounded"
+                            >
+                                Удалить
+                            </button>
+                        </div>
+                    )}
                 </div>
                 <div className="queue-rightside sidebar">
                     <QueueTable queue={queue}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode";
+import { authFetch } from '@/utils/auth';
 
 interface TokenPayload {
   sub: string;
@@ -19,30 +20,26 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await authFetch('http://localhost:8000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          password
-        }),
-        credentials: 'include' 
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.detail || 'Ошибка авторизации');
       }
-      
+
       const decoded = jwtDecode<TokenPayload>(data.access_token);
       const userId = decoded.sub;
 
       localStorage.setItem('access_token', data.access_token);
-      setError(null); 
+      setError(null);
       router.push(`/profiles/${userId}`);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -58,7 +55,7 @@ export default function Login() {
       <div className="flex justify-center mb-6">
         <Link href="/">
           <Image
-            src="/images/logo.png" 
+            src="/images/logo.png"
             alt="Logo"
             width={50}
             height={50}
@@ -100,7 +97,7 @@ export default function Login() {
               id="remember_me"
               name="remember_me"
               type="checkbox"
-            />  
+            />
             <label className="ml-2 block text-sm text-gray-300" htmlFor="remember_me">
               Запомнить меня
             </label>
