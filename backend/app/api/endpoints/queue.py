@@ -102,12 +102,12 @@ def register_websocket_handlers(app):
                     continue
                 
                 if data == "join":
-                    if client_id not in [user["client_id"] for user in current_queue]:
-                        current_queue.append({
+                    if client_id not in [user["client_id"] for user in queues[queue_id]["queue"]]:
+                        queues[queue_id]["queue"].append({
                             "client_id": client_id,
                             "join_time": time.time()  # Сохраняем время добавления
                         })
-                        await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                        await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                     else:
                         await websocket.send_text("error: Вы уже в очереди!")
                 

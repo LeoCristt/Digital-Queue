@@ -57,7 +57,6 @@ export const useWebSocket = (queueId: string) => {
 
   const leaveQueue = () => {
     socketRef.current?.send("leave");
-    window.location.reload();
   };
 
   return { messages, queue, sendMessage, joinQueue, leaveQueue };

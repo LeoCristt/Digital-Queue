@@ -1,7 +1,8 @@
 'use client'
 import { useWebSocket } from "@/hooks/useWebSocket";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 import "../../../../styles/queue.css";
 import ClockSvg from '../../../../assets/images/Clock.svg';
 import TicketSvg from '../../../../assets/images/Ticket.svg';
@@ -12,13 +13,31 @@ import LineVertSvg from '../../../../assets/images/LineVert.svg';
 import LineGorSvg from '../../../../assets/images/LineGor.svg';
 import QueueTable from "../../../../components/queue-table";
 
+interface TokenPayload {
+    sub: string;
+}
+
 const QueueComponent = ({ queueId }: { queueId: string }) => {
     const [text, setText] = useState("");
+    const [userId, setUserId] = useState<string>("");
     const params = useParams();
     const { id } = params;
     const { messages, queue, sendMessage, joinQueue, leaveQueue } = useWebSocket(
         typeof id === "string" ? id : ""
     );
+
+    useEffect(() => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            try {
+                const decoded = jwtDecode<TokenPayload>(token);
+                setUserId(decoded.sub);
+            } catch (error) {
+                console.error("Ошибка при декодировании JWT:", error);
+            }
+        }
+    }, []);
+
     return (
         <div>
             <div className="queue-main">
@@ -53,14 +72,19 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                     </div>
                 </div>
                 <div className="queue-rightside sidebar">
-                    <QueueTable queue={queue}/>
+                    <QueueTable queue={queue}
+                        currentUserId={userId ?? undefined} />
                 </div>
             </div>
             <h3 className="mt-4 text-lg font-semibold">Чат:</h3>
             <ul>
                 {messages.map((msg, idx) => (
                     <li key={idx} className="border p-2 my-1">
-                        <strong>{msg.user_id}:</strong> {msg.text} <span className="text-xs text-gray-500">{new Date(msg.timestamp * 1000).toLocaleTimeString()}</span>
+                        <strong>{msg.user_id === userId ? "Вы" : `Пользователь ${msg.user_id}`}: </strong>
+                        {msg.text}
+                        <span className="text-xs text-gray-500">
+                            &nbsp;{new Date(msg.timestamp * 1000).toLocaleTimeString()}
+                        </span>
                     </li>
                 ))}
             </ul>

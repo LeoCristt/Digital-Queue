@@ -14,21 +14,21 @@ const Header = () => {
     const pathname = usePathname();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
+
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('access_token');
-            if (token) {
-                try {
-                    const decoded = jwtDecode<TokenPayload>(token);
-                    setUserId(decoded.sub);
-                    setIsAuthenticated(true);
-                } catch (error) {
-                    console.error("Invalid token:", error);
-                    setIsAuthenticated(false);
-                }
-            } else {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            try {
+                const decoded = jwtDecode<TokenPayload>(token);
+                setUserId(decoded.sub);
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error("Invalid token:", error);
+                localStorage.removeItem('access_token');
                 setIsAuthenticated(false);
             }
+        } else {
+            setIsAuthenticated(false);
         }
     }, []);
 
@@ -39,18 +39,19 @@ const Header = () => {
         },
         {
             href: '/queue',
-            label: 'Очередь'
+            label: 'Очередь',
         },
         { 
-            href: userId ? `/profiles/${userId}` : '/login', 
+            href: `/profiles/${userId}`, 
             label: 'Профиль', 
-            authRequired: false 
+            authRequired: true 
         },
         {
             href: '/contact',
             label: 'Информация'
         },
     ];
+
     const handleProtectedNavigation = (path: string) => {
         if (!isAuthenticated) {
             router.push('/login');
@@ -58,6 +59,7 @@ const Header = () => {
             router.push(path);
         }
     };
+
     const handleLogout = () => {
         localStorage.removeItem('access_token');
         setIsAuthenticated(false);
@@ -74,18 +76,17 @@ const Header = () => {
 
                 <div className="flex space-x-6">
                     {links.map((link) => {
-                        if (link.authRequired) {
-                            return (
-                                <button
-                                    key={link.href}
-                                    onClick={() => handleProtectedNavigation(link.href)}
-                                    className={`${pathname === link.href ? 'border-b-2 border-foreground' : 'text-gray-600 hover:text-white'} transition-colors cursor-pointer`}
-                                >
-                                    {link.label}
-                                </button>
-                            );
-                        }
-                        return (
+                        if (link.authRequired && !isAuthenticated) return null;
+                        
+                        return link.authRequired ? (
+                            <button
+                                key={link.href}
+                                onClick={() => handleProtectedNavigation(link.href)}
+                                className={`${pathname === link.href ? 'border-b-2 border-foreground' : 'text-gray-600 hover:text-white'} transition-colors cursor-pointer`}
+                            >
+                                {link.label}
+                            </button>
+                        ) : (
                             <Link
                                 key={link.href}
                                 href={link.href}
