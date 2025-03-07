@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
-import { authFetch } from '@/utils/auth';
 
 interface TokenPayload {
     sub: string;
@@ -63,11 +62,19 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            // Замените все вызовы fetch на authFetch
-            const response = await authFetch('http://localhost:8000/api/auth/logout', {
+            const accessToken = localStorage.getItem('access_token');
+            
+            const headers = new Headers();
+            if (accessToken) {
+                headers.append('Authorization', `Bearer ${accessToken}`);
+            }
+    
+            const response = await fetch('http://localhost:8000/api/auth/logout', {
                 method: 'POST',
+                headers: headers,
+                credentials: 'include' 
             });
-
+    
             if (!response.ok) {
                 throw new Error('Ошибка при выходе');
             }
@@ -75,6 +82,7 @@ const Header = () => {
             localStorage.removeItem('access_token');
             setIsAuthenticated(false);
             setUserId(null);
+            
             router.push('/');
         } catch (error) {
             console.error('Ошибка при выходе:', error);

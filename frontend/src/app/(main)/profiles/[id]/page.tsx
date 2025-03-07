@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ModalSettings from '@/components/ModalSettings';
-import { authFetch } from '@/utils/auth';
 
 interface UserProfile {
   username: string;
@@ -26,7 +25,7 @@ export default function Home() {
         }
         console.log('Fetching profile for user ID:', userId);
 
-        const response = await authFetch(`http://localhost:8000/api/profiles/${userId}`, {
+        const response = await fetch(`http://localhost:8000/api/profiles/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

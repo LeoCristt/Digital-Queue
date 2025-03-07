@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { authFetch } from '@/utils/auth';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 
@@ -29,7 +28,7 @@ export default function Register() {
     }
 
     try {
-      const response = await authFetch(
+      const response = await fetch(
         'http://localhost:8000/api/auth/register',
         {
           method: 'POST',
