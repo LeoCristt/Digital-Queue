@@ -110,7 +110,7 @@ body {
   0% {
     filter: blur(64px);
     transform: scale(100%) translateY(125vh);
-    box-shadow: 0 0 100px var(--foreground);
+    border: 24px var(--foreground);
   }
   100% {
     filter: blur(0);
@@ -126,7 +126,7 @@ body {
   100% {
     filter: blur(64px);
     transform: scale(100%) translateY(125vh);
-    box-shadow: 0 0 100px var(--foreground);
+    border: 24px var(--foreground);
   }
 }
 
