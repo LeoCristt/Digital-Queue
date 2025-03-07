@@ -10,7 +10,7 @@ from jose import jwt
 
 router = APIRouter()
 
-@router.post("/delete")
+@router.delete("/delete")
 async def delete(response: Response, request: Request, db: Session = Depends(get_db)):
 
     auth_header = request.headers.get("New-Access-Token")
