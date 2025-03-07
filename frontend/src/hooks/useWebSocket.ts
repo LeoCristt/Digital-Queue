@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 
 export const useWebSocket = (queueId: string) => {
   const [messages, setMessages] = useState<{ user_id: string; text: string; timestamp: number }[]>([]);
   const [queue, setQueue] = useState<string[]>([]);
   const socketRef = useRef<WebSocket | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const password = searchParams.get("password") || "";
 
   useEffect(() => {
     if (!queueId) return;
 
-    const ws = new WebSocket(`ws://localhost:8000/api/queue/${queueId}`);
+    const ws = new WebSocket(`ws://localhost:8000/api/queue/${queueId}?password=${password}`);
 
     ws.onopen = () => {
       console.log("Connected to WebSocket");
@@ -26,7 +31,14 @@ export const useWebSocket = (queueId: string) => {
       if (data.startsWith("queue:")) {
         const queueData = data.slice(6).split(",");
         setQueue(queueData);
-      } else {
+      } else if (data.startsWith("error:")) {
+        if (data.includes("You can only create a queue with your own user ID")) {
+          router.push("/404");
+        } else {
+          router.push("/");
+        }
+      }
+      else {
         try {
           const parsed = JSON.parse(data);
           if (parsed.type === "new_message") {
@@ -75,6 +87,7 @@ export const useWebSocket = (queueId: string) => {
 
   const deleteQueue = () => {
     socketRef.current?.send("delete")
+    router.push('/')
   }
 
   return { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue };

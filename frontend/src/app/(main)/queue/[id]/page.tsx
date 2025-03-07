@@ -22,9 +22,10 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
     const { id } = params;
-    const { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue  } = useWebSocket(
+    const { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
         typeof id === "string" ? id : ""
     );
+    const queueId1 = params.id as string;
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -37,7 +38,8 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
             }
         }
     }, []);
-    const isQueueOwner = userId === "1";
+    const isQueueOwner = userId === queueId1;
+    console.log(queueId1)
 
     return (
         <div>
