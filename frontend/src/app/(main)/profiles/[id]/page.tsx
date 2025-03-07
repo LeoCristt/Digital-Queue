@@ -124,7 +124,7 @@ export default function Home() {
           </button>
         </div>
       </main>
-      <ModalSettings/>
+      <ModalSettings userData={userData!}/>
     </div>
   );
 }

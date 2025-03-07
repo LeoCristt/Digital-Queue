@@ -1,7 +1,18 @@
 "use client";
 import {useEffect} from "react";
 
-export default function Home() {
+interface UserData
+{
+    avatar_url: string;
+    // Добавь другие поля, если они есть в userData
+}
+
+interface ModalSettingsProps
+{
+    userData: UserData;
+}
+
+export default function ModalSettings({userData}:ModalSettingsProps) {
     useEffect(() => {
         const modalContainer = document.getElementById('settingsModalContainer');
         const modal = document.getElementById('settingsModal');
@@ -193,7 +204,7 @@ export default function Home() {
                             <button id="openImg"
                                     className="flex justify-between align-middle bg-background rounded-2xl p-[20px]"
                                     type="button">
-                                <img src="http://localhost:8000/static/avatars/default_avatar.png"
+                                <img src={userData?.avatar_url}
                                      className="profile-user-img rounded-full w-20 h-20 object-cover drop-shadow-md"/>
                                 <div className="flex flex-col justify-center w-full">
                                     <p className="h-fit">Изменить профиль</p>
