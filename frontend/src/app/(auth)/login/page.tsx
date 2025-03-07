@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode";
+import { authFetch } from '@/utils/auth';
 
 interface TokenPayload {
   sub: string;
@@ -19,30 +20,26 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await authFetch('http://localhost:8000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          password
-        }),
-        credentials: 'include' 
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.detail || 'Ошибка авторизации');
       }
-      
+
       const decoded = jwtDecode<TokenPayload>(data.access_token);
       const userId = decoded.sub;
 
       localStorage.setItem('access_token', data.access_token);
-      setError(null); 
+      setError(null);
       router.push(`/profiles/${userId}`);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -58,7 +55,7 @@ export default function Login() {
       <div className="flex justify-center mb-6">
         <Link href="/">
           <Image
-            src="/images/logo.png" 
+            src="/images/logo.png"
             alt="Logo"
             width={50}
             height={50}
@@ -70,7 +67,7 @@ export default function Login() {
       <form onSubmit={handleSubmit} id="login_form" className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300" htmlFor="email/login">
-            Адрес электронной почты
+            Адрес электронной почты или Логин
           </label>
           <input
             className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
@@ -100,15 +97,10 @@ export default function Login() {
               id="remember_me"
               name="remember_me"
               type="checkbox"
-            />  
+            />
             <label className="ml-2 block text-sm text-gray-300" htmlFor="remember_me">
               Запомнить меня
             </label>
-          </div>
-          <div className="text-sm">
-            <Link href="/forgot-password" className="font-medium text-textColor hover:text-textColor">
-              Забыл пароль?
-            </Link>
           </div>
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -119,9 +111,6 @@ export default function Login() {
           >
             Войти
           </button>
-        </div>
-        <div id="message" style={{ display: 'none' }} className="flex items-center justify-center">
-          <label className="ml-2 block text-sm text-red-500" id="response-message"></label>
         </div>
         <div className="relative mt-6">
           <div className="absolute inset-0 flex items-center">
@@ -137,7 +126,6 @@ export default function Login() {
               href="/login/yandex"
               className="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
             >
-              <span className="sr-only">Войти через Яндекс</span>
               Яндекс
             </Link>
           </div>
