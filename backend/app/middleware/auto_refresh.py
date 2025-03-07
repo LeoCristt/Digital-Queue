@@ -29,6 +29,20 @@ async def auto_refresh_token_middleware(request: Request, call_next):
         request.url.path
     ) is not None
 
+    is_logout_path = re.match(
+        r'^/api/auth/logout$',  # \d+ — только цифры для user_id
+        request.url.path
+    ) is not None
+
+    is_delete_path = re.match(
+        r'^/api/auth/delete$',  # \d+ — только цифры для user_id
+        request.url.path
+    ) is not None
+
+    # Если путь исключен И НЕ является /api/profiles/{user_id}/settings
+    if any(request.url.path.startswith(p) for p in EXCLUDED_PATHS) and not is_settings_path and not is_logout_path and not is_delete_path:
+        return await call_next(request)
+
     # Если путь исключен И НЕ является /api/profiles/{user_id}/settings
     if any(request.url.path.startswith(p) for p in EXCLUDED_PATHS) and not is_settings_path:
         return await call_next(request)
