@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
-import { authFetch } from '@/utils/auth';
 
 interface TokenPayload {
     sub: string;
@@ -64,7 +63,7 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             // Замените все вызовы fetch на authFetch
-            const response = await authFetch('http://localhost:8000/api/auth/logout', {
+            const response = await fetch('http://localhost:8000/api/auth/logout', {
                 method: 'POST',
             });
 

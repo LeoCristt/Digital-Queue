@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode";
-import { authFetch } from '@/utils/auth';
 
 interface TokenPayload {
   sub: string;
@@ -22,7 +21,7 @@ export default function Login() {
     setError(null);
 
     try {
-      const response = await authFetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch('http://localhost:8000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
