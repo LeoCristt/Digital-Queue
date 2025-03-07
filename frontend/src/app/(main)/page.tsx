@@ -1,6 +1,5 @@
 "use client";
 import ModalCreateQueue from '@/components/ModalCreateQueue';
-import ModalAdministrateQueue from '@/components/ModalAdministrateQueue';
 
 export default function Home() {
     return (
@@ -35,7 +34,7 @@ export default function Home() {
                         <div className="text-foreground content-center">Подключение</div><div className="content-center">к очереди</div>
                     </div>
                     <div className="flex flex-row h-full gap-[20px] bg-secondbackground p-[20px] rounded-2xl">
-                        <input type="text" className="w-full rounded-2xl p-[10px] bg-thirdbackground text-2xl text-textInputt" placeholder="Введите код для подключения"/>
+                        <input type="text" className="w-full rounded-2xl p-[10px] bg-trhirdbackground text-2xl text-textInputt" placeholder="Введите код для подключения"/>
                         {/*Подключение по номеру комнаты*/}
                         <button id="">
                             <div className="flex justify-center bg-background rounded-2xl p-[10px]">
@@ -48,60 +47,54 @@ export default function Home() {
                 </div>
             </section>
 
-            {/*<section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">*/}
-            {/*    <div className="flex flex-col gap-[20px] w-full">*/}
-            {/*        <div className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">*/}
-            {/*            <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>*/}
-            {/*        </div>*/}
-            {/*        <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>*/}
-            {/*    </div>*/}
-            {/*    /!*Создение очереди*!/*/}
-            {/*    <button className="mx-auto" id="openCreateQueue">*/}
-            {/*        <div className="bg-secondbackground rounded-2xl p-[10px]">*/}
-            {/*            <div className="bg-background p-[40px] rounded-full">*/}
-            {/*                <svg className="stroke-foreground w-[60px]" viewBox="0 0 90 89">*/}
-            {/*                    <path d="M45.1165 6.03955L45.1165 82.2957" strokeWidth="12" strokeLinecap="round"/>*/}
-            {/*                    <path d="M6.98828 44.1678L83.2444 44.1678" strokeWidth="12" strokeLinecap="round"/>*/}
-            {/*                </svg>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    </button>*/}
-            {/*</section>*/}
+            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
+                <div className="flex flex-col gap-[20px] w-full">
+                    <div className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                        <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>
+                    </div>
+                    <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
+                </div>
+                {/*Создение очереди*/}
+                <button className="mx-auto" id="openCreateQueue">
+                    <div className="bg-secondbackground rounded-2xl p-[10px]">
+                        <div className="bg-background p-[40px] rounded-full">
+                            <svg className="stroke-foreground w-[90px]" viewBox="0 0 90 89">
+                                <path d="M45.1165 6.03955L45.1165 82.2957" strokeWidth="12" strokeLinecap="round"/>
+                                <path d="M6.98828 44.1678L83.2444 44.1678" strokeWidth="12" strokeLinecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </button>
+            </section>
 
-            {/*<section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">*/}
-            {/*    <div className="flex flex-col gap-[20px] w-full">*/}
-            {/*        <div className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">*/}
-            {/*            <div className="text-foreground content-center">Управление</div><div className="content-center">очередью</div>*/}
-            {/*        </div>*/}
-            {/*        <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Управляйте очередью "название"</div>*/}
-            {/*    </div>*/}
-            {/*    /!*Управление очередью*!/*/}
-            {/*    <button className="mx-auto" id="openAdministrateQueue">*/}
-            {/*        <div className="bg-secondbackground rounded-2xl p-[10px]">*/}
-            {/*            <div className="bg-background p-[40px] rounded-full">*/}
-            {/*                <svg className="fill-foreground w-[60px]" viewBox="0 0 24 24">*/}
-            {/*                    <path d="M21,12a1,1,0,0,0-1,1v6a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5A1,1,0,0,1,5,4h6a1,1,0,0,0,0-2H5A3,3,0,0,0,2,5V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V13A1,1,0,0,0,21,12ZM6,12.76V17a1,1,0,0,0,1,1h4.24a1,1,0,0,0,.71-.29l6.92-6.93h0L21.71,8a1,1,0,0,0,0-1.42L17.47,2.29a1,1,0,0,0-1.42,0L13.23,5.12h0L6.29,12.05A1,1,0,0,0,6,12.76ZM16.76,4.41l2.83,2.83L18.17,8.66,15.34,5.83ZM8,13.17l5.93-5.93,2.83,2.83L10.83,16H8Z"></path>*/}
-            {/*                </svg>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    </button>*/}
-            {/*</section>*/}
+            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
+                <div className="flex flex-col gap-[20px] w-full">
+                    <div className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                        <div className="text-foreground content-center">Управление</div><div className="content-center">очередью</div>
+                    </div>
+                    <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Управляйте своей очередью</div>
+                </div>
+                {/*Управление очередью - редирект на страницу очереди*/}
+                <button className="mx-auto" id="openAdministrateQueue">
+                    <div className="bg-secondbackground rounded-2xl p-[10px]">
+                        <div className="bg-background p-[40px] rounded-full">
+                            <svg className="fill-foreground w-[90px]" viewBox="0 0 24 24">
+                                <path d="M21,12a1,1,0,0,0-1,1v6a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5A1,1,0,0,1,5,4h6a1,1,0,0,0,0-2H5A3,3,0,0,0,2,5V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V13A1,1,0,0,0,21,12ZM6,12.76V17a1,1,0,0,0,1,1h4.24a1,1,0,0,0,.71-.29l6.92-6.93h0L21.71,8a1,1,0,0,0,0-1.42L17.47,2.29a1,1,0,0,0-1.42,0L13.23,5.12h0L6.29,12.05A1,1,0,0,0,6,12.76ZM16.76,4.41l2.83,2.83L18.17,8.66,15.34,5.83ZM8,13.17l5.93-5.93,2.83,2.83L10.83,16H8Z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </button>
+            </section>
 
-            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] mb-[40px]">
+            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px]">
                 <div className="flex flex-col gap-[20px] w-full">
                     <div
                         className="flex flex-row gap-2 justify-center text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Что мы</div>
                         <div className="text-foreground">умеем?</div>
                     </div>
-                    <div
-                        className="text-2xl text-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
-                        Пример текста пример текста
-                        Пример текста пример текста
-                        Пример текста пример текста
-                        Пример текста пример текста
-                        Пример текста пример текста
-                        Пример текста пример текста
+                    <div className="text-2xl text-center h-full content-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
+                        Наш проект предоставит Вам невероятную возможность в сфере организации очередей.
                     </div>
                 </div>
                 <div className="flex flex-col gap-[20px] w-full">
@@ -111,21 +104,15 @@ export default function Home() {
                     <div className="flex flex-row gap-[20px] w-full h-full text-2xl">
                         <div className="flex flex-col justify-center w-full bg-secondbackground rounded-2xl p-[10px]">
                             <div className="flex flex-row gap-2 justify-center text-nowrap">
-                                <div className="text-foreground">Swagger</div>
+                                {/*<div className="text-foreground">Swagger</div>*/}
                             </div>
-                            <div className="text-center text-textInput">For better models and testing & mocking.</div>
-                        </div>
-                        <div className="flex flex-col justify-center w-full bg-secondbackground rounded-2xl p-[10px]">
-                            <div className="flex flex-row gap-2 justify-center text-nowrap">
-                               <div className="text-foreground">Redoc</div>
-                            </div>
-                            <div className="text-center text-textInput">For better response viewing.</div>
+                            {/*<div className="text-center text-textInput">For better models and testing & mocking.</div>*/}
+                            <div className="text-center text-textInput">В разработке 🥴</div>
                         </div>
                     </div>
                 </div>
             </section>
-            {/*<ModalCreateQueue/>*/}
-            {/*<ModalAdministrateQueue/>*/}
+            <ModalCreateQueue/>
         </div>
 );
 }

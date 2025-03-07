@@ -42,27 +42,28 @@ export default function CreateQueue() {
     }, []);
     return (
         <div id="ModalContainerCreateQueue"
-             className="w-full h-full fixed z-[51] justify-center items-center top-0 max-w-[1150px] hidden">
+             className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
             <div className="flex flex-col justify-center">
-                <form id="ModalCreateQueue"
-                      className="box-border backdrop-blur-xl w-[500px] h-[700px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
+                <div id="ModalCreateQueue"
+                     className="box-border backdrop-blur-xl max-w-[500px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground flex flex-col">
                     {/* Заголовок */}
                     <div className="text-3xl">
                         <button type="button" id="closeCreateQueue" className="absolute right-5 top-4">
-                            <svg width="48" height="48" viewBox="0 0 71 71" className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
+                            <svg width="48" height="48" viewBox="0 0 71 71"
+                                 className="stroke-foreground sm:stroke-secondbackground sm:hover:stroke-foregroundhover transition-all">
                                 <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
                                 <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
                             </svg>
                         </button>
-                        <div className="h-[72px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
+                        <div
+                            className="min-h-[72px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2 px-[64px] flex-wrap">
                             <div className="text-foreground">Создание</div>
                             <div>очереди</div>
                         </div>
                     </div>
                     {/* Основное содержимое */}
-                    <div className="flex-1 flex flex-col justify-between text-2xl p-[20px]">
-                        <div className="flex flex-col gap-[10px]">
-                            <input type="text" placeholder="Название" className="w-full rounded-2xl p-[15px] bg-thirdbackground text-textInputt" />
+                    <div className="flex-1 flex flex-col gap-[20px] justify-between text-2xl p-[20px]">
+                        <div className="flex flex-col gap-[20px]">
                             <div className="flex flex-row gap-3 text-textInput">
                                 Приватная очередь
                                 <label className="inline-flex items-center cursor-pointer">
@@ -91,9 +92,9 @@ export default function CreateQueue() {
                             </div>
                             {isPrivate && (
                                 <input
-                                    type="text"
+                                    type="password"
                                     placeholder="Пароль"
-                                    className="w-full rounded-2xl p-[15px] bg-thirdbackground text-textInputt"
+                                    className="w-full rounded-2xl p-[15px] bg-trhirdbackground text-textInput"
                                 />
                             )}
                         </div>
@@ -104,7 +105,7 @@ export default function CreateQueue() {
                             Создать очередь
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     );

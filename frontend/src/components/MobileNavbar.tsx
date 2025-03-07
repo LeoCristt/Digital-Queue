@@ -24,7 +24,7 @@ const MobileNavbar = () => {
     }, []);
 
     return (
-        <nav className="sm:hidden fixed bottom-2 left-2 right-2 bg-secondbackground border-2 border-foregroundhover shadow-2xl rounded-full p-2">
+        <nav className="sm:hidden sticky bottom-[10px] mx-[10px] backdrop-blur-xl bg-backgroundHeader border-2 border-foregroundhover shadow-2xl rounded-full p-2">
             <div className="flex justify-around items-center">
                 {/* Главная */}
                 <Link href="/">
