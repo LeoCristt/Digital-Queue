@@ -1,44 +1,19 @@
 "use client";
-import {useEffect} from "react";
+import { useEffect } from 'react';
 import {useRouter} from "next/navigation";
 
-interface UserData
-{
+interface UserData {
     avatar_url: string;
     // Добавь другие поля, если они есть в userData
 }
 
-interface ModalSettingsProps
-{
+interface ModalSettingsProps {
     userData: UserData;
 }
 
-export default function ModalSettings({userData}:ModalSettingsProps) {
+export default function ModalSettings({userData}: ModalSettingsProps) {
     const router = useRouter();
-
-
-    const removeAccount = async () => {
-        try {
-            const accessToken = localStorage.getItem('access_token');
-            console.log(accessToken);
-            const response = await fetch('http://localhost:8000/api/auth/delete', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ accessToken }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Ошибка при удалении');
-            }
-
-            localStorage.removeItem('access_token');
-            router.push('/');
-        } catch (error) {
-            console.error('Ошибка при выходе:', error);
-        }
-    };
+    const button = document.getElementById("removeAccount")
 
     useEffect(() => {
         const modalContainer = document.getElementById('settingsModalContainer');
@@ -204,11 +179,47 @@ export default function ModalSettings({userData}:ModalSettingsProps) {
         };
     }, []); // remove profile modal
 
+    useEffect(() => {
+        const removeAccount = async () => {
+            try {
+                const accessToken = localStorage.getItem('access_token');
+
+                const headers = new Headers();
+                if (accessToken) {
+                    headers.append('Authorization', `Bearer ${accessToken}`);
+                }
+
+                const response = await fetch('http://localhost:8000/api/auth/delete', {
+                    method: 'DELETE',
+                    headers: headers,
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при удалении');
+                } else {
+                    localStorage.removeItem('access_token');
+
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Ошибка при удалении:', error);
+            }
+        };
+        if (!button) return;
+
+        button.addEventListener("click", removeAccount);
+
+        return () => {
+            button.removeEventListener("click", removeAccount);
+        };
+    }, [button, router]);
+
     return (
         <div id="settingsModalContainer"
              className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
             <div className="flex flex-col justify-center">
-                <form id="settingsModal"
+                <div id="settingsModal"
                       className="box-border backdrop-blur-xl max-w-[500px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
                     {/* Заголовок */}
                     <div className="text-3xl">
@@ -257,7 +268,7 @@ export default function ModalSettings({userData}:ModalSettingsProps) {
                             Удалить учётную запись
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
 
             <div id="imgModalContainer"
@@ -364,7 +375,9 @@ export default function ModalSettings({userData}:ModalSettingsProps) {
                             <button id="closeRemove" type="button"
                                     className="bg-colorbutton rounded-2xl p-[10px]">Отмена
                             </button>
-                            <button id="" type="button" className="bg-red-500 rounded-2xl p-[10px]" onClick={removeAccount}>Удалить</button>
+                            <button id="removeAccount" type="button"
+                                    className="bg-red-500 rounded-2xl p-[10px]">Удалить
+                            </button>
                         </div>
                     </form>
                 </div>

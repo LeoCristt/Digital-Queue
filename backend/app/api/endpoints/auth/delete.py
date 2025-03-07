@@ -39,7 +39,7 @@ async def delete(response: Response, request: Request, db: Session = Depends(get
 
     db.delete(user)
     db.commit()
-    db.refresh(user)
+    # db.refresh(user)
 
     return {
         "message": "Пользователь удален.",
