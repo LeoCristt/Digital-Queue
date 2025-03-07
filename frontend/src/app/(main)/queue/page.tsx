@@ -8,6 +8,7 @@ import LineVertSvg from '../../../assets/images/LineVert.svg';
 import LineGorSvg from '../../../assets/images/LineGor.svg';
 import QueueTable from "../../../components/queue-table";
 import Chat from '@/components/ModalChat';
+import QueueQuit from '@/components/ModalQueueQuit';
 
 export default function Queue() {
     return (
@@ -38,7 +39,8 @@ export default function Queue() {
                     </div>
                 </div>
                 <div className="queue-button">
-                    <button id="openchat">Выйти из очереди</button>
+                    <button id="openQueueQuit">Выйти из очереди</button>
+                    <QueueQuit/>
                 </div>
             </div>
             <div className="queue-rightside sidebar">
