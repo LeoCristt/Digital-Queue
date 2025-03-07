@@ -40,9 +40,9 @@ export default function QueueQuit() {
         };
     }, []);
     return (
-            <div id="ModalContainerQueueQuit" className="fixed right-2 bottom-24 flex flex-col justify-center max-w-[1150px] hidden media-chat">
+            <div id="ModalContainerQueueQuit" className="fixed z-[50] top-0 bottom-0 left-200 pt-[31px] flex items-center justify-center max-w-[1150px] hidden media-chat">
                 <form id="ModalQueueQuit"
-                      className="box-border backdrop-blur-xl w-[300px] h-[550px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form ">
+                      className="box-border backdrop-blur-xl w-[520px] h-[250px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form-quit">
                     {/* Заголовок */}
                     <div className="text-2xl">
                         <button type="button" id="closeQueueQuit" className="absolute right-5 top-2">
@@ -52,13 +52,16 @@ export default function QueueQuit() {
                             </svg>
                         </button>
                         <div className="h-[48px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
-                            <div className="text-foreground">Чат</div>
+                            <div className="text-foreground text-3xl">Выход из очереди</div>
                         </div>
                     </div>
                     {/* Основное содержимое */}
-                    <div className="p-3 mt-auto flex gap-2">
-                        <input type="text" placeholder="Введите сообщение..." className="w-full p-2 rounded-lg bg-trhirdbackground text-textInputt"/>
-                        <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg">Отправить</button>
+                    <div className="flex flex-col gap-8 items-center justify-center h-[174px]">
+                        <p className="text-3xl">Вы точно хотите покинуть очередь?</p>
+                        <div className="flex justify-center gap-10">
+                            <button type="submit" className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Да</button>
+                            <button type="submit" className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Нет</button>
+                        </div>
                     </div>
                 </form>
             </div>

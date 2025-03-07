@@ -48,7 +48,7 @@ export default function Chat() {
     return (
             <div id="ModalContainerChat" className="fixed right-2 bottom-24 flex flex-col justify-center max-w-[1150px] hidden media-chat">
                 <form id="ModalChat"
-                      className="box-border backdrop-blur-xl w-[300px] h-[550px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form ">
+                      className="box-border backdrop-blur-xl w-[300px] h-[550px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form">
                     {/* Заголовок */}
                     <div className="text-2xl">
                         <button type="button" id="closeChat" className="absolute right-5 top-2">

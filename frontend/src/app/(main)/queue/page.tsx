@@ -40,7 +40,6 @@ export default function Queue() {
                 </div>
                 <div className="queue-button">
                     <button id="openQueueQuit">Выйти из очереди</button>
-                    <QueueQuit/>
                 </div>
             </div>
             <div className="queue-rightside sidebar">
@@ -54,6 +53,7 @@ export default function Queue() {
                 </svg>
             </button>
             <Chat/>
+            <QueueQuit/>
         </div>
     );
 }

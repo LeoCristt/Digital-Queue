@@ -137,7 +137,7 @@
     gap: 10px;
 }
 
-.queue-button button {
+#openQueueQuit {
     font-size: 22px;
     background-color: var(--buttoncolor);
     border-radius: 10px;
@@ -280,6 +280,10 @@
     .media-form {
         width: 57vh;
         height: 530px;
+        backdrop-filter: none;
+    }
+
+    .media-form-quit {
         backdrop-filter: none;
     }
 }
