@@ -1,5 +1,6 @@
 "use client";
 import {useEffect} from "react";
+import {useRouter} from "next/navigation";
 
 interface UserData
 {
@@ -13,6 +14,32 @@ interface ModalSettingsProps
 }
 
 export default function ModalSettings({userData}:ModalSettingsProps) {
+    const router = useRouter();
+
+
+    const removeAccount = async () => {
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            console.log(accessToken);
+            const response = await fetch('http://localhost:8000/api/auth/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ accessToken }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при удалении');
+            }
+
+            localStorage.removeItem('access_token');
+            router.push('/');
+        } catch (error) {
+            console.error('Ошибка при выходе:', error);
+        }
+    };
+
     useEffect(() => {
         const modalContainer = document.getElementById('settingsModalContainer');
         const modal = document.getElementById('settingsModal');
@@ -283,7 +310,7 @@ export default function ModalSettings({userData}:ModalSettingsProps) {
                                 </label>
                                 <input
                                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
-                                    id="password1"
+                                    id="password"
                                     name="password"
                                     required
                                     type="password"
@@ -297,7 +324,7 @@ export default function ModalSettings({userData}:ModalSettingsProps) {
                                     <input
                                         className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
                                         id="password1"
-                                        name="password"
+                                        name="password1"
                                         required
                                         type="password"
                                     />
@@ -337,7 +364,7 @@ export default function ModalSettings({userData}:ModalSettingsProps) {
                             <button id="closeRemove" type="button"
                                     className="bg-colorbutton rounded-2xl p-[10px]">Отмена
                             </button>
-                            <button id="" type="button" className="bg-red-500 rounded-2xl p-[10px]">Удалить</button>
+                            <button id="" type="button" className="bg-red-500 rounded-2xl p-[10px]" onClick={removeAccount}>Удалить</button>
                         </div>
                     </form>
                 </div>
