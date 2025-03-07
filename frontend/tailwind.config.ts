@@ -22,6 +22,7 @@ export default {
         skinsurvivor: 'var(--skinsurvivor)',
         skinlegend: 'var(--skinlegend)',
       },
+
     },
   },
   plugins: [],
