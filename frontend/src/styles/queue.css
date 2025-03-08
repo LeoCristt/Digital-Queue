@@ -1,11 +1,4 @@
-:root {
-    --secondbackground:#16253B;
-    --buttoncolor: #932B2B;
-    --linecolor: #00FF88;
-    --scrollcolor: #888;
-    --scrollbackcolor: white;
-    --buttoncolordop: #cfac10;  
-}
+@import "colors.css";
 
 .queue-main {
     display: flex;
