@@ -86,7 +86,7 @@ const Header = () => {
     };
 
     return (
-        <header className="backdrop-blur-xl bg-backgroundHeader w-full sticky top-0 z-50 py-2 px-2">
+        <header className="backdrop-blur-xl bg-backgroundHeader w-full sticky top-0 z-50 py-2 px-4">
             <nav className="hidden container px-4 py-2 sm:flex items-center justify-between text-lg"> {/* Уменьшил padding и размер шрифта */}
                 <Link href="/" className="align-center text-xl"> {/* Уменьшил размер шрифта */}
                     DQ
@@ -131,4 +131,4 @@ const Header = () => {
     );
 };
 
-export default Header;1
+export default Header;
