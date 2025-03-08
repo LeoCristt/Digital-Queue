@@ -37,13 +37,20 @@ export default function QueueQuit() {
             modal.removeEventListener('animationend', closeModal);
         }
 
+        const handleFormSubmit = (event: { preventDefault: () => void; }) => {
+            event.preventDefault();
+        };
+
         chatButton.addEventListener('click', openModal);
         chatCloseButton.addEventListener('click', closeModalAnimationProcess);
+        modal.addEventListener('submit', handleFormSubmit);
 
         return () => {
             chatButton.removeEventListener('click', openModal);
             chatCloseButton.removeEventListener('click', closeModalAnimationProcess);
             modal.removeEventListener('animationend', closeModal);
+            modal.removeEventListener('submit', handleFormSubmit);
+
         };
     }, []);
     return (
@@ -52,22 +59,16 @@ export default function QueueQuit() {
                       className="box-border backdrop-blur-xl w-[520px] h-[250px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form-quit">
                     {/* Заголовок */}
                     <div className="text-2xl">
-                        <button type="button" id="closeQueueQuit" className="absolute right-5 top-2">
-                            <svg width="40" height="40" viewBox="0 0 71 71" className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
-                                <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
-                                <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
-                            </svg>
-                        </button>
                         <div className="h-[48px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
-                            <div className="text-foreground text-3xl">Выход из очереди</div>
+                            <div className="zagolovok text-foreground text-3xl">Выход из очереди</div>
                         </div>
                     </div>
                     {/* Основное содержимое */}
                     <div className="flex flex-col gap-8 items-center justify-center h-[174px]">
-                        <p className="text-3xl">Вы точно хотите покинуть очередь?</p>
+                        <p className="zagolovok text-3xl">Вы точно хотите покинуть очередь?</p>
                         <div className="flex justify-center gap-10">
-                            <button className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]" onClick={leaveQueue}>Да</button>
-                            <button className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Нет</button>
+                            <button type="submit" className="vihodqueue bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]" onClick={leaveQueue}>Да</button>
+                            <button type="submit" id="closeQueueQuit" className="vihodqueue bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Нет</button>
                         </div>
                     </div>
                 </form>

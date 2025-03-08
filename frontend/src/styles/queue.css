@@ -283,6 +283,10 @@
         font-size: 35px;
     }
 
+    .queue-leftside-conteiner {
+        margin-top: 40px;
+    }
+
     .queue-leftside-ticket {
         height: 190px;
     }
@@ -318,16 +322,36 @@
     }
 
     .media-form {
-        width: 57vh;
+        width: 45vh;
         height: 530px;
         backdrop-filter: none;
     }
 
     .media-form-quit {
         backdrop-filter: none;
+        width: 44vh;
     }
 
     .queue-button {
         padding: 0px 7px;
+    }
+
+    .queue-admin-controls {
+        padding: 0px 7px;
+    }
+
+    .queue-admin-controls button {
+        font-size: 16px;
+    }
+
+    .vihodqueue {
+        font-size: 22px;
+        width: 150px;
+    }
+
+    .zagolovok {
+        font-size: 27px;
+        text-align: center;
+        width: 290px;
     }
 }
