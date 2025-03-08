@@ -21,7 +21,7 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
     const { id } = params;
-    const {queue, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
+    const {queue, sendSwapRequest, incomingSwapRequest, acceptSwap, declineSwap, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
         typeof id === "string" ? id : ""
     );
     const queueId1 = params.id as string;
@@ -100,7 +100,8 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                 </div>
                 <div className="queue-rightside sidebar">
                     <QueueTable queue={queue}
-                                currentUserId={userId ?? undefined}/>
+                                currentUserId={userId ?? undefined}
+                                sendSwapRequest={sendSwapRequest}/>
                 </div>
                 <button id="openChat" className="fixed bottom-5 right-5 bg-secondbackground rounded-full p-[10px]">
                     <svg className="fill-foreground w-[40px]" version="1.1" viewBox="0 0 60 60">
@@ -109,6 +110,13 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                         c0.405-0.057,9.813-1.412,16.617-5.338C21.622,54.711,25.738,55.5,30,55.5c16.542,0,30-12.112,30-27S46.542,1.5,30,1.5z"/>
                     </svg>
                 </button>
+                {incomingSwapRequest && (
+                    <div className="swap-request-modal">
+                        <p>Пользователь {incomingSwapRequest.from} предлагает обмен. Принять?</p>
+                        <button onClick={acceptSwap}>Принять</button>
+                        <button onClick={declineSwap}>Отклонить</button>
+                    </div>
+                )}
                 <Chat/>
                 <QueueQuit/>
             </div>

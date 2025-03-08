@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 export const useWebSocket = (queueId: string) => {
   const [messages, setMessages] = useState<{ user_id: string; text: string; timestamp: number }[]>([]);
   const [queue, setQueue] = useState<string[]>([]);
+  const [incomingSwapRequest, setIncomingSwapRequest] = useState<{ from: string } | null>(null);
+  const [swapResult, setSwapResult] = useState<{ status: 'accepted' | 'declined'; with: string } | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -38,6 +40,11 @@ export const useWebSocket = (queueId: string) => {
             setMessages((prev) => [...prev, parsed.data]);
           } else if (parsed.type === "chat_history") {
             setMessages(parsed.data);
+          } else if (parsed.type === "swap_request") {
+            setIncomingSwapRequest({ from: parsed.from });
+          } else if (parsed.type === "swap_result") {
+            setSwapResult({ status: parsed.status, with: parsed.with });
+            setTimeout(() => setSwapResult(null), 5000);
           }
         } catch (e) {
           console.error("Ошибка парсинга:", e);
@@ -83,5 +90,22 @@ export const useWebSocket = (queueId: string) => {
     router.push('/')
   }
 
-  return { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue };
+  const sendSwapRequest = (targetId: string) => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(`swap_request:${targetId}`);
+    }
+  };
+
+  const acceptSwap = () => {
+    socketRef.current?.send("swap_accept");
+    setIncomingSwapRequest(null);
+  };
+
+  const declineSwap = () => {
+    socketRef.current?.send("swap_decline");
+    setIncomingSwapRequest(null);
+  };
+
+
+  return { messages, queue, incomingSwapRequest, swapResult, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue, sendSwapRequest, acceptSwap, declineSwap };
 };
