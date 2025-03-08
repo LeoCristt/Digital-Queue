@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /*--background: #FFFFFF;          !* Основной фон - белый *!*/
+    /*--secondbackground: #F5F7FA;    !* Вторичный фон - светло-серый *!*/
+    /*--trhirdbackground: #E4E7EB;    !* Третичный фон - серый *!*/
+    /*--backgroundHeader: rgba(255, 255, 255, 0.95); !* Полупрозрачный светлый *!*/
+    /*--foreground: #007A5E;          !* Основной акцент - изумрудный *!*/
+    /*--colorbutton: #009672;         !* Кнопки - темно-бирюзовый *!*/
+    /*--importantcolorbutton: #C62828;!* Важные кнопки - алый *!*/
+    /*--textColor: #2D3748;           !* Основной текст - темно-серый *!*/
+    /*--textInput: #718096;           !* Текст полей ввода - серый *!*/
+    /*--foregroundhover: #00694E;     !* Ховер-акцент - темный изумруд *!*/
+    /*--skinsurvivor: #D32F2F;        !* Скин выжившего - насыщенный красный *!*/
+    /*--skinlegend: #FFAB00;          !* Скин легенды - янтарный *!*/
+    /*--buttoncolor: #932B2B;*/
+    /*--linecolor: #00FF88;*/
+    /*--scrollcolor: #888;*/
+    /*--scrollbackcolor: white;*/
+    /*--buttoncolordop: #cfac10;*/
+
+    --background: #0A1B30;
+    --secondbackground:#16253B;
+    --trhirdbackground: #384152;
+    --backgroundHeader: rgba(10, 27, 48, 0.75);
+    --foreground: #00FF88;
+    --colorbutton:#00BE65;
+    --importantcolorbutton: #932B2B;
+    --textColor: #ffffff;
+    --textInput: #939AA4;
+    --foregroundhover: #0bc578;
+    --skinsurvivor: #ef0606;
+    --skinlegend: #ffcd00;
+    --buttoncolor: #932B2B;
+    --linecolor: #00FF88;
+    --scrollcolor: #888;
+    --scrollbackcolor: white;
+    --buttoncolordop: #cfac10;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0A1B30;
+        --secondbackground:#16253B;
+        --trhirdbackground: #384152;
+        --backgroundHeader: rgba(10, 27, 48, 0.75);
+        --foreground: #00FF88;
+        --colorbutton:#00BE65;
+        --importantcolorbutton: #932B2B;
+        --textColor: #ffffff;
+        --textInput: #939AA4;
+        --foregroundhover: #0bc578;
+        --skinsurvivor: #ef0606;
+        --skinlegend: #ffcd00;
+        --buttoncolor: #932B2B;
+        --linecolor: #00FF88;
+        --scrollcolor: #888;
+        --scrollbackcolor: white;
+        --buttoncolordop: #cfac10;
+    }
+}
