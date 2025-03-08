@@ -113,23 +113,23 @@ export default function Login() {
           </button>
         </div>
         <div className="relative mt-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-600"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gray-800 text-gray-400">Или продолжить с</span>
-          </div>
+          {/*<div className="absolute inset-0 flex items-center">*/}
+          {/*  <div className="w-full border-t border-gray-600"></div>*/}
+          {/*</div>*/}
+          {/*<div className="relative flex justify-center text-sm">*/}
+          {/*  <span className="px-2 bg-gray-800 text-gray-400">Или продолжить с</span>*/}
+          {/*</div>*/}
         </div>
-        <div className="grid gap-3">
-          <div>
-            <Link
-              href="/login/yandex"
-              className="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
-            >
-              Яндекс
-            </Link>
-          </div>
-        </div>
+        {/*<div className="grid gap-3">*/}
+        {/*  <div>*/}
+        {/*    <Link*/}
+        {/*      href="/login/yandex"*/}
+        {/*      className="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"*/}
+        {/*    >*/}
+        {/*      Яндекс*/}
+        {/*    </Link>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </form>
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-400">

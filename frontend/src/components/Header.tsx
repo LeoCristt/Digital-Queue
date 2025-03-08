@@ -46,10 +46,6 @@ const Header = () => {
             label: 'Профиль',
             authRequired: true
         },
-        {
-            href: '/contact',
-            label: 'Информация'
-        },
     ];
 
     const handleProtectedNavigation = (path: string) => {
@@ -63,18 +59,18 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             const accessToken = localStorage.getItem('access_token');
-            
+
             const headers = new Headers();
             if (accessToken) {
                 headers.append('Authorization', `Bearer ${accessToken}`);
             }
-    
+
             const response = await fetch('http://localhost:8000/api/auth/logout', {
                 method: 'POST',
                 headers: headers,
-                credentials: 'include' 
+                credentials: 'include'
             });
-    
+
             if (!response.ok) {
                 throw new Error('Ошибка при выходе');
             }
@@ -82,7 +78,7 @@ const Header = () => {
             localStorage.removeItem('access_token');
             setIsAuthenticated(false);
             setUserId(null);
-            
+
             router.push('/');
         } catch (error) {
             console.error('Ошибка при выходе:', error);
@@ -90,9 +86,9 @@ const Header = () => {
     };
 
     return (
-        <header className="backdrop-blur-xl bg-backgroundHeader w-full flex justify-between sticky top-0 z-50 mt-2">
-            <nav className="hidden container mx-auto px-4 py-4 sm:flex items-center justify-between">
-                <Link href="/" className="align-center text-[20px]">
+        <header className="backdrop-blur-xl bg-backgroundHeader w-full sticky top-0 z-50 py-2 px-4">
+            <nav className="hidden container px-4 py-2 sm:flex items-center justify-between text-lg"> {/* Уменьшил padding и размер шрифта */}
+                <Link href="/" className="align-center text-xl"> {/* Уменьшил размер шрифта */}
                     DQ
                 </Link>
 
@@ -120,7 +116,8 @@ const Header = () => {
                     })}
                 </div>
 
-                <div className="flex space-x-6 bg-foreground text-black p-2 rounded-2xl shadow-4xl">
+
+                <div className="flex space-x-6 bg-foreground text-black p-1 rounded-2xl shadow-4xl"> {/* Уменьшил padding */}
                     {isAuthenticated ? (
                         <button onClick={handleLogout}>Выйти</button>
                     ) : (
