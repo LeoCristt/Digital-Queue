@@ -1,12 +1,8 @@
-from fastapi.testclient import TestClient
-from app.main import app
 from app.models.user import User
 from app.core.security import verify_password, REFRESH_TOKEN_EXPIRE_DAYS
 
-client = TestClient(app)
-
 # Тест 1: Успешная регистрация
-def test_register_success(db_session):
+def test_register_success(client, db_session):
     test_data = {
         "email": "test@example.com",
         "username": "testuser",
@@ -25,7 +21,7 @@ def test_register_success(db_session):
     assert verify_password(test_data["password"], user.hashed_password)
 
 # Тест 2: Несовпадающие пароли
-def test_register_password_mismatch():
+def test_register_password_mismatch(client):
     test_data = {
         "email": "test2@example.com",
         "username": "testuser2",
@@ -39,7 +35,7 @@ def test_register_password_mismatch():
     assert "Пароли не совпадают" in response.json()["detail"]
 
 # Тест 3: Занятый email
-def test_register_existing_email(db_session):
+def test_register_existing_email(client, db_session):
     # Создаем существующего пользователя
     existing_user = User(
         email="existing@example.com",
@@ -62,7 +58,7 @@ def test_register_existing_email(db_session):
     assert "Почта или логин уже зарезервированы" in response.json()["detail"]
 
 # Тест 4: Занятый username
-def test_register_existing_username(db_session):
+def test_register_existing_username(client, db_session):
     existing_user = User(
         email="another@example.com",
         username="takenusername",
@@ -108,7 +104,7 @@ def test_refresh_token_cookie(client):
     assert f"Max-Age={REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600}" in cookie_header
 
 # Тест 6: Некорректный email
-def test_register_invalid_email():
+def test_register_invalid_email(client):
     test_data = {
         "email": "not-an-email",
         "username": "invalidemail",
@@ -122,7 +118,7 @@ def test_register_invalid_email():
     assert "value is not a valid email address" in str(response.json())
 
 # Тест 7: Слабый пароль
-def test_register_weak_password():
+def test_register_weak_password(client):
     test_data = {
         "email": "weak@example.com",
         "username": "weakpassword",
