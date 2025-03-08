@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from pydantic import field_validator
 
 # Базовая схема для пользователя
 class UserBase(BaseModel):
@@ -22,3 +23,10 @@ class User(UserBase):
 
     class Config:
         from_attributes = True  # Ранее orm_mode = True
+
+class UserCreateWithPasswordValidation(UserCreate):
+    @field_validator('password')
+    def validate_password_length(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        return v

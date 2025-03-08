@@ -9,3 +9,5 @@ argon2_cffi
 python-multipart
 websockets
 requests
+pytest
+httpx
