@@ -1,0 +1,291 @@
+:root {
+    --secondbackground:#16253B;
+    --buttoncolor: #932B2B;
+    --linecolor: #00FF88;
+    --scrollcolor: #888;
+    --scrollbackcolor: white;
+    --buttoncolordop: #C4A24A;  
+}
+
+.queue-main {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.queue-leftside {
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.queue-table-empty {
+    text-align: center;
+    width: 100%;
+    color: #666;
+    padding: 1rem;
+  }
+
+.queue-rightside {
+    margin-left: 30px;
+    margin-right: 50px;
+}
+
+.sidebar {
+    border-radius: 10px;
+    width: 700px;
+    height: 90vh;
+    background-color: var(--secondbackground);
+}
+
+.queue-leftside-position {
+    text-align: center;
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+}
+
+.queue-leftside-position p{
+    font-size: 42px;
+    width: 300px;
+}
+
+.queue-leftside-conteiner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.queue-leftside-ticket {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 260px;
+}
+
+.queue-leftside-ticket-img {
+    height: 100%;
+}
+
+.queue-leftside-time {
+    margin: 0px 0px 45px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.queue-leftside-time p{
+    text-align: center;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+.queue-leftside-time img {
+    width: 68px;
+    height: 68px;
+}
+
+.queue-leftside-ticket-in {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    gap: 25px;
+}
+
+.leftcolumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 15px;
+    min-width: 52px;
+}
+
+.leftcolumn-toparrow-image {
+    height: 35px;
+    margin-bottom: 0px;
+}
+
+.leftcolumn-downarrow-image {
+    height: 35px;
+    margin-top: 0px;
+}
+
+.leftcolumn-hashtag-image {
+    height: 47px;
+}
+
+.rightcolumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+}
+
+.rightcolumn-ticketnumber {
+    font-size: 54px;
+    margin-right: auto;
+}
+
+.rightcolumn-remaining {
+    font-size: 24px;
+}
+
+.queue-button {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    bottom: 50px;
+    gap: 10px;
+}
+
+.queue-button button {
+    font-size: 22px;
+    background-color: var(--buttoncolor);
+    border-radius: 10px;
+    width: 200px;
+    height: 48px;
+}
+
+.queue-button button:first-child{
+    background-color: var(--linecolor);
+    color:black
+}
+
+.queue-rightside {
+    position: relative;
+    overflow: hidden;
+}
+
+.queue-rightside::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 25%;
+    width: 4px;
+    background-color: var(--linecolor);
+    height: 100%;
+}
+
+.queue-rightside-horiz {
+    margin: 0px 15px;
+}
+
+.queue-table {
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    width: 100%;
+    background-color: var(--secondbackground);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    height: 85vh;
+    min-height: 500px;
+}
+
+.queue-table-header {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    font-size: 42px;
+    text-align: center;
+    border-bottom: 4px solid var(--linecolor);
+    position: relative;
+}
+
+.queue-table-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.queue-table-row {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    text-align: center;
+    font-size: 24px;
+    padding: 15px;
+    position: relative;
+}
+
+.queue-table-number {
+    position: relative;
+}
+
+.queue-table-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.queue-table-body::-webkit-scrollbar-track {
+    background: var(--scrollbackcolor);
+    border-radius: 4px;
+}
+
+.queue-table-body::-webkit-scrollbar-thumb {
+    background: var(--scrollcolor);
+    border-radius: 4px;
+}
+
+.queue-table-body::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollcolor);
+}
+
+/* МЕДИАХУНЯ 9MICE KOSTILI NASHE VSE :/ */
+
+@media(max-width: 768px){
+    .queue-main {
+        flex-direction: column;
+        gap: 30px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar {
+        width: auto;
+        margin: 0px 22px;
+    }
+
+    .queue-leftside-position p {
+        font-size: 35px;
+    }
+
+    .queue-leftside-ticket {
+        height: 190px;
+    }
+
+    .queue-leftside-ticket-img {
+        height: 100%;
+        margin: 0px 150px;
+    }
+
+    .leftcolumn {
+        justify-content: center;
+        gap: 7px;
+    }
+
+    .rightcolumn-remaining {
+        font-size: 20px;
+    }
+
+    .queue-leftside-ticket-in {
+        left: 57%;
+    }
+
+    .leftcolumn-downarrow-image, .leftcolumn-toparrow-image {
+        height: 29px;
+    }
+
+    .leftcolumn-hashtag-image {
+        height: 46px;
+    }
+
+    .queue-table-header {
+        font-size: 35px;
+    }
+}

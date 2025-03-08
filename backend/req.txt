@@ -8,6 +8,7 @@ python-jose
 argon2_cffi
 python-multipart
 websockets
+gigachat
 requests
 pytest
 httpx

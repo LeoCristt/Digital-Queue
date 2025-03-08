@@ -10,40 +10,16 @@ from app.core.security import (
     ALGORITHM
 )
 from jose import jwt
-import requests
+from gigachat import GigaChat
 
 # Глобальные переменные для хранения очереди и подключений
 queues = {}
 
 async def send_message_to_gigachat(message: str):
-    """
-    Отправляет сообщение в Gigachat API и возвращает ответ.
-    """
-    url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
-
-    payload={
-    'scope': 'GIGACHAT_API_PERS'
-    }
-    headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json',
-    'RqUID': '2a6cf25a-1bdd-4e77-ad10-7a82781af8a1',
-    'Authorization': 'Basic MTVmZjQ5NTUtNTQ5OS00ODViLWE3NzItZTQzMjM1MDU4MTZjOjcxN2ZlM2ExLTdmYzYtNDBmYS1iMmFjLWQyOTc2YThjOGIwNA=='
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    url = "https://gigachat.devices.sberbank.ru/api/v1/models"
-
-    payload={}
-    headers = {
-    'Accept': 'application/json',
-    'Authorization': f'Bearer {response.text}'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response.text
+    # Укажите ключ авторизации, полученный в личном кабинете, в интерфейсе проекта GigaChat API
+    with GigaChat(credentials="MTVmZjQ5NTUtNTQ5OS00ODViLWE3NzItZTQzMjM1MDU4MTZjOjcxN2ZlM2ExLTdmYzYtNDBmYS1iMmFjLWQyOTc2YThjOGIwNA==", verify_ssl_certs=False) as giga:
+        response = giga.chat(message)
+        return (response.choices[0].message.content)
 
 def register_websocket_handlers(app):
     @app.websocket("/api/queue/{queue_id}")
@@ -90,6 +66,7 @@ def register_websocket_handlers(app):
                 "last_processing_start": None,  # Время начала обработки текущего пользователя
                 "avg_time": None,  # Среднее время обработки
                 "messages": [],  # История сообщений чата
+                "swap_requests": {},
             }
         else:
             # Если очередь уже существует
@@ -106,6 +83,8 @@ def register_websocket_handlers(app):
             # Добавляем подключение в список
             active_connections.append((websocket, client_id))
 
+            await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+
             await websocket.send_json({
                 "type": "chat_history",
                 "data": queues[queue_id]["messages"][-50:]  # Последние 50 сообщений
@@ -114,8 +93,29 @@ def register_websocket_handlers(app):
             while True:
                 data = await websocket.receive_text()
 
+                # Добавьте проверку просроченных запросов в цикл обработки сообщений
+                if int(time.time()) % 10 == 0:  # Проверка каждые 10 секунд
+                    current_time = time.time()
+                    expired = [target_id for target_id, req in queues[queue_id]["swap_requests"].items() 
+                            if current_time - req["timestamp"] > 30]
+                    
+                    for target_id in expired:
+                        sender_id = queues[queue_id]["swap_requests"][target_id]["from"]
+                        del queues[queue_id]["swap_requests"][target_id]
+                        await send_personal_message(sender_id, {"type": "swap_result", "status": "timeout"}, active_connections)
+
                 if data.startswith("message:"):
                     message_text = data[len("message:"):].strip()
+                    if message_text:
+                        new_message = {
+                            "user_id": client_id,
+                            "text": message_text,
+                            "timestamp": time.time(),
+                        }
+                        queues[queue_id]["messages"].append(new_message)
+                        
+                        # Рассылаем сообщение всем участникам
+                        await broadcast_message(active_connections, new_message)
                     if "/ai" in message_text:
                         # Разделяем сообщение на части
                         parts = message_text.split("/ai", 1)
@@ -142,34 +142,25 @@ def register_websocket_handlers(app):
                                     await websocket.send_text(f"error: Ошибка при взаимодействии с Gigachat: {str(e)}")
                         else:
                             await websocket.send_text("error: Не указано сообщение для нейронки после /ai")
-                    else:
-                        # Обрабатываем как обычное сообщение
-                        if message_text:
-                            new_message = {
-                                "user_id": client_id,
-                                "text": message_text,
-                                "timestamp": time.time(),
-                            }
-                            queues[queue_id]["messages"].append(new_message)
-                            
-                            # Рассылаем сообщение всем участникам
-                            await broadcast_message(active_connections, new_message)
                     continue
                 
                 if data == "join":
-                    if client_id not in [user["client_id"] for user in current_queue]:
-                        current_queue.append({
+                    if client_id not in [user["client_id"] for user in queues[queue_id]["queue"]]:
+                        queues[queue_id]["queue"].append({
                             "client_id": client_id,
                             "join_time": time.time()  # Сохраняем время добавления
                         })
-                        await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                        await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                     else:
                         await websocket.send_text("error: Вы уже в очереди!")
                 
                 elif data == "leave":
-                    if client_id in [user["client_id"] for user in current_queue]:
-                        current_queue = [user for user in current_queue if user["client_id"] != client_id]
-                        await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                    # Удаляем пользователя из очереди в глобальном словаре
+                    queues[queue_id]["queue"] = [
+                        user for user in queues[queue_id]["queue"] 
+                        if user["client_id"] != client_id
+                    ]
+                    await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
 
                 elif data == "delete":
                     if client_id == queue_id:
@@ -189,6 +180,7 @@ def register_websocket_handlers(app):
                         
                         # Очищаем локальный список подключений
                         active_connections.clear()
+                        break
                     else:
                         await websocket.send_text("error: Только создатель очереди может её удалить!")
                 
@@ -203,12 +195,12 @@ def register_websocket_handlers(app):
                             queue_data["avg_time"] = sum(queue_data["processing_times"]) / len(queue_data["processing_times"])
                             await websocket.send_text(f"info: Предыдущий пользователь обработан за {processing_time:.1f} сек. Среднее время: {queue_data['avg_time']:.1f} сек")
 
-                        if current_queue:
+                        if queues[queue_id]["queue"]:
                             # Начинаем обработку нового пользователя
-                            removed_user = current_queue.pop(0)
+                            removed_user = queues[queue_id]["queue"].pop(0)
                             queue_data["removed_user"] = removed_user
                             queue_data["last_processing_start"] = time.time()  # Запускаем новый таймер
-                            await broadcast_queue(active_connections, current_queue, queue_data.get("avg_time"))
+                            await broadcast_queue(active_connections, queues[queue_id]["queue"], queue_data.get("avg_time"))
                             await websocket.send_text(f"info: Начата обработка пользователя {removed_user['client_id']}")
                         else:
                             queue_data["last_processing_start"] = None  # Сбрасываем таймер
@@ -221,19 +213,113 @@ def register_websocket_handlers(app):
                         removed_user = queues[queue_id]["removed_user"]
                         if removed_user:
                             # Возвращаем пользователя обратно в начало очереди
-                            current_queue.insert(0, removed_user)  # Вставляем в начало
+                            queues[queue_id]["queue"].insert(0, removed_user)  # Вставляем в начало
                             queues[queue_id]["removed_user"] = None
-                            await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+                            await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                             await websocket.send_text(f"info: Пользователь {removed_user['client_id']} возвращен в очередь.")
                         else:
                             await websocket.send_text("error: Нет пользователя для возврата!")
                     else:
                         await websocket.send_text("error: Только создатель очереди может использовать команду 'undo'!")
+                
+                elif data.startswith("swap_request:"):
+                    try:
+                        target_id = data.split(":")[1].strip()
+
+                        # В блоке обработки swap_request добавьте проверку существующих запросов
+                        if queues[queue_id]["swap_requests"].get(target_id):
+                            await websocket.send_text("error: У пользователя уже есть активный запрос!")
+                            return
+                        
+                        # Проверка что оба пользователя в очереди
+                        current_queue = queues[queue_id]["queue"]
+                        sender_in_queue = any(user["client_id"] == client_id for user in current_queue)
+                        target_in_queue = any(user["client_id"] == target_id for user in current_queue)
+                        
+                        if not sender_in_queue:
+                            await websocket.send_text("error: Вы не в очереди!")
+                        elif not target_in_queue:
+                            await websocket.send_text("error: Целевой пользователь не в очереди!")
+                        elif target_id == client_id:
+                            await websocket.send_text("error: Нельзя меняться с собой!")
+                        else:
+                            # Сохраняем запрос
+                            queues[queue_id]["swap_requests"][target_id] = {
+                                "from": client_id,
+                                "timestamp": time.time()
+                            }
+                            
+                            # Отправляем уведомления
+                            await send_personal_message(target_id, {
+                                "type": "swap_request",
+                                "from": client_id
+                            }, active_connections)
+                            
+                            await websocket.send_text("info: Запрос на обмен отправлен")
+
+                    except Exception as e:
+                        await websocket.send_text("error: Неверный формат команды. Используйте: swap_request:user_id")
+
+                elif data == "swap_accept":
+                    await process_swap_response(client_id, queue_id, True, active_connections)
+
+                elif data == "swap_decline":
+                    await process_swap_response(client_id, queue_id, False, active_connections)
 
         except WebSocketDisconnect:
             # Удаляем подключение при разрыве
             active_connections.remove((websocket, client_id))
             await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+
+    async def send_personal_message(target_id, message, connections):
+        for ws, cid in connections:
+            if cid == target_id:
+                try:
+                    await ws.send_json(message)
+                except:
+                    pass
+                break
+
+    async def process_swap_response(client_id, queue_id, accepted, active_connections):
+        request = queues[queue_id]["swap_requests"].get(client_id)
+        
+        if not request:
+            return
+        
+        sender_id = request["from"]
+        del queues[queue_id]["swap_requests"][client_id]
+        
+        if accepted:
+            try:
+                sender_idx = next(i for i, u in enumerate(queues[queue_id]["queue"]) if u["client_id"] == sender_id)
+                target_idx = next(i for i, u in enumerate(queues[queue_id]["queue"]) if u["client_id"] == client_id)
+            except StopIteration:
+                return
+            
+            # Обмен позициями
+            queues[queue_id]["queue"][sender_idx], queues[queue_id]["queue"][target_idx] = queues[queue_id]["queue"][target_idx], queues[queue_id]["queue"][sender_idx]
+            
+            # Рассылаем обновленную очередь
+            await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
+            
+            # Отправляем подтверждения
+            await send_personal_message(sender_id, {
+                "type": "swap_result",
+                "status": "accepted",
+                "with": client_id
+            }, active_connections)
+            
+            await send_personal_message(client_id, {
+                "type": "swap_result",
+                "status": "accepted",
+                "with": sender_id
+            }, active_connections)
+        else:
+            await send_personal_message(sender_id, {
+                "type": "swap_result",
+                "status": "declined",
+                "with": client_id
+            }, active_connections)
 
     async def broadcast_queue(active_connections, current_queue, avg_time):
         if avg_time is None:
