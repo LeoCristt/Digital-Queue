@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
-from app.schemas.user import UserCreate
+from app.schemas.user import UserCreateWithPasswordValidation
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.user import User
@@ -9,7 +9,7 @@ from app.core.security import create_access_token, create_refresh_token, REFRESH
 router = APIRouter()
 
 @router.post("/register")
-async def register(response: Response, user: UserCreate, db: Session = Depends(get_db)):
+async def register(response: Response, user: UserCreateWithPasswordValidation, db: Session = Depends(get_db)):
     if user.password != user.re_password:
         raise HTTPException(status_code=400, detail="Пароли не совпадают!")
     db_user_email = db.query(User).filter(User.email == user.email).first()
