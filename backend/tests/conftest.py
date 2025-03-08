@@ -47,7 +47,8 @@ def test_user(db_session):
     user = User(
         email="test@example.com",
         username="testuser",
-        hashed_password=get_password_hash("TestPass123!")
+        hashed_password=get_password_hash("TestPass123!"),
+        avatar_url="/static/avatars/default_avatar.png"
     )
     db_session.add(user)
     db_session.commit()
