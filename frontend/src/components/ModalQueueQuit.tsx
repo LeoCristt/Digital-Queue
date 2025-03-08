@@ -1,8 +1,15 @@
 "use client";
-import { handleClientScriptLoad } from "next/script";
-import { useEffect, useState} from "react";
+import { useEffect} from "react";
+import {useWebSocket} from "@/hooks/useWebSocket";
+import {useParams} from "next/navigation";
 
 export default function QueueQuit() {
+    const params = useParams();
+    const { id } = params;
+    const { leaveQueue } = useWebSocket(
+        typeof id === "string" ? id : ""
+    );
+
     useEffect(() => {
         const modalContainer = document.getElementById('ModalContainerQueueQuit');
         const modal = document.getElementById('ModalQueueQuit');
@@ -59,8 +66,8 @@ export default function QueueQuit() {
                     <div className="flex flex-col gap-8 items-center justify-center h-[174px]">
                         <p className="text-3xl">Вы точно хотите покинуть очередь?</p>
                         <div className="flex justify-center gap-10">
-                            <button type="submit" className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Да</button>
-                            <button type="submit" className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Нет</button>
+                            <button className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]" onClick={leaveQueue}>Да</button>
+                            <button className="bg-blue-500 text-2xl text-white p-2 rounded-lg w-[200px]">Нет</button>
                         </div>
                     </div>
                 </form>

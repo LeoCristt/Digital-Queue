@@ -9,20 +9,19 @@ import TicketSvg from '../../../../assets/images/Ticket.svg';
 import HashtagSvg from '../../../../assets/images/Hashtag.svg';
 import ToparrowSvg from '../../../../assets/images/Toparrow.svg';
 import DownarrowSvg from '../../../../assets/images/Downarrow.svg';
-import LineVertSvg from '../../../../assets/images/LineVert.svg';
-import LineGorSvg from '../../../../assets/images/LineGor.svg';
 import QueueTable from "../../../../components/queue-table";
+import Chat from '@/components/ModalChat';
+import QueueQuit from '@/components/ModalQueueQuit';
 
 interface TokenPayload {
     sub: string;
 }
 
 const QueueComponent = ({ queueId }: { queueId: string }) => {
-    const [text, setText] = useState("");
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
     const { id } = params;
-    const { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
+    const {queue, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
         typeof id === "string" ? id : ""
     );
     const queueId1 = params.id as string;
@@ -68,6 +67,9 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                             <img src={ClockSvg.src}></img>
                             <p>~10 минут</p>
                         </div>
+                        <div className="queue-button">
+                            <button id="openQueueQuit">Выйти из очереди</button>
+                        </div>
                     </div>
                     <div className="queue-button">
                         <button onClick={joinQueue}>Присоединиться</button>
@@ -98,31 +100,18 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                 </div>
                 <div className="queue-rightside sidebar">
                     <QueueTable queue={queue}
-                        currentUserId={userId ?? undefined} />
+                                currentUserId={userId ?? undefined}/>
                 </div>
+                <button id="openChat" className="fixed bottom-5 right-5 bg-secondbackground rounded-full p-[10px]">
+                    <svg className="fill-foreground w-[40px]" version="1.1" viewBox="0 0 60 60">
+                        <path d="M30,1.5c-16.542,0-30,12.112-30,27c0,5.205,1.647,10.246,4.768,14.604c-0.591,6.537-2.175,11.39-4.475,13.689
+                        c-0.304,0.304-0.38,0.769-0.188,1.153C0.276,58.289,0.625,58.5,1,58.5c0.046,0,0.093-0.003,0.14-0.01
+                        c0.405-0.057,9.813-1.412,16.617-5.338C21.622,54.711,25.738,55.5,30,55.5c16.542,0,30-12.112,30-27S46.542,1.5,30,1.5z"/>
+                    </svg>
+                </button>
+                <Chat/>
+                <QueueQuit/>
             </div>
-            <h3 className="mt-4 text-lg font-semibold">Чат:</h3>
-            <ul>
-                {messages.map((msg, idx) => (
-                    <li key={idx} className="border p-2 my-1">
-                        <strong>{msg.user_id === userId ? "Вы" : `Пользователь ${msg.user_id}`}: </strong>
-                        {msg.text}
-                        <span className="text-xs text-gray-500">
-                            &nbsp;{new Date(msg.timestamp * 1000).toLocaleTimeString()}
-                        </span>
-                    </li>
-                ))}
-            </ul>
-            <input
-                type="text"
-                className="border p-2 w-full mt-2 text-black"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Введите сообщение..."
-            />
-            <button onClick={() => sendMessage(text)} className="px-4 py-2 bg-green-500 text-white rounded mt-2">
-                Отправить
-            </button>
         </div>
     );
 }

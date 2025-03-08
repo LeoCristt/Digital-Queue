@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-
 export const useWebSocket = (queueId: string) => {
   const [messages, setMessages] = useState<{ user_id: string; text: string; timestamp: number }[]>([]);
   const [queue, setQueue] = useState<string[]>([]);
@@ -31,12 +30,6 @@ export const useWebSocket = (queueId: string) => {
       if (data.startsWith("queue:")) {
         const queueData = data.slice(6).split(",");
         setQueue(queueData);
-      } else if (data.startsWith("error:")) {
-        if (data.includes("You can only create a queue with your own user ID")) {
-          router.push("/404");
-        } else {
-          router.push("/");
-        }
       }
       else {
         try {

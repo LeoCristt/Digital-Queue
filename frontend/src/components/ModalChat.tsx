@@ -1,8 +1,34 @@
 "use client";
-import { handleClientScriptLoad } from "next/script";
 import { useEffect, useState} from "react";
+import {useParams} from "next/navigation";
+import {useWebSocket} from "@/hooks/useWebSocket";
+import {jwtDecode} from "jwt-decode";
+
+interface TokenPayload {
+    sub: string;
+}
 
 export default function Chat() {
+    const [text, setText] = useState("");
+    const [userId, setUserId] = useState<string>("");
+    const params = useParams();
+    const { id } = params;
+    const { messages, sendMessage } = useWebSocket(
+        typeof id === "string" ? id : ""
+    );
+
+    useEffect(() => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            try {
+                const decoded = jwtDecode<TokenPayload>(token);
+                setUserId(decoded.sub);
+            } catch (error) {
+                console.error("Ошибка при декодировании JWT:", error);
+            }
+        }
+    }, []);
+
     useEffect(() => {
         const modalContainer = document.getElementById('ModalContainerChat');
         const modal = document.getElementById('ModalChat');
@@ -52,19 +78,36 @@ export default function Chat() {
                     {/* Заголовок */}
                     <div className="text-2xl">
                         <button type="button" id="closeChat" className="absolute right-5 top-2">
-                            <svg width="40" height="40" viewBox="0 0 71 71" className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
+                            <svg width="40" height="40" viewBox="0 0 71 71"
+                                 className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
                                 <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
                                 <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
                             </svg>
                         </button>
-                        <div className="h-[48px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
+                        <div
+                            className="h-[48px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
                             <div className="text-foreground">Чат</div>
                         </div>
                     </div>
                     {/* Основное содержимое */}
+                    <ul>
+                        {messages.map((msg, idx) => (
+                            <li key={idx} className="border p-2 my-1">
+                                <strong>{msg.user_id === userId ? "Вы" : `Пользователь ${msg.user_id}`}: </strong>
+                                {msg.text}
+                                <span className="text-xs text-gray-500">
+                            &nbsp;{new Date(msg.timestamp * 1000).toLocaleTimeString()}
+                        </span>
+                            </li>
+                        ))}
+                    </ul>
                     <div className="p-3 mt-auto flex gap-2">
-                        <input type="text" placeholder="Введите сообщение..." className="w-full p-2 rounded-lg bg-trhirdbackground text-textInputt"/>
-                        <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg">Отправить</button>
+                        <input type="text" placeholder="Введите сообщение..."
+                               className="w-full p-2 rounded-lg bg-trhirdbackground text-textInputt"
+                               onChange={(e) => setText(e.target.value)}/>
+                        <button type="submit" onClick={() => sendMessage(text)}
+                                className="bg-blue-500 text-white p-2 rounded-lg">Отправить
+                        </button>
                     </div>
                 </form>
             </div>
