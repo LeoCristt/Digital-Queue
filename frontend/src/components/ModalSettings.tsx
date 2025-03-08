@@ -1,6 +1,7 @@
 "use client";
-import { useEffect } from 'react';
-import {useRouter} from "next/navigation";
+import {useEffect, useState} from 'react';
+import {useParams, useRouter} from "next/navigation";
+import {jwtDecode} from "jwt-decode";
 
 interface UserData {
     avatar_url: string;
@@ -13,7 +14,13 @@ interface ModalSettingsProps {
 
 export default function ModalSettings({userData}: ModalSettingsProps) {
     const router = useRouter();
-    const button = document.getElementById("removeAccount")
+    const params = useParams();
+    // const button = document.getElementById("removeAccount")
+    const [old_password, setOld_Password] = useState('');
+    const [new_password, setNew_Password] = useState('');
+    const [re_password, setRe_Password] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const userId = params.id as string;
 
     useEffect(() => {
         const modalContainer = document.getElementById('settingsModalContainer');
@@ -179,53 +186,92 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
         };
     }, []); // remove profile modal
 
-    useEffect(() => {
-        const removeAccount = async () => {
-            try {
-                const accessToken = localStorage.getItem('access_token');
+    const removeAccount = async () => {
+        try {
+            const accessToken = localStorage.getItem('access_token');
 
-                const headers = new Headers();
-                if (accessToken) {
-                    headers.append('Authorization', `Bearer ${accessToken}`);
-                }
-
-                const response = await fetch('http://localhost:8000/api/auth/delete', {
-                    method: 'DELETE',
-                    headers: headers,
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Ошибка при удалении');
-                } else {
-                    localStorage.removeItem('access_token');
-
-                    window.location.href = '/';
-                }
-            } catch (error) {
-                console.error('Ошибка при удалении:', error);
+            const headers = new Headers();
+            if (accessToken) {
+                headers.append('Authorization', `Bearer ${accessToken}`);
             }
-        };
-        if (!button) return;
 
-        button.addEventListener("click", removeAccount);
+            const response = await fetch('http://localhost:8000/api/auth/delete', {
+                method: 'DELETE',
+                headers: headers,
+                credentials: 'include'
+            });
 
-        return () => {
-            button.removeEventListener("click", removeAccount);
-        };
-    }, [button, router]);
+            if (!response.ok) {
+                throw new Error('Ошибка при удалении');
+            } else {
+                localStorage.removeItem('access_token');
+
+                window.location.href = '/';
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении:', error);
+        }
+    };
+
+    const changePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+
+        if (new_password !== re_password) {
+            setError('Пароли не совпадают!');
+            return;
+        }
+
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            if (!accessToken) {
+                throw new Error('Требуется авторизация');
+            }
+
+            const response = await fetch(
+                `http://localhost:8000/api/profiles/${userId}/settings/password`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({
+                        old_password: old_password,
+                        new_password: new_password
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.detail || 'Ошибка при изменении пароля');
+            }
+
+            // Успешное обновление
+            setOld_Password('');
+            setNew_Password('');
+            setRe_Password('');
+            document.getElementById('closePasswd')?.click();
+            alert('Пароль успешно обновлен!');
+
+        } catch (err: any) {
+            setError(err.message.text || 'Произошла ошибка');
+            console.error('Ошибка:', err);
+        }
+    };
 
     return (
         <div id="settingsModalContainer"
              className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
             <div className="flex flex-col justify-center">
                 <div id="settingsModal"
-                      className="box-border backdrop-blur-xl max-w-[500px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
+                     className="box-border backdrop-blur-xl max-w-[500px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground 0 flex flex-col">
                     {/* Заголовок */}
                     <div className="text-3xl">
                         <button type="button" id="closeSettings" className="absolute right-5 top-4">
                             <svg width="48" height="48" viewBox="0 0 71 71"
-                                 className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
+                                 className="stroke-foreground sm:stroke-secondbackground sm:hover:stroke-foregroundhover transition-all">
                                 <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
                                 <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
                             </svg>
@@ -275,11 +321,11 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                  className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
                 <div className="flex flex-col justify-center">
                     <form id="imgModal"
-                          className="box-border backdrop-blur-xl max-w-[490px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
+                          className="box-border backdrop-blur-xl max-w-[490px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground 0 flex flex-col">
                         <div className="text-3xl">
                             <button type="button" id="closeImg" className="absolute right-5 top-4">
                                 <svg width="48" height="48" viewBox="0 0 71 71"
-                                     className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
+                                     className="stroke-foreground sm:stroke-secondbackground sm:hover:stroke-foregroundhover transition-all">
                                     <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
                                     <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
                                 </svg>
@@ -290,7 +336,23 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                 <div className="text-foreground">профиля</div>
                             </div>
                         </div>
-                        {/*Контент*/}
+                        <div className="p-[20px] flex flex-col gap-[20px]">
+                            <div>
+                                <label className="block">
+                                    Новое изображение профиля
+                                </label>
+                                <input type="file" accept="image/png, image/jpeg, image/webp"
+                                       className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"/>
+                            </div>
+                            <div>
+                                <label className="block">
+                                    Новый nickname
+                                </label>
+                                <input type="text"
+                                       className="mb-3 mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"/>
+                            </div>
+                            <button className="bg-colorbutton text-2xl rounded-2xl p-[10px]">Сохранить</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -299,11 +361,11 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                  className="w-full h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
                 <div className="flex flex-col justify-center">
                     <form id="passwdModal"
-                          className="box-border backdrop-blur-xl max-w-[490px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
+                          className="box-border backdrop-blur-xl max-w-[490px] h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground 0 flex flex-col">
                         <div className="text-3xl">
                             <button type="button" id="closePasswd" className="absolute right-5 top-4">
                                 <svg width="48" height="48" viewBox="0 0 71 71"
-                                     className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
+                                     className="stroke-foreground sm:stroke-secondbackground sm:hover:stroke-foregroundhover transition-all">
                                     <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
                                     <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
                                 </svg>
@@ -325,6 +387,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                     name="password"
                                     required
                                     type="password"
+                                    onChange={(e) => setOld_Password(e.target.value)}
                                 />
                             </div>
                             <div className="bg-background rounded-2xl p-[20px] flex flex-col gap-[20px]">
@@ -338,6 +401,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                         name="password1"
                                         required
                                         type="password"
+                                        onChange={(e) => setNew_Password(e.target.value)}
                                     />
                                 </div>
                                 <div>
@@ -345,15 +409,19 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                         Повтор нового пароля
                                     </label>
                                     <input
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                        className="mb-3 mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
                                         id="password2"
                                         name="password-again"
                                         required
                                         type="password"
+                                        onChange={(e) => setRe_Password(e.target.value)}
                                     />
                                 </div>
                             </div>
-                            <button className="bg-colorbutton text-2xl rounded-2xl p-[10px]">Сохранить</button>
+                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                            <button type="button" className="bg-colorbutton text-2xl rounded-2xl p-[10px]"
+                                    onClick={changePassword}>Сохранить
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -363,7 +431,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                  className="w-[100vw] left-0 h-full fixed z-[51] justify-center items-center top-0 hidden backdrop-blur-md">
                 <div className="flex flex-col justify-center">
                     <form id="removeModal"
-                          className="box-border backdrop-blur-xl w-fit h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col">
+                          className="box-border backdrop-blur-xl w-fit h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground 0 flex flex-col">
                         <div className="text-3xl">
                             <div
                                 className="h-[72px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2 px-6">
@@ -375,7 +443,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                             <button id="closeRemove" type="button"
                                     className="bg-colorbutton rounded-2xl p-[10px]">Отмена
                             </button>
-                            <button id="removeAccount" type="button"
+                            <button id="removeAccount" type="button" onClick={removeAccount}
                                     className="bg-red-500 rounded-2xl p-[10px]">Удалить
                             </button>
                         </div>
