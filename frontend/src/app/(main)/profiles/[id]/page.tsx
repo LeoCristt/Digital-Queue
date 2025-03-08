@@ -2,18 +2,40 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ModalSettings from '@/components/ModalSettings';
+import {jwtDecode} from "jwt-decode";
 
 interface UserProfile {
   username: string;
   avatar_url: string;
 }
+
+interface TokenPayload {
+  sub: string;
+}
+
+
 export default function Home() {
   const router = useRouter();
   const params = useParams();
   const userId = params.id as string;
+  const [queueId1, setUserId] = useState<string>("");
   const [userData, setUserData] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      try {
+        const decoded = jwtDecode<TokenPayload>(token);
+        setUserId(decoded.sub);
+      } catch (error) {
+        console.error("Ошибка при декодировании JWT:", error);
+      }
+    }
+  }, []);
+
+  const isQueueOwner = userId === queueId1;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,6 +133,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        {isQueueOwner && (
         <div className="flex justify-center m-1.5">
           <button id="openSettings" type="button">
             <svg className="fill-secondbackground hover:fill-foreground transition-all"
@@ -122,7 +145,9 @@ export default function Home() {
             </svg>
           </button>
         </div>
+            )}
       </main>
+
       <ModalSettings userData={userData!}/>
     </div>
   );
