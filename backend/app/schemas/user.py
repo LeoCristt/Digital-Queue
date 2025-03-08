@@ -30,3 +30,16 @@ class UserCreateWithPasswordValidation(UserCreate):
         if len(v) < 8:
             raise ValueError('Password must be at least 8 characters')
         return v
+
+class UserLoginWithPasswordValidation(UserLogin):
+    @field_validator('password')
+    def validate_password_length(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        return v
+    
+    @field_validator('username')
+    def username_not_empty(cls, v):
+        if not v.strip():
+            raise ValueError("field required")
+        return v

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
-from app.schemas.user import UserLogin
+from app.schemas.user import UserLoginWithPasswordValidation
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.user import User
@@ -8,7 +8,7 @@ from app.core.security import verify_password, create_access_token, create_refre
 router = APIRouter()
 
 @router.post("/login")
-async def login(response: Response, user: UserLogin, db: Session = Depends(get_db)):
+async def login(response: Response, user: UserLoginWithPasswordValidation, db: Session = Depends(get_db)):
     user_bd = db.query(User).filter((User.email == user.username) | (User.username == user.username)).first()
 
     if not user_bd:
