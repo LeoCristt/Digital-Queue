@@ -1,45 +1,63 @@
 "use client";
-import ModalCreateQueue from '@/components/ModalCreateQueue';
-import {jwtDecode} from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import ModalConnectByCode from "@/components/ModalConnectByCode";
+import ModalCreateQueue from '@/components/ModalCreateQueue';
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 
 interface TokenPayload {
     sub: string;
 }
 
-
 export default function Home() {
     const [userId, setUserId] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState("");
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [selectedQueueId, setSelectedQueueId] = useState<number | null>(null);
     const router = useRouter();
 
-    const handleButtonClick = () => {
+    // Обработчик клика по кнопке подключения
+    const handleConnectClick = () => {
         const queueNumber = parseInt(inputValue, 10);
 
         if (isNaN(queueNumber)) {
             alert("Пожалуйста, введите корректный id");
-        } else {
-            router.push(`/queue/${queueNumber}`);
+            return;
         }
+
+        setSelectedQueueId(queueNumber);
+        setShowPasswordModal(true);
     };
 
+    // Обработчик отправки пароля из модального окна
+    const handlePasswordSubmit = (password: string) => {
+        if (!selectedQueueId) return;
+
+        let url = `/queue/${selectedQueueId}`;
+        if (password) {
+            url += `?password=${encodeURIComponent(password)}`;
+        }
+
+        router.push(url);
+        setShowPasswordModal(false);
+    };
+
+    // Получение userId из токена
     useEffect(() => {
         if (typeof window !== "undefined") {
-          try {
-            const token = localStorage.getItem("access_token");
-            if (!token) {
-              return;
-            }
+            try {
+                const token = localStorage.getItem("access_token");
+                if (!token) return;
 
-            const decoded = jwtDecode<TokenPayload>(token);
-            setUserId(decoded.sub);
-          } catch (error) {
-            console.error("Ошибка при декодировании токена:", error);
-          }
+                const decoded = jwtDecode<TokenPayload>(token);
+                setUserId(decoded.sub);
+            } catch (error) {
+                console.error("Ошибка при декодировании токена:", error);
+            }
         }
-      }, []);
+    }, []);
+
     return (
         <div className="p-[20px]">
             <section className="flex flex-row justify-center gap-2 my-[60px] text-6xl text-nowrap">
@@ -48,7 +66,6 @@ export default function Home() {
             </section>
 
             <section className="flex flex-row sm:flex-nowrap flex-wrap-reverse gap-[20px] w-full mb-[40px]">
-                {/*Сканирование QR*/}
                 <button className="mx-auto" id="openScanQR">
                     <div className="bg-secondbackground rounded-2xl p-[10px]">
                         <div className="bg-background p-[40px] rounded-full">
@@ -67,17 +84,25 @@ export default function Home() {
                         </div>
                     </div>
                 </button>
+
                 <div className="flex flex-col w-full gap-[20px]">
                     <div className="flex flex-row justify-center gap-2 h-full text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
-                        <div className="text-foreground content-center">Подключение</div><div className="content-center">к очереди</div>
+                        <div className="text-foreground content-center">Подключение</div>
+                        <div className="content-center">к очереди</div>
                     </div>
                     <div className="flex flex-row h-full gap-[20px] bg-secondbackground p-[20px] rounded-2xl">
-                        <input type="text" onChange={(e) => setInputValue(e.target.value)} className="w-full rounded-2xl p-[10px] bg-trhirdbackground lg:text-3xl text-2xl text-textInputt" placeholder="Введите код для подключения"/>
-                        {/*Подключение по номеру комнаты*/}
-                        <button id="" onClick={handleButtonClick} >
+                        <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            className="w-full rounded-2xl p-[10px] bg-trhirdbackground text-2xl text-textInputt"
+                            placeholder="Введите код для подключения"
+                        />
+                        <button onClick={handleConnectClick}>
                             <div className="flex justify-center bg-background rounded-2xl p-[10px]">
                                 <svg className="w-[50px]" viewBox="0 0 102 95">
-                                     <path d="M0.13916 15.412V43.291H48.944L32.1803 29.1665C31.2658 28.3556 30.7635 27.2759 30.7805 26.1574C30.7975 25.039 31.3325 23.9704 32.2713 23.1795C33.2102 22.3886 34.4787 21.938 35.8063 21.9236C37.134 21.9093 38.4158 22.3325 39.3784 23.1029L64.8357 44.5482C65.7898 45.3525 66.3257 46.443 66.3257 47.5801C66.3257 48.7171 65.7898 49.8076 64.8357 50.6119L39.3784 72.0572C38.4158 72.8276 37.134 73.2508 35.8063 73.2365C34.4787 73.2222 33.2102 72.7715 32.2713 71.9806C31.3325 71.1897 30.7975 70.1211 30.7805 69.0027C30.7635 67.8842 31.2658 66.8045 32.1803 65.9936L48.944 51.8691H0.13916V79.7481C0.144214 83.7281 2.0233 87.5439 5.36413 90.3583C8.70495 93.1726 13.2346 94.7556 17.9593 94.7598H84.1482C88.8728 94.7556 93.4025 93.1726 96.7433 90.3583C100.084 87.5439 101.963 83.7281 101.968 79.7481V15.412C101.963 11.432 100.084 7.61616 96.7433 4.80184C93.4025 1.98751 88.8728 0.404557 84.1482 0.400299H17.9593C13.2346 0.404557 8.70495 1.98751 5.36413 4.80184C2.0233 7.61616 0.144214 11.432 0.13916 15.412Z" fill="#00FF88"/>
+                                    <path d="M0.13916 15.412V43.291H48.944L32.1803 29.1665C31.2658 28.3556 30.7635 27.2759 30.7805 26.1574C30.7975 25.039 31.3325 23.9704 32.2713 23.1795C33.2102 22.3886 34.4787 21.938 35.8063 21.9236C37.134 21.9093 38.4158 22.3325 39.3784 23.1029L64.8357 44.5482C65.7898 45.3525 66.3257 46.443 66.3257 47.5801C66.3257 48.7171 65.7898 49.8076 64.8357 50.6119L39.3784 72.0572C38.4158 72.8276 37.134 73.2508 35.8063 73.2365C34.4787 73.2222 33.2102 72.7715 32.2713 71.9806C31.3325 71.1897 30.7975 70.1211 30.7805 69.0027C30.7635 67.8842 31.2658 66.8045 32.1803 65.9936L48.944 51.8691H0.13916V79.7481C0.144214 83.7281 2.0233 87.5439 5.36413 90.3583C8.70495 93.1726 13.2346 94.7556 17.9593 94.7598H84.1482C88.8728 94.7556 93.4025 93.1726 96.7433 90.3583C100.084 87.5439 101.963 83.7281 101.968 79.7481V15.412C101.963 11.432 100.084 7.61616 96.7433 4.80184C93.4025 1.98751 88.8728 0.404557 84.1482 0.400299H17.9593C13.2346 0.404557 8.70495 1.98751 5.36413 4.80184C2.0233 7.61616 0.144214 11.432 0.13916 15.412Z"
+                                          fill="#00FF88"/>
                                 </svg>
                             </div>
                         </button>
@@ -150,7 +175,13 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <ModalConnectByCode
+                isOpen={showPasswordModal}
+                onClose={() => setShowPasswordModal(false)}
+                onConnect={handlePasswordSubmit}
+            />
             <ModalCreateQueue userId={userId || ''} />
         </div>
-);
+    );
 }
