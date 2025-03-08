@@ -16,4 +16,9 @@ api_router.include_router(delete.router, prefix="/auth", tags=["auth"])
 api_router.include_router(feedback.router, tags=["feedback"])
 
 api_router.include_router(profiles.router, prefix="/profiles", tags=["profiles"])
-api_router.include_router(settings.router, prefix="/profiles", tags=["profiles"])
+api_router.include_router(
+    settings.router,
+    prefix="/profiles",
+    tags=["settings"],  # Изменяем тег для отдельной группы эндпоинтов настроек
+    responses={404: {"description": "Not found"}},
+)
