@@ -42,10 +42,6 @@ async def auto_refresh_token_middleware(request: Request, call_next):
     # Если путь исключен И НЕ является /api/profiles/{user_id}/settings
     if any(request.url.path.startswith(p) for p in EXCLUDED_PATHS) and not is_settings_path and not is_logout_path and not is_delete_path:
         return await call_next(request)
-
-    # Если путь исключен И НЕ является /api/profiles/{user_id}/settings
-    if any(request.url.path.startswith(p) for p in EXCLUDED_PATHS) and not is_settings_path:
-        return await call_next(request)
     
     # Остальная логика middleware...
     auth_header = request.headers.get("Authorization")

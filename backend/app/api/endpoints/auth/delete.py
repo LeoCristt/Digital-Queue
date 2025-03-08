@@ -16,9 +16,6 @@ async def delete(response: Response, request: Request, db: Session = Depends(get
     auth_header = request.headers.get("New-Access-Token")
     if not auth_header:
         auth_header = request.headers.get("Authorization")
-
-    if not auth_header:
-        raise HTTPException(status_code=401, detail="Not authenticated")
     
     access_token = auth_header.split(" ")[1]
 

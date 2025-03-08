@@ -6,7 +6,7 @@ from app.core.security import (
     SECRET_KEY,
     ALGORITHM
 )
-from jose import jwt
+from jose import jwt, ExpiredSignatureError, JWTError
 
 router = APIRouter()
 
@@ -19,11 +19,18 @@ async def logout(response: Response, request: Request, db: Session = Depends(get
     
     access_token = auth_header.split(" ")[1]
 
-    payload = jwt.decode(
-        access_token,
-        SECRET_KEY,
-        algorithms=[ALGORITHM]
-    )
+    try:
+        payload = jwt.decode(
+            access_token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
     access_user_id = payload.get("sub")
     

@@ -21,9 +21,9 @@ def test_delete_unauthorized(client):
     response = client.delete("/api/auth/delete")
     
     assert response.status_code == 401
-    assert "Not authenticated" in response.json()["detail"]
+    assert "Требуется аутентификация" in response.json()["detail"]
 
-# Тест 3: Неверный формат токена
+# Тест 3: Недействительный токен
 def test_delete_invalid_token(client):
     response = client.delete(
         "/api/auth/delete",
@@ -31,7 +31,7 @@ def test_delete_invalid_token(client):
     )
     
     assert response.status_code == 401
-    assert "Invalid token" in response.json()["detail"]
+    assert "Недействительный токен" in response.json()["detail"]
 
 # Тест 4: Попытка удаления несуществующего пользователя
 def test_delete_nonexistent_user(client):
@@ -81,7 +81,7 @@ def test_delete_with_expired_token(client, test_user):
     )
     
     assert response.status_code == 401
-    assert "Token expired" in response.json()["detail"]
+    assert "Токен истек" in response.json()["detail"]
 
 # Тест 7: Попытка удаления с неверным методом
 def test_delete_wrong_method(client, test_user):
