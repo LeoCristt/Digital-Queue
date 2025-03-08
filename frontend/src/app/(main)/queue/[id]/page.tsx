@@ -77,7 +77,7 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                         <div className="queue-admin-controls flex justify-center gap-3">
                             <button
                                 onClick={nextQueue}
-                                className="bg-blue-500"
+                                className="bg-colorbutton"
                             >
                                 Следующий пользователь
                             </button>
@@ -91,7 +91,7 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                                 onClick={deleteQueue}
                                 className="deletebttn"
                             >
-                                Удалить пользователя
+                                Завершить очередь
                             </button>
                         </div>
                     )}
@@ -100,7 +100,7 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                     <QueueTable queue={queue}
                                 currentUserId={userId ?? undefined}/>
                 </div>
-                <button id="openChat" className="fixed bottom-5 right-5 bg-secondbackground rounded-full p-[10px]">
+                <button id="openChat" className="fixed sm:bottom-5 bottom-20 right-5 bg-secondbackground rounded-full p-[10px]">
                     <svg className="fill-foreground w-[40px]" version="1.1" viewBox="0 0 60 60">
                         <path d="M30,1.5c-16.542,0-30,12.112-30,27c0,5.205,1.647,10.246,4.768,14.604c-0.591,6.537-2.175,11.39-4.475,13.689
                         c-0.304,0.304-0.38,0.769-0.188,1.153C0.276,58.289,0.625,58.5,1,58.5c0.046,0,0.093-0.003,0.14-0.01

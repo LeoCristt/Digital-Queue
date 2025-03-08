@@ -82,7 +82,7 @@ export default function Chat() {
     }, []);
 
     return (
-        <div id="ModalContainerChat" className="fixed right-2 bottom-24 flex flex-col justify-center max-w-[1150px] hidden media-chat">
+        <div id="ModalContainerChat" className="fixed right-2 sm:bottom-24 bottom-20 flex-col justify-center max-w-[1150px] hidden media-chat">
             <form
                 id="ModalChat"
                 onSubmit={handleSubmit}

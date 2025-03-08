@@ -18,7 +18,6 @@ export default {
         colorbutton: 'var(--colorbutton)',
         trhirdbackground: 'var(--trhirdbackground)',
         textInput: 'var(--textInput)',
-        importantcolorbutton: 'var(--importantcolorbutton)',
         skinsurvivor: 'var(--skinsurvivor)',
         skinlegend: 'var(--skinlegend)',
       },
