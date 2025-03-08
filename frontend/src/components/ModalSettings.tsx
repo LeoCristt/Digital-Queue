@@ -1,11 +1,10 @@
 "use client";
 import {useEffect, useState} from 'react';
-import {useParams, useRouter} from "next/navigation";
-import {jwtDecode} from "jwt-decode";
+import {useParams} from "next/navigation";
 
 interface UserData {
     avatar_url: string;
-    // Добавь другие поля, если они есть в userData
+    username: string;
 }
 
 interface ModalSettingsProps {
@@ -13,14 +12,16 @@ interface ModalSettingsProps {
 }
 
 export default function ModalSettings({userData}: ModalSettingsProps) {
-    const router = useRouter();
     const params = useParams();
-    // const button = document.getElementById("removeAccount")
+    const [new_nick, setNew_nick] = useState(userData.username);
+    const [new_Avatar, setNewAvatar] = useState<File | null>(null);
     const [old_password, setOld_Password] = useState('');
     const [new_password, setNew_Password] = useState('');
     const [re_password, setRe_Password] = useState('');
-    const [error, setError] = useState<string | null>(null);
+    const [errorPassword, setErrorPassword] = useState<string | null>(null);
+    const [errorNickAndImg, setErrorNickAndImg] = useState<string | null>(null);
     const userId = params.id as string;
+
 
     useEffect(() => {
         const modalContainer = document.getElementById('settingsModalContainer');
@@ -215,10 +216,10 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
 
     const changePassword = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
+        setErrorPassword('');
 
         if (new_password !== re_password) {
-            setError('Пароли не совпадают!');
+            setErrorPassword('Пароли не совпадают!');
             return;
         }
 
@@ -256,7 +257,71 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
             alert('Пароль успешно обновлен!');
 
         } catch (err: any) {
-            setError(err.message.text || 'Произошла ошибка');
+            setErrorPassword(err.message.text || 'Произошла ошибка');
+            console.error('Ошибка:', err);
+        }
+    };
+
+    const changeNickAndImg = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setErrorNickAndImg('');
+
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            if (!accessToken) {
+                throw new Error('Требуется авторизация');
+            }
+
+            // 1. Создаем FormData для изображения
+            const formData = new FormData();
+            if (new_Avatar) {
+                formData.append('file', new_Avatar); // Ключ должен совпадать с ожидаемым на сервере
+            }
+
+            // 2. Отправляем запросы параллельно
+            const [responseNick, responseImg] = await Promise.all([
+                fetch(
+                    `http://localhost:8000/api/profiles/${userId}/settings/username`,
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`
+                        },
+                        body: JSON.stringify({
+                            new_username: new_nick
+                        }),
+                    }
+                ),
+                new_Avatar ? fetch(
+                    `http://localhost:8000/api/profiles/${userId}/settings/avatar`,
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        },
+                        body: formData // Используем FormData вместо JSON
+                    }
+                ) : Promise.resolve(null)
+            ]);
+
+            // 3. Проверяем оба ответа
+            if (responseNick && !responseNick.ok) {
+                const errorData = await responseNick.json();
+                throw new Error(errorData.detail || 'Ошибка при изменении никнейма');
+            }
+
+            if (responseImg && !responseImg.ok) {
+                const errorData = await responseImg.json();
+                throw new Error(errorData.detail || 'Ошибка при изменении аватара');
+            }
+
+            // 4. Обновляем UI
+            alert('Данные успешно обновлены!');
+            window.location.reload(); // Для обновления аватара
+
+        } catch (err: any) {
+            setErrorNickAndImg(err.message || 'Произошла ошибка');
             console.error('Ошибка:', err);
         }
     };
@@ -341,17 +406,30 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                 <label className="block">
                                     Новое изображение профиля
                                 </label>
-                                <input type="file" accept="image/png, image/jpeg, image/webp"
-                                       className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"/>
+                                <input
+                                    type="file"
+                                    accept="image/png, image/jpeg, image/webp"
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setNewAvatar(e.target.files[0]);
+                                        }
+                                    }}
+                                />
                             </div>
                             <div>
                                 <label className="block">
                                     Новый nickname
                                 </label>
                                 <input type="text"
-                                       className="mb-3 mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"/>
+                                       className="mb-3 mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                       defaultValue={userData.username}
+                                       onChange={(e) => setNew_nick(e.target.value)}/>
                             </div>
-                            <button className="bg-colorbutton text-2xl rounded-2xl p-[10px]">Сохранить</button>
+                            {errorNickAndImg && <p className="text-red-500 text-sm">{errorNickAndImg}</p>}
+                            <button className="bg-colorbutton text-2xl rounded-2xl p-[10px]" type="button"
+                                    onClick={changeNickAndImg}>Сохранить
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -418,7 +496,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                     />
                                 </div>
                             </div>
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                            {errorPassword && <p className="text-red-500 text-sm">{errorPassword}</p>}
                             <button type="button" className="bg-colorbutton text-2xl rounded-2xl p-[10px]"
                                     onClick={changePassword}>Сохранить
                             </button>
