@@ -1,5 +1,4 @@
-from pydantic import BaseModel, EmailStr
-from pydantic import field_validator
+from pydantic import BaseModel, EmailStr, field_validator
 
 # Базовая схема для пользователя
 class UserBase(BaseModel):

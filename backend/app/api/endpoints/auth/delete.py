@@ -6,7 +6,7 @@ from app.core.security import (
     SECRET_KEY,
     ALGORITHM
 )
-from jose import jwt, ExpiredSignatureError, JWTError
+from jose import jwt
 
 router = APIRouter()
 
@@ -19,18 +19,11 @@ async def delete(response: Response, request: Request, db: Session = Depends(get
     
     access_token = auth_header.split(" ")[1]
 
-    try:
-        payload = jwt.decode(
-            access_token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
-    except ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="Invalid token")
+    payload = jwt.decode(
+        access_token,
+        SECRET_KEY,
+        algorithms=[ALGORITHM]
+    )
 
     access_user_id = payload.get("sub")
     

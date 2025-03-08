@@ -8,11 +8,12 @@ from app.core.security import (
     ALGORITHM,
 )
 from jose import jwt
+from app.schemas.feedback import feedbackAddWithDescriptionValidation
 
 router = APIRouter()
 
 @router.post("/feedback")
-async def get_settings(request: Request, description: str, db: Session = Depends(get_db)):
+async def feedback(request: Request, data: feedbackAddWithDescriptionValidation, db: Session = Depends(get_db)):
 
     auth_header = request.headers.get("New-Access-Token")
     if not auth_header:
@@ -32,7 +33,7 @@ async def get_settings(request: Request, description: str, db: Session = Depends
     if not user:
         raise HTTPException(status_code=400, detail="Пользователь не найден с таким ID!")
     
-    db_feedback = Feedback(user_id=user.id, description=description)
+    db_feedback = Feedback(user_id=user.id, description=data.description)
     db.add(db_feedback)
     db.commit()
     db.refresh(db_feedback)
