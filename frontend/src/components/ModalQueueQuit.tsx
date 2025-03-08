@@ -47,7 +47,7 @@ export default function QueueQuit() {
         };
     }, []);
     return (
-            <div id="ModalContainerQueueQuit" className="fixed z-[50] top-0 bottom-0 left-200 pt-[31px] flex items-center justify-center max-w-[1150px] hidden media-chat">
+            <div id="ModalContainerQueueQuit" className="fixed z-[50] top-0 bottom-0 left-200 pt-[31px] flex items-center justify-center w-[100vw] hidden media-chat">
                 <form id="ModalQueueQuit"
                       className="box-border backdrop-blur-xl w-[520px] h-[250px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form-quit">
                     {/* Заголовок */}

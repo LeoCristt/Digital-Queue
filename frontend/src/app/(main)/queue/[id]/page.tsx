@@ -68,32 +68,30 @@ const QueueComponent = ({ queueId }: { queueId: string }) => {
                             <p>~10 минут</p>
                         </div>
                         <div className="queue-button">
-                            <button id="openQueueQuit">Выйти из очереди</button>
+                            <button id="joinQueue" onClick={joinQueue}>Присоединиться</button>
+                            <button id="openQueueQuit" onClick={leaveQueue}>Выйти</button>
                         </div>
                     </div>
-                    <div className="queue-button">
-                        <button onClick={joinQueue}>Присоединиться</button>
-                        <button onClick={leaveQueue}>Выйти из очереди</button>
-                    </div>
+                    
                     {isQueueOwner && (
-                        <div className="queue-admin-controls mt-4">
+                        <div className="queue-admin-controls flex justify-center gap-3">
                             <button
                                 onClick={nextQueue}
-                                className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+                                className="bg-blue-500"
                             >
                                 Следующий пользователь
                             </button>
                             <button
                                 onClick={undoQueue}
-                                className="px-4 py-2 bg-yellow-500 text-white rounded"
+                                className="backbttn"
                             >
                                 Вернуть предыдущего
                             </button>
                             <button
                                 onClick={deleteQueue}
-                                className="px-4 py-2 bg-red-500 text-white rounded"
+                                className="deletebttn"
                             >
-                                Удалить
+                                Удалить пользователя
                             </button>
                         </div>
                     )}
