@@ -8,7 +8,13 @@ interface TokenPayload {
     sub: string;
 }
 
-export default function Chat() {
+interface QueueTableProps {
+    queue: string[];
+    currentUserId?: string;
+}
+
+export default function Chat({ currentUserId }: QueueTableProps) {
+
     const [text, setText] = useState("");
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
@@ -90,16 +96,28 @@ export default function Chat() {
                         </div>
                     </div>
                     {/* Основное содержимое */}
-                    <ul>
-                        {messages.map((msg, idx) => (
-                            <li key={idx} className="border p-2 my-1">
-                                <strong>{msg.user_id === userId ? "Вы" : `Пользователь ${msg.user_id}`}: </strong>
-                                {msg.text}
-                                <span className="text-xs text-gray-500">
-                            &nbsp;{new Date(msg.timestamp * 1000).toLocaleTimeString()}
-                        </span>
-                            </li>
-                        ))}
+                    <ul className="overflow-y-auto flex-1 p-2">
+                        {messages.map((msg, idx) => {
+                            const isCurrentUser = currentUserId
+                                ? msg.user_id.toString() === currentUserId.toString()
+                                : false;
+
+                            return (
+                                <li key={idx}
+                                    className={`p-2 my-2 rounded-lg ${isCurrentUser ? 'bg-blue-100 ml-8' : 'bg-gray-100 mr-8'}`}>
+                                    <div className="font-medium text-sm">
+                                        {isCurrentUser ? "Вы" : `Пользователь ${msg.user_id}`}
+                                    </div>
+                                    <div className="text-gray-800">{msg.text}</div>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                        {new Date(msg.timestamp * 1000).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}
+                                    </div>
+                                </li>
+                            );
+                        })}
                     </ul>
                     <div className="p-3 mt-auto flex gap-2">
                         <input type="text" placeholder="Введите сообщение..."
