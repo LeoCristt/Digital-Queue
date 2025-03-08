@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState} from "react";
-import {useParams} from "next/navigation";
-import {useWebSocket} from "@/hooks/useWebSocket";
-import {jwtDecode} from "jwt-decode";
+import { useEffect, useState, useRef } from "react";
+import { useParams } from "next/navigation";
+import { useWebSocket } from "@/hooks/useWebSocket";
+import { jwtDecode } from "jwt-decode";
 
 interface TokenPayload {
     sub: string;
@@ -16,6 +16,21 @@ export default function Chat() {
     const { messages, sendMessage } = useWebSocket(
         typeof id === "string" ? id : ""
     );
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (text.trim()) {
+            sendMessage(text);
+            setText(""); // Очищаем поле ввода
+        }
+    };
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -56,60 +71,72 @@ export default function Chat() {
             modal.removeEventListener('animationend', closeModal);
         }
 
-        const handleFormSubmit = (event: { preventDefault: () => void; }) => {
-            event.preventDefault();
-        };
-
         chatButton.addEventListener('click', openModal);
         chatCloseButton.addEventListener('click', closeModalAnimationProcess);
-        modal.addEventListener('submit', handleFormSubmit);
 
         return () => {
             chatButton.removeEventListener('click', openModal);
             chatCloseButton.removeEventListener('click', closeModalAnimationProcess);
             modal.removeEventListener('animationend', closeModal);
-            modal.removeEventListener('submit', handleFormSubmit);
         };
     }, []);
+
     return (
-            <div id="ModalContainerChat" className="fixed right-2 bottom-24 flex flex-col justify-center max-w-[1150px] hidden media-chat">
-                <form id="ModalChat"
-                      className="box-border backdrop-blur-xl w-[300px] h-[550px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form">
-                    {/* Заголовок */}
-                    <div className="text-2xl">
-                        <button type="button" id="closeChat" className="absolute right-5 top-2">
-                            <svg width="40" height="40" viewBox="0 0 71 71"
-                                 className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
-                                <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
-                                <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
-                            </svg>
-                        </button>
-                        <div
-                            className="h-[48px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
-                            <div className="text-foreground">Чат</div>
-                        </div>
+        <div id="ModalContainerChat" className="fixed right-2 bottom-24 flex flex-col justify-center max-w-[1150px] hidden media-chat">
+            <form
+                id="ModalChat"
+                onSubmit={handleSubmit}
+                className="box-border backdrop-blur-xl w-[300px] h-[550px] rounded-3xl border-2 border-backgroundHeader bg-secondbackground shadow-2xl flex flex-col media-form"
+            >
+                {/* Заголовок */}
+                <div className="text-2xl">
+                    <button type="button" id="closeChat" className="absolute right-5 top-2">
+                        <svg width="40" height="40" viewBox="0 0 71 71"
+                             className="stroke-secondbackground hover:stroke-foregroundhover transition-all">
+                            <path d="M17.6777 17.6776L53.0331 53.0329" strokeWidth="6" strokeLinecap="round"/>
+                            <path d="M17.678 53.0331L53.0333 17.6778" strokeWidth="6" strokeLinecap="round"/>
+                        </svg>
+                    </button>
+                    <div
+                        className="h-[48px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2">
+                        <div className="text-foreground">Чат</div>
                     </div>
-                    {/* Основное содержимое */}
-                    <ul>
-                        {messages.map((msg, idx) => (
-                            <li key={idx} className="border p-2 my-1">
-                                <strong>{msg.user_id === userId ? "Вы" : `Пользователь ${msg.user_id}`}: </strong>
-                                {msg.text}
-                                <span className="text-xs text-gray-500">
-                            &nbsp;{new Date(msg.timestamp * 1000).toLocaleTimeString()}
-                        </span>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="p-3 mt-auto flex gap-2">
-                        <input type="text" placeholder="Введите сообщение..."
-                               className="w-full p-2 rounded-lg bg-trhirdbackground text-textInputt"
-                               onChange={(e) => setText(e.target.value)}/>
-                        <button type="submit" onClick={() => sendMessage(text)}
-                                className="bg-blue-500 text-white p-2 rounded-lg">Отправить
-                        </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+
+                {/* Список сообщений */}
+                <ul className="flex-1 overflow-y-auto p-2 space-y-2">
+                    {messages.map((msg, idx) => (
+                        <li
+                            key={idx}
+                            className="border p-2 rounded-lg bg-trhirdbackground break-words"
+                        >
+                            <strong>{msg.user_id === userId ? "Вы" : `Пользователь ${msg.user_id}`}: </strong>
+                            {msg.text}
+                            <span className="text-xs text-gray-500 block mt-1">
+                                {new Date(msg.timestamp * 1000).toLocaleTimeString()}
+                            </span>
+                        </li>
+                    ))}
+                    <div ref={messagesEndRef} />
+                </ul>
+
+                {/* Форма ввода */}
+                <div className="p-3 mt-auto flex gap-2">
+                    <input
+                        type="text"
+                        placeholder="Введите сообщение..."
+                        className="w-full p-2 rounded-lg bg-trhirdbackground text-textInputt"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                        Отправить
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 }
