@@ -1,5 +1,4 @@
-from fastapi import WebSocket, WebSocketDisconnect, APIRouter, HTTPException, Depends, Request
-import uuid
+from fastapi import WebSocket, WebSocketDisconnect, APIRouter, HTTPException, Depends, Request, status
 from app.core.security import verify_refresh_token
 from app.core.database import get_db
 from app.models.user import User
@@ -11,9 +10,20 @@ from app.core.security import (
 )
 from jose import jwt
 from gigachat import GigaChat
+import random
 
 # Глобальные переменные для хранения очереди и подключений
 queues = {}
+
+def generate_unique_client_id(db: Session):
+    used_ids = {user.id for user in db.query(User.id).all()}
+    while True:
+        client_id_num = random.randint(100, 999)
+        if client_id_num not in used_ids:
+            return str(client_id_num)
+        client_id_num = random.randint(1000, 9999)
+        if client_id_num not in used_ids:
+            return str(client_id_num)
 
 async def send_message_to_gigachat(message: str):
     # Укажите ключ авторизации, полученный в личном кабинете, в интерфейсе проекта GigaChat API
@@ -27,7 +37,7 @@ def register_websocket_handlers(app):
         await websocket.accept()
 
         # Генерация client_id
-        client_id = websocket.cookies.get("client_id")
+        client_id = websocket.cookies.get(f"client_id_{queue_id}")
 
         refresh_token = websocket.cookies.get("refresh_token")
         id = None
@@ -43,9 +53,9 @@ def register_websocket_handlers(app):
                 raise HTTPException(status_code=401, detail="Пользователь не найден")
         
         if not client_id and not id:
-            client_id = str(uuid.uuid4())
+            client_id = generate_unique_client_id(db)
             try:
-                await websocket.send_text(f"set_cookie:client_id={client_id}")
+                await websocket.send_text(f"set_cookie:client_id_{queue_id}={client_id}")
             except WebSocketDisconnect:
                 return  # Выход, если соединение закрыто
         elif not client_id and id:
@@ -74,7 +84,7 @@ def register_websocket_handlers(app):
                 if password != queues[queue_id]["password"]:  # Проверяем пароль
                     await websocket.send_text("error: Неверный пароль!")
                     await websocket.close()
-                    return
+                    raise WebSocketDisconnect(code=status.WS_1008_POLICY_VIOLATION, reason="error: Неверный пароль!")
 
         current_queue = queues[queue_id]["queue"]
         active_connections = queues[queue_id]["connections"]
@@ -173,6 +183,7 @@ def register_websocket_handlers(app):
                         # Рассылаем уведомление и закрываем соединения
                         for connection, _ in connections_to_close:
                             try:
+                                await connection.send_text(f"delete_cookie:client_id_{queue_id}")
                                 await connection.send_text("info: Очередь была удалена создателем.")
                                 await connection.close()
                             except Exception:
@@ -268,8 +279,9 @@ def register_websocket_handlers(app):
 
         except WebSocketDisconnect:
             # Удаляем подключение при разрыве
-            active_connections.remove((websocket, client_id))
-            await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+            if queues[queue_id]:
+                active_connections.remove((websocket, client_id))
+                await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
 
     async def send_personal_message(target_id, message, connections):
         for ws, cid in connections:

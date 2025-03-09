@@ -12,6 +12,7 @@ from app.core.database import get_db
 from fastapi.testclient import TestClient
 from app.models.user import User
 from app.core.security import get_password_hash
+from app.core.security import create_refresh_token, create_access_token
 
 TEST_DATABASE_URL = "sqlite:///./sql_app.db"
 
@@ -45,6 +46,7 @@ def client(db_session):
 @pytest.fixture
 def test_user(db_session):
     user = User(
+        id=1,
         email="test@example.com",
         username="testuser",
         hashed_password=get_password_hash("TestPass123!"),
@@ -52,4 +54,25 @@ def test_user(db_session):
     )
     db_session.add(user)
     db_session.commit()
+
+    user.refresh_token = create_refresh_token(data={"sub": str(user.id)})
+    user.access_token = create_access_token(data={"sub": str(user.id)})
+    
+    return user
+
+@pytest.fixture
+def second_user(db_session):
+    user = User(
+        id=2,
+        username="user2",
+        email="user2@example.com",
+        hashed_password="hashedpass2",
+        avatar_url="/static/avatars/default_avatar.png"
+    )
+    db_session.add(user)
+    db_session.commit()
+
+    user.refresh_token = create_refresh_token(data={"sub": str(user.id)})
+    user.access_token = create_access_token(data={"sub": str(user.id)})
+    
     return user
