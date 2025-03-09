@@ -11,9 +11,22 @@ from app.core.security import (
 )
 from jose import jwt
 from gigachat import GigaChat
+import random
 
 # Глобальные переменные для хранения очереди и подключений
 queues = {}
+
+def generate_unique_client_id(db: Session):
+    # Генерируем трехзначные числа, пока не найдем свободное
+    used_ids = {user.id for user in db.query(User.id).all()}
+    while True:
+        client_id_num = random.randint(100, 999)
+        if client_id_num not in used_ids:
+            return str(client_id_num)
+        # Если все трехзначные заняты (маловероятно), расширяем диапазон
+        client_id_num = random.randint(1000, 9999)
+        if client_id_num not in used_ids:
+            return str(client_id_num)
 
 async def send_message_to_gigachat(message: str):
     # Укажите ключ авторизации, полученный в личном кабинете, в интерфейсе проекта GigaChat API
@@ -27,7 +40,7 @@ def register_websocket_handlers(app):
         await websocket.accept()
 
         # Генерация client_id
-        client_id = websocket.cookies.get("client_id")
+        client_id = websocket.cookies.get(f"client_id_{queue_id}")
 
         refresh_token = websocket.cookies.get("refresh_token")
         id = None
@@ -43,9 +56,9 @@ def register_websocket_handlers(app):
                 raise HTTPException(status_code=401, detail="Пользователь не найден")
         
         if not client_id and not id:
-            client_id = str(uuid.uuid4())
+            client_id = generate_unique_client_id(db)
             try:
-                await websocket.send_text(f"set_cookie:client_id={client_id}")
+                await websocket.send_text(f"set_cookie:client_id_{queue_id}={client_id}")
             except WebSocketDisconnect:
                 return  # Выход, если соединение закрыто
         elif not client_id and id:
@@ -173,6 +186,7 @@ def register_websocket_handlers(app):
                         # Рассылаем уведомление и закрываем соединения
                         for connection, _ in connections_to_close:
                             try:
+                                await connection.send_text(f"delete_cookie:client_id_{queue_id}")
                                 await connection.send_text("info: Очередь была удалена создателем.")
                                 await connection.close()
                             except Exception:
@@ -268,8 +282,9 @@ def register_websocket_handlers(app):
 
         except WebSocketDisconnect:
             # Удаляем подключение при разрыве
-            active_connections.remove((websocket, client_id))
-            await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
+            if queues[queue_id]:
+                active_connections.remove((websocket, client_id))
+                await broadcast_queue(active_connections, current_queue, queues[queue_id].get("avg_time"))
 
     async def send_personal_message(target_id, message, connections):
         for ws, cid in connections:
