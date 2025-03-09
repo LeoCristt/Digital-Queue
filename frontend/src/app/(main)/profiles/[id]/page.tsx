@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ModalSettings from '@/components/ModalSettings';
 import {jwtDecode} from "jwt-decode";
+import Feedback from "@/components/Feedback";
 
 interface UserProfile {
   username: string;
@@ -147,7 +148,7 @@ export default function Home() {
         </div>
             )}
       </main>
-
+      <Feedback/>
       <ModalSettings userData={userData!}/>
     </div>
   );
