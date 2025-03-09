@@ -174,13 +174,13 @@ const QueueComponent = () => {
                                 onClick={nextQueue}
                                 className="bg-colorbutton"
                             >
-                                Следующий пользователь
+                                Следующий участник
                             </button>
                             <button
                                 onClick={undoQueue}
                                 className="backbttn"
                             >
-                                Вернуть предыдущего
+                                Вернуть участника
                             </button>
                             <button
                                 onClick={deleteQueue}
@@ -207,7 +207,6 @@ const QueueComponent = () => {
                 <Chat
                     queue={queue}
                     currentUserId={currentUserIdentifier || undefined}/>
-                <QueueQuit/>
             </div>
         </div>
     );
