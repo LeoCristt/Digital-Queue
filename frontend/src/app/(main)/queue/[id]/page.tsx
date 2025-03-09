@@ -3,6 +3,7 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { QRCodeSVG } from 'qrcode.react';
 import "../../../../styles/queue.css";
 import ClockSvg from '../../../../assets/images/Clock.svg';
 import TicketSvg from '../../../../assets/images/Ticket.svg';
@@ -11,7 +12,6 @@ import ToparrowSvg from '../../../../assets/images/Toparrow.svg';
 import DownarrowSvg from '../../../../assets/images/Downarrow.svg';
 import QueueTable from "../../../../components/queue-table";
 import Chat from '@/components/ModalChat';
-import QueueQuit from '@/components/ModalQueueQuit';
 
 interface TokenPayload {
     sub: string;
@@ -27,6 +27,7 @@ const QueueComponent = () => {
     const {queue, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
         typeof id === "string" ? id : ""
     );
+    const [showQR, setShowQR] = useState(false);
     const queueId1 = params.id as string;
 
 
@@ -167,8 +168,22 @@ const QueueComponent = () => {
                         <div className="queue-button">
                             <button id="joinQueue" onClick={joinQueue}>Присоединиться</button>
                             <button id="openQueueQuit" onClick={leaveQueue}>Выйти</button>
+                            <button onClick={() => setShowQR(!showQR)}>
+                                {showQR ? 'Скрыть QR' : 'Показать QR'}
+                            </button>
                         </div>
                     </div>
+
+                    {showQR && (
+                        <div className="qr-code-container">
+                            <QRCodeSVG
+                                value={window.location.href}
+                                size={256}
+                                level="H"
+                                includeMargin={true}
+                            />
+                        </div>
+                    )}
 
                     {isQueueOwner && (
                         <div className="queue-admin-controls flex justify-center gap-3">
