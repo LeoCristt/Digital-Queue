@@ -19,26 +19,6 @@ interface TokenPayload {
 
 
 
-const getClientIdFromCookies = (): string | null => {
-    try {
-        // Получаем все cookies
-        const cookies = document.cookie.split(';');
-
-        // Ищем куку с именем 'client_id'
-        const clientIdCookie = cookies.find(c =>
-            c.trim().startsWith('client_id=')
-        );
-
-        if (!clientIdCookie) return null;
-
-        // Извлекаем значение и декодируем специальные символы
-        const encodedValue = clientIdCookie.split('=')[1];
-        return decodeURIComponent(encodedValue);
-    } catch (error) {
-        console.error("Error reading client_id cookie:", error);
-        return null;
-    }
-};
 
 const QueueComponent = () => {
     const [userId, setUserId] = useState<string>("");
@@ -48,6 +28,28 @@ const QueueComponent = () => {
         typeof id === "string" ? id : ""
     );
     const queueId1 = params.id as string;
+
+
+    const getClientIdFromCookies = (): string | null => {
+        try {
+            // Получаем все cookies
+            const cookies = document.cookie.split(';');
+
+            // Ищем куку с именем 'client_id'
+            const clientIdCookie = cookies.find(c =>
+                c.trim().startsWith(`client_id_${queueId1}=`)
+            );
+
+            if (!clientIdCookie) return null;
+
+            // Извлекаем значение и декодируем специальные символы
+            const encodedValue = clientIdCookie.split('=')[1];
+            return decodeURIComponent(encodedValue);
+        } catch (error) {
+            console.error("Error reading client_id cookie:", error);
+            return null;
+        }
+    };
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");

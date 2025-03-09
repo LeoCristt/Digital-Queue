@@ -22,8 +22,14 @@ export const useWebSocket = (queueId: string) => {
       const data = event.data;
 
       if (data.startsWith("set_cookie:")) {
-        const clientId = data.split("=")[1];
-        document.cookie = `client_id=${clientId}; path=/`;
+        const clientId = data.split(":")[1];
+        document.cookie = `${clientId}; path=/`;
+        return; 
+      }
+
+      if (data.startsWith("delete_cookie:")) {
+        const cookieName = data.split(":")[1];
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
         return; 
       }
 
