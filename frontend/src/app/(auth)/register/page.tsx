@@ -73,14 +73,14 @@ export default function Register() {
           />
         </Link>
       </div>
-      <h2 className="text-center text-2xl text-white mb-6">Регистрация</h2>
+      <h2 className="text-center text-2xl text-textColor mb-6">Регистрация</h2>
       <form id="register_form" className="space-y-6" onSubmit={handleRegister}>
         <div>
-          <label className="block text-sm font-medium text-gray-300" htmlFor="email">
+          <label className="block text-sm font-medium text-textColor" htmlFor="email">
             Почта
           </label>
           <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             id="email"
             name="email"
             required
@@ -89,11 +89,11 @@ export default function Register() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300" htmlFor="login">
+          <label className="block text-sm font-medium text-textColor" htmlFor="login">
             Логин
           </label>
           <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             id="login"
             name="login"
             required
@@ -102,11 +102,11 @@ export default function Register() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300" htmlFor="password">
+          <label className="block text-sm font-medium text-textColor" htmlFor="password">
             Пароль
           </label>
           <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             id="password1"
             name="password"
             required
@@ -115,11 +115,11 @@ export default function Register() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300" htmlFor="password-again">
+          <label className="block text-sm font-medium text-textColor" htmlFor="password-again">
             Повтор пароля
           </label>
           <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             id="password2"
             name="password-again"
             required
@@ -135,14 +135,14 @@ export default function Register() {
             type="checkbox"
             required
           />
-          <label className="ml-2 block text-sm text-gray-300" htmlFor="personalData">
+          <label className="ml-2 block text-sm text-textColor" htmlFor="personalData">
             Согласие на обработку персональных данных
           </label>
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <div>
           <button
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-colorbutton hover:bg-foregroundhover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-textColor bg-colorbutton hover:bg-foregroundhover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             type="submit"
           >
             Зарегистрироваться

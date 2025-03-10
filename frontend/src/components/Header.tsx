@@ -67,7 +67,7 @@ const Header = () => {
                             <button
                                 key={link.href}
                                 onClick={() => handleProtectedNavigation(link.href)}
-                                className={`${pathname === link.href ? 'border-b-2 border-foreground' : 'text-gray-600 hover:text-white'} transition-colors cursor-pointer`}
+                                className={`${pathname === link.href ? 'border-b-2 border-foreground' : 'text-trhirdbackground hover:text-textColor'} transition-colors cursor-pointer`}
                             >
                                 {link.label}
                             </button>
@@ -75,7 +75,7 @@ const Header = () => {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`${pathname === link.href ? 'border-b-2 border-foreground' : 'text-gray-600 hover:text-white'} transition-colors`}
+                                className={`${pathname === link.href ? 'border-b-2 border-foreground' : 'text-trhirdbackground hover:text-textColor'} transition-colors`}
                             >
                                 {link.label}
                             </Link>

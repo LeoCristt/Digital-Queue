@@ -137,7 +137,7 @@ export default function Home() {
                                     </div>
                                     <div>
                                         <button
-                                            className="mt-4 bg-colorbutton text-white px-4 py-2 rounded-lg hover:bg-colorbuttonhover"
+                                            className="mt-4 bg-colorbutton text-textColor px-4 py-2 rounded-lg hover:bg-colorbuttonhover"
                                             onClick={() => window.location.href = `http://localhost:3000/queue/${queueInfo.queue_id}?password=${queueInfo.password}`}
                                         >
                                             Присоединиться

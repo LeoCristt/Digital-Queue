@@ -63,14 +63,14 @@ export default function Login() {
           />
         </Link>
       </div>
-      <h2 className="text-center text-2xl text-white mb-6">Авторизация</h2>
+      <h2 className="text-center text-2xl text-textColor mb-6">Авторизация</h2>
       <form onSubmit={handleSubmit} id="login_form" className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-300" htmlFor="email/login">
+          <label className="block text-sm font-medium text-textColor" htmlFor="email/login">
             Адрес электронной почты или Логин
           </label>
           <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             id="email/login"
             name="email/login"
             onChange={(e) => setUsername(e.target.value)}
@@ -78,11 +78,11 @@ export default function Login() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300" htmlFor="repeatpassword">
+          <label className="block text-sm font-medium text-textColor" htmlFor="repeatpassword">
             Пароль
           </label>
           <input
-            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             id="repeatpassword/login"
             name="repeatpassword/login"
             onChange={(e) => setPassword(e.target.value)}
@@ -98,7 +98,7 @@ export default function Login() {
               name="remember_me"
               type="checkbox"
             />
-            <label className="ml-2 block text-sm text-gray-300" htmlFor="remember_me">
+            <label className="ml-2 block text-sm text-textColor" htmlFor="remember_me">
               Запомнить меня
             </label>
           </div>
@@ -124,7 +124,7 @@ export default function Login() {
         {/*  <div>*/}
         {/*    <Link*/}
         {/*      href="/login/yandex"*/}
-        {/*      className="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"*/}
+        {/*      className="w-full inline-flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-textColor hover:bg-gray-600"*/}
         {/*    >*/}
         {/*      Яндекс*/}
         {/*    </Link>*/}
