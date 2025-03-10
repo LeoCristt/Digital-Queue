@@ -44,11 +44,12 @@ python -m venv venv
 venv/scripts/activate
 pip install -r req.txt
 alembic upgrade head
+cd ..
 ```
 
 ### 3. Настройка фронтенда
 ```bash
-cd ../frontend
+cd frontend
 npm install
 ```
 
@@ -59,7 +60,7 @@ npm install
 uvicorn app.main:app --reload
 ```
 
-API будет доступно по адресу: http://localhost:3000  
+Фронтенд сервер будет доступен по адресу: http://localhost:3000  
 Документация Swagger: http://127.0.0.1:8000/docs
 
 ### Фронтенд (из папки frontend)
