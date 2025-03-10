@@ -275,7 +275,39 @@
     z-index: 1000; 
 }
 
-/* МЕДИАХУНЯ 9MICE KOSTILI NASHE VSE :/ */
+.swap-request-modal {
+    position: fixed; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: black;
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    color: white; 
+    text-align: center; 
+    z-index: 1000; 
+}
+
+.swap-request-modal p {
+    margin: 0 0 20px 0;
+    font-size: 22px;
+}
+
+.swap-request-modal button {
+    background-color: #4CAF50; 
+    color: white;
+    border: none; 
+    padding: 10px 20px; 
+    margin: 0 10px;
+    border-radius: 10px; 
+    font-size: 22px; 
+    width: 143px;
+}
+
+.swap-request-modal button:last-child {
+    background-color: #f44336; /* Красный фон для кнопки "Отклонить" */
+}
 
 @media(max-width: 768px){
     .queue-main {
@@ -360,5 +392,13 @@
         font-size: 27px;
         text-align: center;
         width: 290px;
+    }
+
+    .swap-request-modal {
+        width: 95%;
+    }
+
+    #swap-decline {
+        margin-top: 10px;
     }
 }
