@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { jwtDecode } from "jwt-decode";
+import {usePathname, useRouter} from 'next/navigation';
+import {useEffect, useState} from 'react';
+import {jwtDecode} from "jwt-decode";
 
 interface TokenPayload {
     sub: string;
@@ -12,7 +12,6 @@ interface TokenPayload {
 const Header = () => {
     const router = useRouter();
     const pathname = usePathname();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -21,14 +20,11 @@ const Header = () => {
             try {
                 const decoded = jwtDecode<TokenPayload>(token);
                 setUserId(decoded.sub);
-                setIsAuthenticated(true);
             } catch (error) {
                 console.error("Invalid token:", error);
                 localStorage.removeItem('access_token');
-                setIsAuthenticated(false);
             }
         } else {
-            setIsAuthenticated(false);
         }
     }, []);
 
@@ -49,52 +45,23 @@ const Header = () => {
     ];
 
     const handleProtectedNavigation = (path: string) => {
-        if (!isAuthenticated) {
+        if (userId == null) {
             router.push('/login');
         } else {
             router.push(path);
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            const accessToken = localStorage.getItem('access_token');
-
-            const headers = new Headers();
-            if (accessToken) {
-                headers.append('Authorization', `Bearer ${accessToken}`);
-            }
-
-            const response = await fetch('http://localhost:8000/api/auth/logout', {
-                method: 'POST',
-                headers: headers,
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Ошибка при выходе');
-            }
-
-            localStorage.removeItem('access_token');
-            setIsAuthenticated(false);
-            setUserId(null);
-
-            router.push('/');
-        } catch (error) {
-            console.error('Ошибка при выходе:', error);
-        }
-    };
-
     return (
         <header className="backdrop-blur-xl bg-backgroundHeader w-full sticky top-0 z-50 py-2 px-4">
-            <nav className="hidden container px-4 py-2 sm:flex items-center justify-between text-lg"> {/* Уменьшил padding и размер шрифта */}
+            <nav
+                className="hidden container px-4 py-2 sm:flex items-center justify-between text-lg"> {/* Уменьшил padding и размер шрифта */}
                 <Link href="/" className="align-center text-xl"> {/* Уменьшил размер шрифта */}
                     DQ
                 </Link>
 
                 <div className="flex space-x-6">
                     {links.map((link) => {
-                        if (link.authRequired && !isAuthenticated) return null;
 
                         return link.authRequired ? (
                             <button
@@ -117,15 +84,7 @@ const Header = () => {
                 </div>
 
 
-                <div className="flex space-x-6 bg-foreground text-black p-1 rounded-2xl shadow-4xl"> {/* Уменьшил padding */}
-                    {isAuthenticated ? (
-                        <button onClick={handleLogout}>Выйти</button>
-                    ) : (
-                        <Link href="/login">
-                            <button>Войти</button>
-                        </Link>
-                    )}
-                </div>
+                <div className="space-x-6"></div>
             </nav>
         </header>
     );
