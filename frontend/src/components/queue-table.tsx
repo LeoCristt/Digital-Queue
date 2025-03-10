@@ -38,7 +38,7 @@ export default function QueueTable({ queue, currentUserId, sendSwapRequest }: Qu
                                 )}
                                 {userId !== currentUserId && (
                                     <button onClick={() => sendSwapRequest(userId)} className="swap-button">
-                                        Обменяться
+                                        Обмен
                                     </button>
                                 )}
                             </div>

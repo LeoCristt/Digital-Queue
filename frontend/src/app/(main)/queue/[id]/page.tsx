@@ -179,7 +179,7 @@ const QueueComponent = () => {
                             </svg>
                             {(() => {
                                 const currentUserIdentifier = userId || clientId;
-                                if (!currentUserIdentifier) return <p>ожидайте</p>;
+                                if (!currentUserIdentifier) return <p>Ожидайте</p>;
 
                                 const userEntry = queue.find(user => {
                                     const [entryId] = user.split(':');
@@ -187,7 +187,7 @@ const QueueComponent = () => {
                                 });
 
                                 const rawTime = userEntry?.split(':')[1] || '0.0 сек';
-                                const displayTime = rawTime === '0.0 сек' ? 'ожидайте' : rawTime;
+                                const displayTime = rawTime === '0.0 сек' ? 'Ожидайте' : rawTime;
 
                                 return <p key={`time-${currentUserIdentifier}`}>{displayTime}</p>;
                             })()}
@@ -224,13 +224,15 @@ const QueueComponent = () => {
                     </div>
 
                     {showQR && (
-                        <div className="qr-code-container">
-                            <QRCodeSVG
-                                value={window.location.href}
-                                size={256}
-                                level="H"
-                                includeMargin={true}
-                            />
+                        <div className="qr-code-overlay" onClick={() => setShowQR(false)}>
+                            <div className="qr-code-container" onClick={(e) => e.stopPropagation()}>
+                                <QRCodeSVG
+                                    value={window.location.href}
+                                    size={300}
+                                    level="H"
+                                    includeMargin={true}
+                                />
+                            </div>
                         </div>
                     )}
 
