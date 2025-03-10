@@ -1,114 +1,114 @@
 @import "colors.css";
-*, *:before, *:after{
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+
+*, *:before, *:after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
-html{
-  width: 100vw;
-  overflow-x: hidden;
-  display: block;
+html {
+    width: 100vw;
+    overflow-x: hidden;
+    display: block;
 }
 
 
 body {
-  color: var(--textColor);
-  background: var(--background);
-  font-family: Futura PT Demi Italic;
-  /*color: #fff;*/
-  min-height: 100vh;
-  display: flex;
+    color: var(--textColor);
+    background: var(--background);
+    font-family: Futura PT Demi Italic;
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    display: flex;
 }
 
-@font-face{
-  font-family: 'Futura PT Demi Italic';
-  src: url('../assets/fonts/futura-book/FuturaPTDemi.otf') format('opentype');
-  font-weight: normal;
-  font-style: italic;
+@font-face {
+    font-family: 'Futura PT Demi Italic';
+    src: url('../assets/fonts/futura-book/FuturaPTDemi.otf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
 }
 
-.container{
-  max-width: 1150px;
-  margin: 0 auto;
-  padding: 0;
-  position: relative;
+.container {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
 }
 
-.auth-container{
-  max-width: 1150px;
-  margin: 1rem auto;
-  padding: 0;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.auth-container {
+    max-width: 1150px;
+    margin: 1rem auto;
+    padding: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .text-stroke {
-    text-shadow:
-            -2px -2px 0 var(--background),
-            2px -2px 0 var(--background),
-            -2px  2px 0 var(--background),
-            2px  2px 0 var(--background);
+    text-shadow: -2px -2px 0 var(--background),
+    2px -2px 0 var(--background),
+    -2px 2px 0 var(--background),
+    2px 2px 0 var(--background);
 }
 
 .animateOpenModal {
-  animation: openModal 1s;
+    animation: openModal 1s;
 }
 
 .animateCloseModal {
-  animation: closeModal 1s;
+    animation: closeModal 1s;
 }
 
 .animateOpenModalBlur {
-  animation: openModalBackdropBlur 1s;
+    animation: openModalBackdropBlur 1s;
 }
 
 .animateCloseModalBlur {
-  animation: closeModalBackdropBlur 1s;
+    animation: closeModalBackdropBlur 1s;
 }
 
 @keyframes openModal {
-  0% {
-    filter: blur(64px);
-    transform: scale(100%) translateY(125vh);
-    border: 24px var(--foreground);
-  }
-  100% {
-    filter: blur(0);
-    transform: scale(100%) translateY(0);
-  }
+    0% {
+        filter: blur(64px);
+        transform: scale(100%) translateY(125vh);
+        border: 24px var(--foreground);
+    }
+    100% {
+        filter: blur(0);
+        transform: scale(100%) translateY(0);
+    }
 }
 
 @keyframes closeModal {
-  0% {
-    filter: blur(0);
-    transform: scale(100%) translateY(0);
-  }
-  100% {
-    filter: blur(64px);
-    transform: scale(100%) translateY(125vh);
-    border: 24px var(--foreground);
-  }
+    0% {
+        filter: blur(0);
+        transform: scale(100%) translateY(0);
+    }
+    100% {
+        filter: blur(64px);
+        transform: scale(100%) translateY(125vh);
+        border: 24px var(--foreground);
+    }
 }
 
 @keyframes openModalBackdropBlur {
-  0% {
-    backdrop-filter: blur(0);
-  }
-  100% {
-    backdrop-filter: blur(12px);
-  }
+    0% {
+        backdrop-filter: blur(0);
+    }
+    100% {
+        backdrop-filter: blur(12px);
+    }
 }
 
 @keyframes closeModalBackdropBlur {
-  0% {
-    backdrop-filter: blur(12px);
-  }
-  100% {
-    backdrop-filter: blur(0);
-  }
+    0% {
+        backdrop-filter: blur(12px);
+    }
+    100% {
+        backdrop-filter: blur(0);
+    }
 }
 
 @keyframes slide-left {
