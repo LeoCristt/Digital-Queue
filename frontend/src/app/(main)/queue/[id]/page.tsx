@@ -1,6 +1,6 @@
 'use client'
 import { useWebSocket } from "@/hooks/useWebSocket";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback} from "react";
 import { useParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { QRCodeSVG } from 'qrcode.react';
@@ -26,26 +26,20 @@ const QueueComponent = () => {
     const queueId1 = params.id as string;
 
 
-    const getClientIdFromCookies = (): string | null => {
+    const getClientIdFromCookies = useCallback((): string | null => {
         try {
-            // Получаем все cookies
             const cookies = document.cookie.split(';');
-
-            // Ищем куку с именем 'client_id'
             const clientIdCookie = cookies.find(c =>
                 c.trim().startsWith(`client_id_${queueId1}=`)
             );
-
             if (!clientIdCookie) return null;
-
-            // Извлекаем значение и декодируем специальные символы
             const encodedValue = clientIdCookie.split('=')[1];
             return decodeURIComponent(encodedValue);
         } catch (error) {
             console.error("Error reading client_id cookie:", error);
             return null;
         }
-    };
+    }, [queueId1]);
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -62,17 +56,20 @@ const QueueComponent = () => {
     const [clientId, setClientId] = useState<string | null>(null);
 
     useEffect(() => {
-        const id = getClientIdFromCookies();
-        setClientId(id);
-    }, []);
+        const checkClientId = () => {
+            const newId = getClientIdFromCookies();
+            setClientId(prevId => prevId !== newId ? newId : prevId);
+        };
 
-    useEffect(() => {
-        const id = getClientIdFromCookies();
-        setClientId(id);
-    }, []);
+        checkClientId();
+
+        const intervalId = setInterval(checkClientId, 1000);
+
+        return () => clearInterval(intervalId);
+    }, [getClientIdFromCookies]);
+
     console.log(`client ID: ${clientId}`)
     const isQueueOwner = userId === queueId1;
-    console.log(queueId1)
 
     const pluralize = (number: number, forms: [string, string, string]) => {
         const n = Math.abs(number) % 100;
