@@ -5,11 +5,6 @@ import { useParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { QRCodeSVG } from 'qrcode.react';
 import "../../../../styles/queue.css";
-import ClockSvg from '@/assets/images/Clock.svg';
-import TicketSvg from '../../../../assets/images/Ticket.svg';
-import HashtagSvg from '../../../../assets/images/Hashtag.svg';
-import ToparrowSvg from '../../../../assets/images/Toparrow.svg';
-import DownarrowSvg from '../../../../assets/images/Downarrow.svg';
 import QueueTable from "../../../../components/queue-table";
 import Chat from '@/components/ModalChat';
 import ErrorModal from "@/components/ModalError";
@@ -65,6 +60,11 @@ const QueueComponent = () => {
     }, []);
 
     const [clientId, setClientId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const id = getClientIdFromCookies();
+        setClientId(id);
+    }, []);
 
     useEffect(() => {
         const id = getClientIdFromCookies();
