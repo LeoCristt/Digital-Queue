@@ -45,6 +45,7 @@ export default function Home() {
         };
 
         fetchQueue();
+        handleCreateQueueClick();
     }, []);
 
     // Обработчик отправки пароля из модального окна
@@ -229,8 +230,7 @@ export default function Home() {
                 onConnect={handlePasswordSubmit}
             />
             {showCreateQueueModal && <ModalCreateQueue
-                userId={userId || ''}
-                onClose={() => setShowCreateQueueModal(false)} />}
+                userId={userId || ''}/>}
 
         </div>
     );
