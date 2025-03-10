@@ -7,7 +7,7 @@ export default function MainLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="flex flex-col justify-between container h-screen">
+        <div className="container">
             <Header />
             <main className="main-content">
                 {children}

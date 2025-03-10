@@ -23,13 +23,13 @@ export default function Redirect() {
     }, [time]);
 
     return (
-        <main className="content-center">
+        <div className="flex items-center justify-center h-screen">
             <div className="flex flex-col gap-2 text-center">
                 <div className="text-3xl">
-                    Увы, вы не можете перейти в очередь :/
+                    Упс, вы не можете перейти в очередь :/
                 </div>
                 <p>Вы будете перенаправлены на главную страницу через {time}</p>
             </div>
-        </main>
+        </div>
     );
 }
