@@ -242,7 +242,7 @@ def register_websocket_handlers(app):
 
                         # В блоке обработки swap_request добавьте проверку существующих запросов
                         if queues[queue_id]["swap_requests"].get(target_id):
-                            await websocket.send_text("error: У пользователя уже есть активный запрос!")
+                            await websocket.send_text("info: У пользователя уже есть активный запрос!")
                             return
                         
                         # Проверка что оба пользователя в очереди
@@ -251,11 +251,11 @@ def register_websocket_handlers(app):
                         target_in_queue = any(user["client_id"] == target_id for user in current_queue)
                         
                         if not sender_in_queue:
-                            await websocket.send_text("error: Вы не в очереди!")
+                            await websocket.send_text("info: Вы не в очереди!")
                         elif not target_in_queue:
-                            await websocket.send_text("error: Целевой пользователь не в очереди!")
+                            await websocket.send_text("info: Целевой пользователь не в очереди!")
                         elif target_id == client_id:
-                            await websocket.send_text("error: Нельзя меняться с собой!")
+                            await websocket.send_text("info: Нельзя меняться с собой!")
                         else:
                             # Сохраняем запрос
                             queues[queue_id]["swap_requests"][target_id] = {

@@ -1,10 +1,15 @@
 'use client'
-import {useWebSocket} from "@/hooks/useWebSocket";
-import {useState, useEffect} from "react";
-import {useParams} from "next/navigation";
-import {jwtDecode} from "jwt-decode";
-import {QRCodeSVG} from 'qrcode.react';
+import { useWebSocket } from "@/hooks/useWebSocket";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { QRCodeSVG } from 'qrcode.react';
 import "../../../../styles/queue.css";
+import ClockSvg from '@/assets/images/Clock.svg';
+import TicketSvg from '../../../../assets/images/Ticket.svg';
+import HashtagSvg from '../../../../assets/images/Hashtag.svg';
+import ToparrowSvg from '../../../../assets/images/Toparrow.svg';
+import DownarrowSvg from '../../../../assets/images/Downarrow.svg';
 import QueueTable from "../../../../components/queue-table";
 import Chat from '@/components/ModalChat';
 import ErrorModal from "@/components/ModalError";
@@ -18,20 +23,8 @@ interface TokenPayload {
 const QueueComponent = () => {
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
-    const {id} = params;
-    const {
-        queue,
-        joinQueue,
-        leaveQueue,
-        nextQueue,
-        undoQueue,
-        deleteQueue,
-        messages,
-        error,
-        setError,
-        info,
-        setInfo
-    } = useWebSocket(
+    const { id } = params;
+    const {queue, sendSwapRequest, incomingSwapRequest, acceptSwap, declineSwap, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue, messages, error, setError, info, setInfo } = useWebSocket(
         typeof id === "string" ? id : ""
     );
     const [showQR, setShowQR] = useState(false);
@@ -247,6 +240,7 @@ const QueueComponent = () => {
                     <QueueTable
                         queue={queue}
                         currentUserId={currentUserIdentifier || undefined}
+                        sendSwapRequest={sendSwapRequest}
                     />
                 </div>
                 <button id="openChat"
@@ -257,6 +251,13 @@ const QueueComponent = () => {
                         c0.405-0.057,9.813-1.412,16.617-5.338C21.622,54.711,25.738,55.5,30,55.5c16.542,0,30-12.112,30-27S46.542,1.5,30,1.5z"/>
                     </svg>
                 </button>
+                {incomingSwapRequest && (
+                    <div className="swap-request-modal">
+                        <p>Пользователь {incomingSwapRequest.from} предлагает обмен. Принять?</p>
+                        <button onClick={acceptSwap}>Принять</button>
+                        <button onClick={declineSwap}>Отклонить</button>
+                    </div>
+                )}
                 <Chat
                     queue={queue}
                     currentUserId={currentUserIdentifier || undefined}/>
