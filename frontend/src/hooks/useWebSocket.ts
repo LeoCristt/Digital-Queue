@@ -5,6 +5,8 @@ export const useWebSocket = (queueId: string) => {
   const [messages, setMessages] = useState<{ user_id: string; text: string; timestamp: number }[]>([]);
   const [queue, setQueue] = useState<string[]>([]);
   const socketRef = useRef<WebSocket | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const password = searchParams.get("password") || "";
@@ -21,16 +23,28 @@ export const useWebSocket = (queueId: string) => {
     ws.onmessage = (event) => {
       const data = event.data;
 
+      if (data.startsWith("error:")) {
+        const errorMessage = data.slice(6);
+        setError(errorMessage);
+        return;
+      }
+
+      if (data.startsWith("info:")) {
+        const infoMessage = data.slice(6);
+        setInfo(infoMessage);
+        return;
+      }
+
       if (data.startsWith("set_cookie:")) {
         const clientId = data.split(":")[1];
         document.cookie = `${clientId}; path=/`;
-        return; 
+        return;
       }
 
       if (data.startsWith("delete_cookie:")) {
         const cookieName = data.split(":")[1];
         document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-        return; 
+        return;
       }
 
       if (data.startsWith("queue:")) {
@@ -89,5 +103,5 @@ export const useWebSocket = (queueId: string) => {
     router.push('/')
   }
 
-  return { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue };
+  return { messages, queue, sendMessage, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue, error, setError, info,setInfo };
 };

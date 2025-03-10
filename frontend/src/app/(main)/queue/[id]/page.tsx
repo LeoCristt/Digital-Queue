@@ -12,6 +12,8 @@ import ToparrowSvg from '../../../../assets/images/Toparrow.svg';
 import DownarrowSvg from '../../../../assets/images/Downarrow.svg';
 import QueueTable from "../../../../components/queue-table";
 import Chat from '@/components/ModalChat';
+import ErrorModal from "@/components/ModalError";
+import ModalInfo from "@/components/ModalInfo";
 
 interface TokenPayload {
     sub: string;
@@ -24,7 +26,7 @@ const QueueComponent = () => {
     const [userId, setUserId] = useState<string>("");
     const params = useParams();
     const { id } = params;
-    const {queue, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue } = useWebSocket(
+    const {queue, joinQueue, leaveQueue, nextQueue, undoQueue, deleteQueue, messages, error, setError, info, setInfo } = useWebSocket(
         typeof id === "string" ? id : ""
     );
     const [showQR, setShowQR] = useState(false);
@@ -214,7 +216,8 @@ const QueueComponent = () => {
                         currentUserId={currentUserIdentifier || undefined}
                     />
                 </div>
-                <button id="openChat" className="fixed sm:bottom-5 bottom-20 right-5 bg-secondbackground rounded-full p-[10px]">
+                <button id="openChat"
+                        className="fixed sm:bottom-5 bottom-20 right-5 bg-secondbackground rounded-full p-[10px]">
                     <svg className="fill-foreground w-[40px]" version="1.1" viewBox="0 0 60 60">
                         <path d="M30,1.5c-16.542,0-30,12.112-30,27c0,5.205,1.647,10.246,4.768,14.604c-0.591,6.537-2.175,11.39-4.475,13.689
                         c-0.304,0.304-0.38,0.769-0.188,1.153C0.276,58.289,0.625,58.5,1,58.5c0.046,0,0.093-0.003,0.14-0.01
@@ -225,6 +228,21 @@ const QueueComponent = () => {
                     queue={queue}
                     currentUserId={currentUserIdentifier || undefined}/>
             </div>
+            <div>
+                {error && <ErrorModal message={error} onClose={() => setError(null)}/>}
+                <ul>
+                    {messages.map((msg, index) => (
+                        <li key={index}>{msg.text}</li>
+                    ))}
+                </ul>
+            </div>
+            {info && (
+                <ModalInfo
+                    message={info}
+                    onClose={() => setInfo(null)}
+                />
+            )}
+
         </div>
     );
 }

@@ -165,7 +165,7 @@ def register_websocket_handlers(app):
                         })
                         await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                     else:
-                        await websocket.send_text("error: Вы уже в очереди!")
+                        await websocket.send_text("info: Вы уже в очереди!")
                 
                 elif data == "leave":
                     # Удаляем пользователя из очереди в глобальном словаре
@@ -187,7 +187,7 @@ def register_websocket_handlers(app):
                         for connection, _ in connections_to_close:
                             try:
                                 await connection.send_text(f"delete_cookie:client_id_{queue_id}")
-                                await connection.send_text("info: Очередь была удалена создателем.")
+                                await connection.send_text("error: Очередь была удалена создателем.")
                                 await connection.close()
                             except Exception:
                                 pass
@@ -218,7 +218,7 @@ def register_websocket_handlers(app):
                             await websocket.send_text(f"info: Начата обработка пользователя {removed_user['client_id']}")
                         else:
                             queue_data["last_processing_start"] = None  # Сбрасываем таймер
-                            await websocket.send_text("error: Очередь пуста!")
+                            await websocket.send_text("info: Очередь пуста!")
                     else:
                         await websocket.send_text("error: Только создатель очереди может использовать команду 'next'!")
 
@@ -232,7 +232,7 @@ def register_websocket_handlers(app):
                             await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                             await websocket.send_text(f"info: Пользователь {removed_user['client_id']} возвращен в очередь.")
                         else:
-                            await websocket.send_text("error: Нет пользователя для возврата!")
+                            await websocket.send_text("info: Нет пользователя для возврата!")
                     else:
                         await websocket.send_text("error: Только создатель очереди может использовать команду 'undo'!")
                 
