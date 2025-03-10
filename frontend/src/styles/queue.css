@@ -29,7 +29,6 @@
 .sidebar {
     border-radius: 10px;
     width: 700px;
-    height: 90vh;
     background-color: var(--secondbackground);
 }
 
@@ -64,7 +63,6 @@
 }
 
 .queue-leftside-time {
-    margin: 0px 0px 55px 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -132,8 +130,6 @@
 .queue-button {
     display: flex;
     justify-content: center;
-    position: relative;
-    bottom: 55px;
     gap: 10px;
 }
 
@@ -141,7 +137,6 @@
     color: var(--scrollbackcolor);
     border-radius: 10px;
     font-size: 22px;
-    width: 200px;
     background-color: var(--colorbutton);
 }
 
@@ -150,13 +145,6 @@
     font-size: 22px;
     background-color: var(--buttoncolor);
     border-radius: 10px;
-    width: 200px;
-    height: 48px;
-}
-
-.queue-button button:first-child{
-    background-color: var(--linecolor);
-    color:black
 }
 
 .queue-rightside {
@@ -239,12 +227,7 @@
     background: var(--scrollcolor);
 }
 
-.queue-admin-controls {
-    margin-bottom: 55px;    
-}
-
 .queue-admin-controls button {
-    width: 155px;
     font-size: 22px;
     color: var(--scrollbackcolor);
     border-radius: 10px;
@@ -270,6 +253,7 @@
 
 @media(max-width: 768px){
     .queue-main {
+        min-height: 90vh;
         flex-direction: column;
         gap: 30px;
         margin-bottom: 15px;
@@ -334,16 +318,11 @@
         width: 44vh;
     }
 
-    .queue-button {
-        padding: 0px 7px;
-    }
-
     .queue-admin-controls {
         padding: 0px 7px;
         align-items: center;
         display: flex;
         flex-direction: column;
-        margin-bottom: 23px;
     }
 
     .queue-admin-controls button {

@@ -168,7 +168,7 @@ const QueueComponent = () => {
                         <div className="queue-button">
                             <button id="joinQueue" onClick={joinQueue}>Присоединиться</button>
                             <button id="openQueueQuit" onClick={leaveQueue}>Выйти</button>
-                            <button onClick={() => setShowQR(!showQR)}>
+                            <button className="bg-colorbutton rounded-xl text-[22px]" onClick={() => setShowQR(!showQR)}>
                                 {showQR ? 'Скрыть QR' : 'Показать QR'}
                             </button>
                         </div>
