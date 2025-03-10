@@ -23,11 +23,13 @@ export default function Redirect() {
     }, [time]);
 
     return (
-        <main>
-            <h1>
-                Залогинтесь, чтобы создать очередь, либо подключитесь к очереди.
-            </h1>
-            <p>{time}</p>
-        </main>
+        <div className="flex items-center justify-center h-screen">
+            <div className="flex flex-col gap-2 text-center">
+                <div className="text-3xl">
+                    Упс, вы не можете перейти в очередь :/
+                </div>
+                <p>Вы будете перенаправлены на главную страницу через {time}</p>
+            </div>
+        </div>
     );
 }

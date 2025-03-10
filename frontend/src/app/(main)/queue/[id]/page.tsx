@@ -200,27 +200,14 @@ const QueueComponent = () => {
                             })()}
                         </div>
                         <div className="queue-button">
-                            <button id="joinQueue" onClick={joinQueue}>Присоединиться</button>
-                            <button id="openQueueQuit" onClick={leaveQueue}>Выйти</button>
-                            <button onClick={() => setShowQR(!showQR)}>
+                            <button id="joinQueue" onClick={joinQueue}>Войти</button>
+                            <button className="bg-buttoncolordop qrbttn rounded-xl text-[22px]" onClick={() => setShowQR(!showQR)}>
                                 {showQR ? 'Скрыть QR' : 'Показать QR'}
                             </button>
+                            <button id="openQueueQuit" onClick={leaveQueue}>Выйти</button>
                         </div>
-                    </div>
-
-                    {showQR && (
-                        <div className="qr-code-container">
-                            <QRCodeSVG
-                                value={window.location.href}
-                                size={256}
-                                level="H"
-                                includeMargin={true}
-                            />
-                        </div>
-                    )}
-
-                    {isQueueOwner && (
-                        <div className="queue-admin-controls flex justify-center gap-3">
+                        {isQueueOwner && (
+                        <div className="queue-admin-controls flex justify-center gap-[10px]">
                             <button
                                 onClick={nextQueue}
                                 className="bg-colorbutton"
@@ -241,6 +228,20 @@ const QueueComponent = () => {
                             </button>
                         </div>
                     )}
+                    </div>
+
+                    {showQR && (
+                        <div className="qr-code-container">
+                            <QRCodeSVG
+                                value={window.location.href}
+                                size={256}
+                                level="H"
+                                includeMargin={true}
+                            />
+                        </div>
+                    )}
+
+
                 </div>
                 <div className="queue-rightside sidebar">
                     <QueueTable
