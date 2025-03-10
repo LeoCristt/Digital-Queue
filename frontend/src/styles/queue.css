@@ -11,7 +11,7 @@
     margin-left: 50px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: stretch;
 }
 
 .queue-table-empty {
@@ -47,7 +47,7 @@
 .queue-leftside-conteiner {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 .queue-leftside-ticket {
@@ -131,6 +131,13 @@
     display: flex;
     justify-content: center;
     gap: 10px;
+}
+
+.queue-button button { 
+    height: 55px;
+    padding: 7px;
+    width: 143px;
+    height: 66px;
 }
 
 #joinQueue {
@@ -229,8 +236,13 @@
 
 .queue-admin-controls button {
     font-size: 22px;
+    width: 143px;
     color: var(--scrollbackcolor);
     border-radius: 10px;
+}
+
+.qrbttn { 
+    background-color: var(--buttoncolordop);
 }
 
 .deletebttn {
@@ -319,7 +331,6 @@
     }
 
     .queue-admin-controls {
-        padding: 0px 7px;
         align-items: center;
         display: flex;
         flex-direction: column;
