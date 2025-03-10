@@ -5,6 +5,7 @@ import ModalConnectByCode from "@/components/ModalConnectByCode";
 import ModalCreateQueue from '@/components/ModalCreateQueue';
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
+import { checkQueueExistence } from "@/utils/api";
 
 interface TokenPayload {
     sub: string;
@@ -15,6 +16,7 @@ export default function Home() {
     const [inputValue, setInputValue] = useState("");
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [selectedQueueId, setSelectedQueueId] = useState<number | null>(null);
+    const [queueInfo, setQueueInfo] = useState<{ queue_id: string; password: string } | null>(null);
     const router = useRouter();
 
     // Обработчик клика по кнопке подключения
@@ -29,6 +31,15 @@ export default function Home() {
         setSelectedQueueId(queueNumber);
         setShowPasswordModal(true);
     };
+
+    useEffect(() => {
+        const fetchQueue = async () => {
+            const result = await checkQueueExistence();
+            setQueueInfo(result);
+        };
+
+        fetchQueue();
+    }, []);
 
     // Обработчик отправки пароля из модального окна
     const handlePasswordSubmit = (password: string) => {
@@ -111,10 +122,32 @@ export default function Home() {
 
             <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
-                        <div className="text-foreground content-center">Создание</div><div className="content-center">очереди</div>
+                    <div
+                        className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                        <div className="text-foreground content-center">Создание</div>
+                        <div className="content-center">очереди</div>
                     </div>
-                    <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">Вы еще не создали свою очередь</div>
+                    <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">
+                        {queueInfo ? (
+                            <div className="flex justify-between p-2">
+                                <div className="">
+                                    <p className="text-lg">Очередь существует!</p>
+                                    <p>Queue ID: {queueInfo.queue_id}</p>
+                                    <p>Password: {queueInfo.password}</p>
+                                </div>
+                                <div>
+                                    <button
+                                        className="mt-4 bg-colorbutton text-white px-4 py-2 rounded-lg hover:bg-colorbuttonhover"
+                                        onClick={() => window.location.href = `http://localhost:3000/queue/${queueInfo.queue_id}?password=${queueInfo.password}`}
+                                    >
+                                        Присоединиться
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <p>Вы еще не создали свою очередь</p>
+                        )}
+                    </div>
                 </div>
                 {/*Создение очереди*/}
                 <button className="mx-auto" id="openCreateQueue">
