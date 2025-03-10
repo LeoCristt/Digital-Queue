@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import ModalConnectByCode from "@/components/ModalConnectByCode";
 import ModalCreateQueue from '@/components/ModalCreateQueue';
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { checkQueueExistence } from "@/utils/api";
+import {ModalScanQR} from "@/components/ModalScanQR";
 
 interface TokenPayload {
     sub: string;
@@ -20,6 +21,15 @@ export default function Home() {
     const router = useRouter();
 
     const [showCreateQueueModal, setShowCreateQueueModal] = useState(false);
+
+    // Добавить новое состояние
+    const [showScanQRModal, setShowScanQRModal] = useState(false);
+
+    // Добавить обработчик сканирования
+    const handleQRScan = useCallback((queueId: number) => {
+        setSelectedQueueId(queueId);
+        setShowPasswordModal(true);
+    }, []);
 
     const handleCreateQueueClick = () => {
         setShowCreateQueueModal(true);
@@ -89,7 +99,7 @@ export default function Home() {
             </section>
 
             <section className="flex flex-row sm:flex-nowrap flex-wrap-reverse gap-[20px] w-full mb-[40px]">
-                <button className="mx-auto" id="openScanQR">
+                <button className="mx-auto" id="openScanQR" onClick={() => setShowScanQRModal(true)}>
                     <div className="bg-secondbackground rounded-2xl p-[10px]">
                         <div className="bg-background p-[40px] rounded-full">
                             <svg className="fill-foreground w-[90px]" viewBox="0 0 123 123">
@@ -232,6 +242,11 @@ export default function Home() {
                 userId={userId || ''}
                 onClose={() => setShowCreateQueueModal(false)} />}
 
+            <ModalScanQR
+                isOpen={showScanQRModal}
+                onClose={() => setShowScanQRModal(false)}
+                onScan={handleQRScan}
+            />
         </div>
     );
 }
