@@ -119,48 +119,67 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
-                <div className="flex flex-col gap-[20px] w-full">
-                    <div
-                        className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
-                        <div className="text-foreground content-center">Создание</div>
-                        <div className="content-center">очереди</div>
-                    </div>
-                    <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">
-                        {queueInfo ? (
-                            <div className="flex justify-between p-2">
-                                <div className="">
-                                    <p className="text-lg">Очередь существует!</p>
-                                    <p>Queue ID: {queueInfo.queue_id}</p>
-                                    <p>Password: {queueInfo.password}</p>
+            {userId ? (
+                <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
+                    <div className="flex flex-col gap-[20px] w-full">
+                        <div
+                            className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                            <div className="text-foreground content-center">Создание</div>
+                            <div className="content-center">очереди</div>
+                        </div>
+                        <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">
+                            {queueInfo ? (
+                                <div className="flex justify-between p-2">
+                                    <div className="">
+                                        <p className="text-lg">Очередь существует!</p>
+                                        <p>Queue ID: {queueInfo.queue_id}</p>
+                                        <p>Password: {queueInfo.password}</p>
+                                    </div>
+                                    <div>
+                                        <button
+                                            className="mt-4 bg-colorbutton text-white px-4 py-2 rounded-lg hover:bg-colorbuttonhover"
+                                            onClick={() => window.location.href = `http://localhost:3000/queue/${queueInfo.queue_id}?password=${queueInfo.password}`}
+                                        >
+                                            Присоединиться
+                                        </button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <button
-                                        className="mt-4 bg-colorbutton text-white px-4 py-2 rounded-lg hover:bg-colorbuttonhover"
-                                        onClick={() => window.location.href = `http://localhost:3000/queue/${queueInfo.queue_id}?password=${queueInfo.password}`}
-                                    >
-                                        Присоединиться
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <p>Вы еще не создали свою очередь</p>
-                        )}
-                    </div>
-                </div>
-                {/*Создение очереди*/}
-                <button className="mx-auto" id="openCreateQueue">
-                    <div className="bg-secondbackground rounded-2xl p-[10px]">
-                        <div className="bg-background p-[40px] rounded-full">
-                            <svg className="stroke-foreground w-[90px]" viewBox="0 0 90 89">
-                                <path d="M45.1165 6.03955L45.1165 82.2957" strokeWidth="12" strokeLinecap="round"/>
-                                <path d="M6.98828 44.1678L83.2444 44.1678" strokeWidth="12" strokeLinecap="round"/>
-                            </svg>
+                            ) : (
+                                <p>Вы еще не создали свою очередь</p>
+                            )}
                         </div>
                     </div>
-                </button>
-            </section>
+                    {/*Создение очереди*/}
+                    <button className="mx-auto" id="openCreateQueue">
+                        <div className="bg-secondbackground rounded-2xl p-[10px]">
+                            <div className="bg-background p-[40px] rounded-full">
+                                <svg className="stroke-foreground w-[90px]" viewBox="0 0 90 89">
+                                    <path d="M45.1165 6.03955L45.1165 82.2957" strokeWidth="12" strokeLinecap="round"/>
+                                    <path d="M6.98828 44.1678L83.2444 44.1678" strokeWidth="12" strokeLinecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </section>
+            ) : (
+                <section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">
+                    <div className="flex flex-col gap-[20px] w-full">
+                        <div
+                            className="flex flex-row gap-2 h-full justify-center text-3xl text-nowrap bg-secondbackground p-[10px] rounded-2xl">
+                            <div className="text-foreground content-center">Создание</div>
+                            <div className="content-center">очереди</div>
+                        </div>
+                        <div className="h-full text-center content-center text-2xl text-textInput bg-secondbackground p-[10px] rounded-2xl">
+                            <div className="flex align-items-center justify-center p-2">
+                                <div className=" ">
+                                    <p className="text-lg">Вы не можете создать очередь. Пожалуйста авторизуйтесь!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            )}
 
             {/*<section className="flex flex-row sm:flex-nowrap flex-wrap gap-[20px] w-full mb-[40px]">*/}
             {/*    <div className="flex flex-col gap-[20px] w-full">*/}
@@ -188,12 +207,14 @@ export default function Home() {
                         <div>Что мы</div>
                         <div className="text-foreground">умеем?</div>
                     </div>
-                    <div className="text-2xl text-center h-full content-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
+                    <div
+                        className="text-2xl text-center h-full content-center text-textInput bg-secondbackground rounded-2xl p-[10px]">
                         Наш проект предоставит Вам невероятную возможность в сфере организации очередей.
                     </div>
                 </div>
                 <div className="flex flex-col gap-[20px] w-full">
-                    <div className="flex flex-row gap-2 justify-center text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
+                    <div
+                        className="flex flex-row gap-2 justify-center text-3xl text-nowrap bg-secondbackground rounded-2xl p-[10px]">
                         <div>Используйте наш</div><div className="text-foreground">API</div>
                     </div>
                     <div className="flex flex-row gap-[20px] w-full h-full text-2xl">

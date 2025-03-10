@@ -15,7 +15,7 @@ export const checkQueueExistence = async (): Promise<{ queue_id: string; passwor
         const data = await response.json();
         return { queue_id: data.queue_id, password: data.password };
     } catch (error) {
-        console.error("Ошибка при проверке очереди:", error);
+        console.log("Ошибка при проверке очереди:", error);
         return null;
     }
 };
