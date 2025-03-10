@@ -20,6 +20,8 @@ export default {
         textInput: 'var(--textInput)',
         skinsurvivor: 'var(--skinsurvivor)',
         skinlegend: 'var(--skinlegend)',
+        toparrow: 'var(--toparrow)',
+        bottomarrow: 'var(--bottomarrow)'
       },
 
     },

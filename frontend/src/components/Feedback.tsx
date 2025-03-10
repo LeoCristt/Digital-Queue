@@ -52,7 +52,7 @@ const FeedbackForm = () => {
             </div>
             <form onSubmit={handleSubmit} className="flex w-full justify-center flex-col h-full p-[10px] text-2xl gap-[10px]">
         <textarea
-            className="w-full p-2 mb-3 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+            className="w-full p-2 mb-3 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
             placeholder="Введите ваш отзыв..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}

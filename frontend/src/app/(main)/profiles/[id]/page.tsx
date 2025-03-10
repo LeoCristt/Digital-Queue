@@ -133,7 +133,7 @@ export default function Home() {
                                 <path d="M43.7912 35.7268H39.2956V47.4543H43.7912V35.7268Z"/>
                                 <path d="M43.7912 15.1301H39.2956V26.8553H43.7912V15.1301Z"/>
                             </svg>
-                            <p className="text-lg font-medium text-gray-300">Стандарт</p>
+                            <p className="text-lg font-medium text-textColor">Стандарт</p>
                             <input type="radio" name="skin"
                                    className="w-5 h-5 text-accent bg-gray-700 border-2 border-gray-500 rounded-full cursor-pointer focus:ring-0"/>
                         </div>
@@ -147,7 +147,7 @@ export default function Home() {
                                 <path d="M43.7912 35.7268H39.2956V47.4543H43.7912V35.7268Z"/>
                                 <path d="M43.7912 15.1301H39.2956V26.8553H43.7912V15.1301Z"/>
                             </svg>
-                            <p className="text-lg font-medium text-gray-300">Выживший</p>
+                            <p className="text-lg font-medium text-textColor">Выживший</p>
                             <input type="radio" name="skin"
                                    className="w-5 h-5 text-accent bg-gray-700 border-2 border-gray-500 rounded-full cursor-pointer focus:ring-0"/>
                         </div>
@@ -161,7 +161,7 @@ export default function Home() {
                                 <path d="M43.7912 35.7268H39.2956V47.4543H43.7912V35.7268Z"/>
                                 <path d="M43.7912 15.1301H39.2956V26.8553H43.7912V15.1301Z"/>
                             </svg>
-                            <p className="text-lg font-medium text-gray-300">Легенда</p>
+                            <p className="text-lg font-medium text-textColor">Легенда</p>
                             <input type="radio" name="skin"
                                    className="w-5 h-5 text-accent bg-gray-700 border-2 border-gray-500 rounded-full cursor-pointer focus:ring-0"/>
                         </div>

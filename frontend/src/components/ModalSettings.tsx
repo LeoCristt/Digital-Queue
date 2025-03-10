@@ -375,7 +375,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                         </div>
 
                         <button id="openRemove" type="button"
-                                className="flex justify-center text-trhirdbackground underline text-lg">
+                                className="flex justify-center text-trhirdbackground underline text-lg hover:text-red-500 transition-all">
                             Удалить учётную запись
                         </button>
                     </div>
@@ -409,7 +409,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                 <input
                                     type="file"
                                     accept="image/png, image/jpeg, image/webp"
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                    className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
                                     onChange={(e) => {
                                         if (e.target.files && e.target.files[0]) {
                                             setNewAvatar(e.target.files[0]);
@@ -422,7 +422,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                     Новый nickname
                                 </label>
                                 <input type="text"
-                                       className="mb-3 mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                       className="mb-3 mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
                                        defaultValue={userData.username}
                                        onChange={(e) => setNew_nick(e.target.value)}/>
                             </div>
@@ -460,7 +460,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                     Старый пароль
                                 </label>
                                 <input
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                    className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
                                     id="password"
                                     name="password"
                                     required
@@ -474,7 +474,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                         Новый пароль
                                     </label>
                                     <input
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                        className="mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
                                         id="password1"
                                         name="password1"
                                         required
@@ -487,7 +487,7 @@ export default function ModalSettings({userData}: ModalSettingsProps) {
                                         Повтор нового пароля
                                     </label>
                                     <input
-                                        className="mb-3 mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
+                                        className="mb-3 mt-1 block w-full px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-trhirdbackground text-textColor"
                                         id="password2"
                                         name="password-again"
                                         required
