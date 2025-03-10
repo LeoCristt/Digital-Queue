@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 
 const FeedbackForm = () => {
     const [description, setDescription] = useState("");
@@ -41,11 +41,18 @@ const FeedbackForm = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-4 border rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Оставьте отзыв</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="box-border max-w-96 w-full h-fit rounded-3xl border-2 border-backgroundHeader bg-secondbackground 0 flex flex-col mb-[60px]">
+            {/*<h2 className="text-xl font-bold mb-4">Оставьте отзыв</h2>*/}
+            <div className="text-3xl">
+                <div
+                    className="h-[72px] bg-background rounded-2xl m-1 border-2 border-backgroundHeader shadow-md flex items-center justify-center gap-2 px-6">
+                    <div>Оставьте</div>
+                    <div className="text-foreground">отзыв</div>
+                </div>
+            </div>
+            <form onSubmit={handleSubmit} className="flex w-full justify-center flex-col h-full p-[10px] text-2xl gap-[10px]">
         <textarea
-            className="w-full p-2 border rounded text-black"
+            className="w-full p-2 mb-3 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-foreground focus:border-foreground sm:text-sm bg-gray-700 text-white"
             placeholder="Введите ваш отзыв..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -53,7 +60,7 @@ const FeedbackForm = () => {
         />
                 <button
                     type="submit"
-                    className="w-full mt-2 p-2 bg-colorbutton text-black rounded hover:bg-foregroundhover"
+                    className="bg-colorbutton text-2xl rounded-2xl p-[10px] w-full "
                     disabled={loading}
                 >
                     {loading ? "Отправка..." : "Отправить"}

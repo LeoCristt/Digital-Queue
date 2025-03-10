@@ -112,7 +112,7 @@ export default function Home() {
 
     return (
         <div className="bg-background items-center justify-items-center">
-            <main className="flex items-center justify-center flex-col m-[120px]">
+            <main className="flex items-center justify-center flex-col my-[60px]">
                 {userData ? (
                     <>
                         <img src={userData.avatar_url}
