@@ -42,7 +42,8 @@ export default function Register() {
       const data = await clonedResponse.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Ошибка регистрации');
+        const serverError = data.detail?.[0]?.msg || data.detail || 'Ошибка регистрации';
+        setError(serverError)
       }
 
       // Сохраняем токен из ответа
@@ -55,7 +56,7 @@ export default function Register() {
       router.replace(`/profiles/${decoded.sub}`);
 
     } catch (err: any) {
-      setError(err.message);
+      // setError(err.message);
       localStorage.removeItem('access_token');
     }
   };
