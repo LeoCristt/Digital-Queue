@@ -28,14 +28,14 @@ class UserCreateWithPasswordValidation(UserCreate):
     @field_validator('password')
     def validate_password_length(cls, v):
         if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
+            raise ValueError('Пароль должен минимум содержать 8 символов')
         return v
 
 class UserLoginWithPasswordValidation(UserLogin):
     @field_validator('password')
     def validate_password_length(cls, v):
         if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
+            raise ValueError('Пароль должен минимум содержать 8 символов')
         return v
     
     @field_validator('username')

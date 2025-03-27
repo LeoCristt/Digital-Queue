@@ -34,6 +34,7 @@ export default function Register() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, username, password, re_password }),
+          credentials: 'include',
         }
       );
 
@@ -65,8 +66,8 @@ export default function Register() {
     <div className="bg-secondbackground p-8 rounded-lg shadow-md w-full max-w-md">
       <div className="flex justify-center mb-6">
         <Link href="/">
-          <Image
-            src="/images/logo.png"
+          <img
+            src="http://localhost:8000/static/avatars/default_avatar.png"
             alt="Logo"
             width={50}
             height={50}

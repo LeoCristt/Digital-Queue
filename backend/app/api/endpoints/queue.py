@@ -105,7 +105,7 @@ def register_websocket_handlers(app):
                     }
                 else:
                     if queue_id != client_id:
-                        await websocket.send_text("error: You can only create a queue with your own user ID")
+                        await websocket.send_text("error: Вы не можете создать очередь по этому ID")
                         await websocket.close()
                         return
                     queues[queue_id] = {
@@ -135,7 +135,7 @@ def register_websocket_handlers(app):
             else:
                 if queues[queue_id]["password"] is not None:
                     if password != queues[queue_id]["password"]:
-                        await websocket.send_text("error: Invalid password!")
+                        await websocket.send_text("error: Неверный пароль!")
                         await websocket.close()
                         raise WebSocketDisconnect(code=status.WS_1008_POLICY_VIOLATION, reason="error: Invalid password!")
 
@@ -192,7 +192,7 @@ def register_websocket_handlers(app):
                                         await broadcast_message(active_connections, new_message)
                                         update_queue_in_db(queue_id)
                                     except Exception as e:
-                                        await websocket.send_text(f"error: Gigachat error: {str(e)}")
+                                        await websocket.send_text(f"info: Gigachat error: {str(e)}")
                             continue
                     
                     if data == "join":
@@ -204,7 +204,7 @@ def register_websocket_handlers(app):
                             await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                             update_queue_in_db(queue_id)
                         else:
-                            await websocket.send_text("error: Already in queue!")
+                            await websocket.send_text("info: Вы уже в очереди!")
                     
                     elif data == "leave":
                         queues[queue_id]["queue"] = [
@@ -260,7 +260,7 @@ def register_websocket_handlers(app):
                                 await websocket.send_text(f"info: Processing user {removed_user['client_id']}")
                             else:
                                 queue_data["last_processing_start"] = None
-                                await websocket.send_text("error: Queue is empty!")
+                                await websocket.send_text("info: Очередь пуста!")
                         else:
                             await websocket.send_text("error: Only queue owner can use 'next'!")
 
@@ -270,7 +270,7 @@ def register_websocket_handlers(app):
                             removed_user = queue_data["removed_user"]
                             
                             if not removed_user:
-                                await websocket.send_text("error: Нет пользователя для возврата!")
+                                await websocket.send_text("info: Нет пользователя для возврата!")
                                 return
                                 
                             # Проверяем, что удаленный пользователь не в текущей очереди
@@ -278,7 +278,7 @@ def register_websocket_handlers(app):
                                             for user in queue_data["queue"])
                             
                             if user_in_queue:
-                                await websocket.send_text("error: Пользователь уже в очереди!")
+                                await websocket.send_text("info: Пользователь уже в очереди!")
                                 return
                                 
                             # Проверяем, что пользователь не присоединился заново
@@ -290,7 +290,7 @@ def register_websocket_handlers(app):
                             )
                             
                             if rejoined:
-                                await websocket.send_text("error: Пользователь уже вернулся в очередь!")
+                                await websocket.send_text("info: Пользователь уже вернулся в очередь!")
                                 return
                                 
                             # Возвращаем пользователя
@@ -301,13 +301,13 @@ def register_websocket_handlers(app):
                             await broadcast_queue(active_connections, queues[queue_id]["queue"], queues[queue_id].get("avg_time"))
                             await websocket.send_text(f"info: Пользователь {removed_user['client_id']} возвращен")
                         else:
-                            await websocket.send_text("error: Только создатель очереди может использовать 'undo'!")
+                            await websocket.send_text("info: Только создатель очереди может использовать 'undo'!")
                     
                     elif data.startswith("swap_request:"):
                         try:
                             target_id = data.split(":")[1].strip()
                             if queues[queue_id]["swap_requests"].get(target_id):
-                                await websocket.send_text("error: User already has active request!")
+                                await websocket.send_text("info: У пользователя уже есть активный запрос!")
                                 return
                             
                             current_queue = queues[queue_id]["queue"]
@@ -315,11 +315,11 @@ def register_websocket_handlers(app):
                             target_in_queue = any(user["client_id"] == target_id for user in current_queue)
                             
                             if not sender_in_queue:
-                                await websocket.send_text("error: You're not in queue!")
+                                await websocket.send_text("info: Вы еще не очереди!")
                             elif not target_in_queue:
-                                await websocket.send_text("error: Target user not in queue!")
+                                await websocket.send_text("info: Пользователь не в очереди!")
                             elif target_id == client_id:
-                                await websocket.send_text("error: Can't swap with yourself!")
+                                await websocket.send_text("info: Нельзя поменяться с самим собой!")
                             else:
                                 queues[queue_id]["swap_requests"][target_id] = {
                                     "from": client_id,
@@ -332,7 +332,7 @@ def register_websocket_handlers(app):
                                 }, active_connections)
                                 await websocket.send_text("info: Swap request sent")
                         except Exception as e:
-                            await websocket.send_text("error: Invalid swap request format")
+                            await websocket.send_text("info: Invalid swap request format")
 
                     elif data == "swap_accept":
                         await process_swap_response(client_id, queue_id, True, active_connections)

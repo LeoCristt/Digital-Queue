@@ -13,7 +13,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({ message, duration = 3000, onClose
     }, [duration, onClose]);
 
     return (
-        <div className="fixed bottom-4 left-4 bg-colorbutton text-textColor px-6 py-3 rounded-lg shadow-md animate-slide-left">
+        <div className="fixed top-4 bottom-auto left-4 bg-colorbutton text-textColor px-6 py-3 rounded-lg shadow-md animate-slide-left md:bottom-4 md:top-auto">
             {message}
         </div>
     );

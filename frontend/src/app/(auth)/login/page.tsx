@@ -32,7 +32,8 @@ export default function Login() {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.detail || 'Ошибка авторизации');
+        const serverError = data.detail?.[0]?.msg || data.detail || 'Ошибка регистрации';
+        setError(serverError)
       }
 
       const decoded = jwtDecode<TokenPayload>(data.access_token);
@@ -43,9 +44,9 @@ export default function Login() {
       router.push(`/profiles/${userId}`);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
+        // setError(error.message);
       } else {
-        setError('Произошла неизвестная ошибка');
+        // setError('Произошла неизвестная ошибка');
       }
     }
   };
@@ -54,8 +55,8 @@ export default function Login() {
     <div className="bg-secondbackground p-8 rounded-lg shadow-md w-full max-w-md">
       <div className="flex justify-center mb-6">
         <Link href="/">
-          <Image
-            src="/images/logo.png"
+          <img
+            src="http://localhost:8000/static/avatars/default_avatar.png"
             alt="Logo"
             width={50}
             height={50}

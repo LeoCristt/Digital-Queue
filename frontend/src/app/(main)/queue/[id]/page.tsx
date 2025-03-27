@@ -263,11 +263,6 @@ const QueueComponent = () => {
             </div>
             <div>
                 {error && <ErrorModal message={error} onClose={() => setError(null)}/>}
-                <ul>
-                    {messages.map((msg, index) => (
-                        <li key={index}>{msg.text}</li>
-                    ))}
-                </ul>
             </div>
             {info && (
                 <ModalInfo

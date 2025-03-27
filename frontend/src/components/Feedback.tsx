@@ -66,7 +66,7 @@ const FeedbackForm = () => {
                     {loading ? "Отправка..." : "Отправить"}
                 </button>
             </form>
-            {message && <p className="mt-2 text-center text-sm text-red-500">{message}</p>}
+            {message && <p className="mt-2 text-center text-sm text-foreground">{message}</p>}
         </div>
     );
 };
